@@ -1,0 +1,20 @@
+{
+	"folders":
+	[
+		{
+			"follow_symlinks": true,
+			"path": "."
+		}
+	],
+	"settings":
+	{
+		"open_related_patterns":
+		[
+			[
+				"*.html",
+				"*.js"
+			]
+		]
+	}
+
+}
