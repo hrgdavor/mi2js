@@ -18,60 +18,47 @@
 		}catch(e){}
 	}
 
-	mi2.joinUrl = function(pars){
-		if(!pars) return "";
-		if(typeof(pars) == 'string') return pars;
-		var arr = [], str='';
-		for(var p in pars){
-			if(typeof(pars[p]) == 'string' || typeof(pars[p]) == 'number')
-				arr.push(encodeURIComponent(p)+"="+encodeURIComponent(pars[p]));
-			else 
-				if(pars[p].length>0) for(var p2 in pars[p]) arr.push(encodeURIComponent(p)+"="+encodeURIComponent(pars[p][p2]));
-		}
-		if(arr.length >0){
-			str = arr[0];
-			for(var i=1; i<arr.length; i++) str += '&'+arr[i];
-		}
-		return str;
-	};
-
 	proto.fetch	= function(_arg){
-		var args = mi2.update({method:'GET', url:"", callback:function(){}, async:true, headers:{}}, _arg);
-		var params = mi2.joinUrl(args.pars || args.parameters);
+		var args = mi2.update({ // defaults
+			method:'GET', 
+			self: this,
+			url:"", 
+			callback:function(){}, 
+			async:true, 
+			headers:{}
+		}, _arg);
+
 		args.method = args.method.toUpperCase();
 
-		if (args.method == 'GET'){
-			if(params) args.url += (args.url.indexOf('?') > 0 ? '&':'?') + params;
-			params = null;
-		}
-
 		this.request.open(args.method, args.url, args.async);
+
+		if (args.method == 'POST' && !args.headers['Content-Type']) args.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		for(var h in args.headers) this.request.setRequestHeader(h,args.headers[h]);
-		if (args.method == 'POST') this.request.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+
 		var ret = null;
 		this.request.onreadystatechange = function(){
 			if(this.readyState == 4){
 				if(this.status == 200){
-					// try{
-						args.callback(this);
-					// }catch(e){console.log("error in callback ",e);}
+					args.callback.call(args.self,this);
 					ret = this;
 				}
-				else if(args.errback) args.errback(this);
+				else if(args.errback) args.errback.call(args.self,this);
 			}
 		};
 
-		this.request.send(params);
+		this.request.send(args.postData);
+
 		return ret;
 	};
 
-	/** ajax request 
-		siungle object with parameters
+	/** ajax request <br>
+		Parameters: single object with fields
 		@param {string} [method=GET] - HTTP method
 		@param {string|object} url - if object is provided then mi2JS.joinUrl will be called to gen url string 
 		@param {function} callback - callback function when data is received
 		@param {function} errback - callback if communication error occurs
 		@param {boolean} [async=false] - async / sync
+		@param {object} - The value of this provided for the call to callback and errback, check Function.prototype.call docs online
 	*/
 	mi2.ajax = function(args){
 		return new MicroAjax().fetch(args);
