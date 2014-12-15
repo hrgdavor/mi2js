@@ -31,7 +31,7 @@ function(comp, proto, superClass){
 		for(var t in this.tabs){
 			var tab = this.tabs[t];
 			if(tab.attr('selected') || (!this.selectedTab) ) this.selectedTab = t;
-			str += '<tabbt mi-set="buttons.'+t+'" event="selectTab" action="'+t+'" mi-comp="base/Button">'
+			str += '<tabbt p="buttons.'+t+'" event="selectTab" action="'+t+'" as="base/Button">'
 				+tab.attr('title')+'</tabbt>';
 		}
 		this.buttonsArea.el.innerHTML = str;

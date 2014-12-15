@@ -14,10 +14,10 @@
 			} 
 
 			if( !compName ){
-				compName = el.getAttribute('mi-comp');
+				compName = el.getAttribute('as');
 				if(!compName) compName = this.tags[el.tagName];
 			} 
-			el.setAttribute('mi-comp', compName);
+			el.setAttribute('as', compName);
 
 			var compDef = this.get(compName, el);
 			var c = new compDef();
@@ -150,7 +150,7 @@
 
 	proto.getCompName = function(){
 		if(this.el && this.el.getAttribute){
-			return this.el.getAttribute('mi-comp');
+			return this.el.getAttribute('as');
 		}
 	};
 
@@ -171,10 +171,14 @@
 			mi2.listen( el, evt, listener, this); 
 	};
 
-	//setTimeout shortcut that by default binds callback function to current object
+	//setTimeout and setInterval shortcut that by default binds callback function to current object
 	//so you can use this in callback without extra bloat otherwise needed
 	proto.setTimeout = function(fc,delay){
 		return setTimeout( mi2.bind(this,fc), delay );
+	};
+  
+	proto.setInterval = function(fc,delay){
+		return setInterval( mi2.bind(this,fc), delay );
 	};
 
 	proto.addListener = function(evtName,callback,thisObj){

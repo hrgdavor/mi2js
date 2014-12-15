@@ -27,6 +27,7 @@ function(comp, proto, superClass){
 			if(n.className && n.className.indexOf('checkboxLabel') != -1){
 				this.listen(n, 'click', function(){
 					this.inp.checked = !this.inp.checked;
+					this.fireIfChanged();
 				});
 			}
 		}

@@ -48,7 +48,7 @@ function(comp, proto, superClass){
 		var ch = el.firstChild;
 		while(ch){
 			if(ch.tagName){
-				if(!ch.getAttribute('mi-comp'))// each component handles own template
+				if(!ch.getAttribute('as'))// each component handles own template
 					this.loadTemplate(ch,list);
 			}else{
 				var str = ch.nodeValue;

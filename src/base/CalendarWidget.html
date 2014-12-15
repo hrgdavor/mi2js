@@ -1,6 +1,6 @@
 <div class="">
-	<select mi-set="year" mi-comp="base/Input"></select>
-	<select mi-set="month" mi-comp="base/Input">
+	<select p="year" as="base/Input"></select>
+	<select p="month" as="base/Input">
 		<option value="0">$(month1)</option>
 		<option value="1">$(month2)</option>
 		<option value="2">$(month3)</option>
@@ -16,13 +16,13 @@
 	</select>
 </div>
 <table>
-<thead mi-set="dayNames" names="$(sday0),$(sday1),$(sday2),$(sday3),$(sday4),$(sday5),$(sday6)">
+<thead p="dayNames" names="$(sday0),$(sday1),$(sday2),$(sday3),$(sday4),$(sday5),$(sday6)">
 </thead>
-<tbody mi-set="dayGrid" class="CalendarDays">
+<tbody p="dayGrid" class="CalendarDays">
 </tbody>
 </table>
 <div class="buttons">
-	<a class="bt" mi-comp="base/Button" event="today">$(today)</a>
-	<a mi-set="done" class="bt" mi-comp="base/Button" event="done">$(done)</a>
-	<a mi-set="clear" class="bt" mi-comp="base/Button" event="done" action="clear">$(clear)</a>
+	<a class="bt" as="base/Button" event="today">$(today)</a>
+	<a p="done" class="bt" as="base/Button" event="done">$(done)</a>
+	<a p="clear" class="bt" as="base/Button" event="done" action="clear">$(clear)</a>
 </div>

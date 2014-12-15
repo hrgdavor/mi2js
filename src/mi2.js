@@ -63,8 +63,7 @@ if(!window.mi2JS) window.mi2JS = function(node){
 	mi2.nn = function(name,list){
 		for(var p in list){
 			if(typeof(list[p]) == "undefined"){
-				console.log(name," parameter ",p," is null but should not be ");
-				throw new Error(name+" parameter "+p+" is null but should not be ");
+				console.error(name," parameter ",p," is null but should not be ");
 			}
 		}
 	};

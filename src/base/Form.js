@@ -37,7 +37,7 @@ function(comp, proto, superClass){
 		if(this.inp){
 			for(var p in this.inp){
 				var comp = this.inp[p];
-				var compName = comp.el.getAttribute('mi-comp'); 
+				var compName = comp.el.getAttribute('as'); 
 				if(!compName){
 					this.inp[p] = mi2JS.comp.make(comp.el,'base/Input',this);
 				}else if(!comp.getValue || ! comp.setValue){
