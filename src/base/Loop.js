@@ -1,4 +1,17 @@
-mi2JS.comp.add('base/List', 'Base', '',
+mi2JS.comp.add('base/Loop', 'Base', '',
+
+/**
+if component extends Loop and has an element bound to itemsArea it will be used instead
+of the component root.
+
+example with inline template: 
+	mi2JS.comp.add('base/List', 'lock3/Loop', '<div class="title">title</div><div p="itemsArea"></div>',
+
+example in separate template file:
+	<div class="title">title</div>
+	<div p="noData">There are no results avaialble</div>
+	<div p="itemsArea"></div>
+*/
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
@@ -6,70 +19,33 @@ function(comp, proto, superClass){
 	var mi2 = mi2JS;
 	var $ = mi2.wrap;
 
+	proto.itemTemplate = document.createElement('DIV');
+	proto.itemTemplate.setAttribute('mi-comp','Base');
+
 	comp.constructor = function(el, tpl, parent){
 		superClass.constructor.call(this, el, tpl, parent);
 
-		this.itemComp  = this.attr('item-comp','Base');
-		this.itemTag   = this.attr('item-tag');
-		this.itemId    = this.attr('item-id',  'id');
-		this.itemTpl   = ''; 
-		this.itemAttr  = {'class':this.attr('item-class','')};
-		// additional functions to override the default component 
-		// (small tweaks only, otherwise make a new component)
-		this.itemExtend = {};
+		if(!this.itemsArea) this.itemsArea = this;
 
-		// support for components with inline template
-		if(!this.itemTag){
-			var ch = el.firstChild;
-			while(ch && ! ch.tagName) ch=ch.nextSibling;
-			if(ch && ch.tagName){
-				var attr = ch.attributes;
-				if(attr){
-					for(var i=0; i<attr.length; i++) {
-						if(attr[i].value)
-							this.itemAttr[attr[i].name] = attr[i].value;
-					}
-				}
-				this.itemComp = this.itemAttr['as'] || mi2.comp.tags[ch.tagName] || 'Base';
-				this.itemTag = ch.tagName;
-				this.itemTpl = ch.innerHTML;
-				el.removeChild(ch);
-			}else // default tag
-				this.itemTag = 'DIV';
+		var ignore = this.noData;
+		if(ignore){
+			ignore = ignore.el;
+			ignore.parentNode.remove(ignore.el);
 		}
 
+		// support for components with inline template, and skip noData node
+		var ch = this.itemsArea.el.firstChild;
+		while(ch && ch == ignore && !ch.tagName) ch=ch.nextSibling;
 
-		var noDataText = this.attr('no_data');
-		if(noDataText){
-			this.noData = $(mi2.addTag(el,'DIV','hidden noData'));
-			this.noData.el.innerHTML = t(noDataText);            
-		}
+		if(ch && ch.tagName){
+			this.itemTemplate = ch;
+			ch.parentNode.removeChild(ch);
+		} 
+
+		this.itemHtml = this.itemTemplate.innerHTML;
+
 		this.items = [];
 		this.count = 0;
-		if(this.attr('reorder')) this.enableReorder();
-	};
-
-	proto.extendItem = function(ext){
-		this.itemExt = ext;
-	};
-
-	proto.enableReorder = function(){
-		this.reorder = new Reorder(this.el,{onstop:util.bind(this,this.reorderStop)});
-	};
-
-	proto.reorderStop = function(evt){
-		var i=0;
-		var div = mi2.child(this.el,'DIV');
-		var tmp = this.items; this.items = [];
-		while(div){
-			var item = tmp[div.index];
-			if(item){
-				this.items[i] = item;
-				div.index = i;
-				i++;
-			}
-			div = mi2.next(div, 'DIV');
-		}
 	};
 
 	proto.setValue = function(arr){
@@ -85,70 +61,57 @@ function(comp, proto, superClass){
 		}
 	};
 
-	proto.getItem = function(id){
-		var data;
+	/** returns only active items (do not access .times property directly as it contains also disabled ones) */
+	proto.getItems = function(id){
+		var it = [];
 		for(var i=0; i<this.count; i++){
-			data = this.items[i].getValue();
-			if(data[this.itemId] == id) return this.items[i]; 
+			it.push(this.items[i]);
 		}
-	};
-	
-	proto.updateItem = function(newData){
-		var data;
-		for(var i=0; i<this.count; i++){
-			data = this.items[i].getValue();
-			if(data[this.itemId] == newData[this.itemId]) this.setItem(newData,i); 
-		}
+		return it;
 	};
 
-	function getValue(){
-		return this.data;
-	}
-	
-	proto.makeItem = function(list, newData,i, tagName){
-		var node = mi2.addTag(list.el, tagName || this.itemTag, '');
-		node.innerHTML = list.itemTpl;
-		for(var p in list.itemAttr) node.setAttribute(p, list.itemAttr[p]);
-		var comp = mi2.comp.make(node, list.itemComp, list);
-		if(this.itemExt) mi2.update(comp,this.itemExt);
+	function defGetValue(){ return this.data;}
+	function defSetValue(){ }
+
+	proto.makeItem = function(newData,i){
+		var node = mi2.addTag(this.itemsArea.el, this.itemTemplate.tagName, '');
+		node.innerHTML = this.itemHtml;
+
+		var attr = this.itemTemplate.attributes;
+		if(attr) for(var i=0; i<attr.length; i++) node.setAttribute(attr[i].name, attr[i].value);
+
+		var comp = mi2.comp.make(node, null, this);
+
+		if(!comp.getValue) comp.getValue = defGetValue;
+		if(!comp.setValue) comp.setValue = defSetValue;
+
+		this.itemCreated(comp, i);
+
 		return comp;
 	};
 
+	/** 
+	Use this method to add extra initialization for created components (extra methods or init params).
+
+	Component that extends Loop can override this method, and if used inside 
+	another component it can listen to itemCreated event by adding method on_itemCreated.
+	This distinction also avoids Loop inside a Loopp accidentaly coliding for this event. 
+	*/
+	proto.itemCreated = function(item, i){
+		this.parent.fireEvent('itemCreated',{item:item, index:i});
+	};
+
 	proto.setItem = function(newData,i){
-		if(this.items.length <= i){
-			this.items[i] = this.makeItem(this, newData, i, this.itemTag);
-			if(!this.items[i].getValue) this.items[i].getValue = getValue;
-		}
-		this.items[i].data = newData;
-		this.items[i].el.index = i;
-		this.items[i].setValue(newData);
-		this.items[i].setVisible(true);
+		var item = this.items[i];
+
+		if(!item) item = this.items[i] = this.makeItem(newData, i);
+
+		item.data = newData;
+		item.el.index = i;
+		item.setValue(newData);
+		item.setVisible(true);
 	};
  
-	proto.getItemHeight = function(){
-		return this.items[0].el.offsetHeight;
-	};
-
-	proto.remove = function(removeData){
-		var arr = [];
-		var data;
-		for(var i=0; i<this.count; i++){
-			data = this.items[i].getValue();
-			if(removeData[this.itemId] != data[this.itemId]) arr.push(data);
-		}
-		this.setValue(arr);
-	};
-	
-	proto.getIds = function(){
-		var arr = [], data;
-		for(var i=0; i<this.count; i++){
-			data = this.items[i].getValue();
-			if(data !== null && this.items[i].isVisible())
-				arr.push(data[this.itemId]);
-		}
-		return arr;
-	};
-
 	proto.getValue = function(){
 		var arr = [],data;
 		for(var i=0; i<this.count; i++){
@@ -170,10 +133,12 @@ function(comp, proto, superClass){
 			superClass.prototype.fireEvent.call(this,name,evt);
 			return;
 		}
-		evt = evt || {};
-		evt.list = this;
-		if(this.parent.fireEvent)
+
+		if(this.parent && this.parent.fireEvent){
+			evt = evt || {};
+			evt.loop = this;
 			this.parent.fireEvent(name, evt);
+		}
 	};
 	
 });

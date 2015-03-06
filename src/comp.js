@@ -46,6 +46,8 @@
 		return tpl;
 	};
 
+	mi2.comp.check = function(name){ return this.def[name] || this.later[name]; }
+	
 	mi2.comp.get = function(name, el){ 
 		var compDef = this.def[name];
 		if(!compDef && this.later[name]){
@@ -164,6 +166,7 @@
 	so you can use this in callback without extra bloat otherwise needed
 	*/
 	proto.listen = function(el,evt,listener){
+		listener = listener || this['on_'+evt];
 
 		if(el.addListener){
 			el.addListener( evt, listener, this);

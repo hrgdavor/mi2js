@@ -94,7 +94,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			i++;
 			span--;
 		}
-		if(this.hideHeader) this.thead.className = 'hidden';
+		if(this.hideHeader) this.thead.setVisible(false);
 		this.listen(this.thead.el,"click",this.theadClick);
 	};
 
@@ -107,20 +107,24 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto._findTh = function(code){
-		var tr = $child(this.thead,'TR');
+		var tr = mi2.child(this.thead.el,'TR');
 		while(tr){
-			var tmp = $child(tr,'TH');
+			var tmp = mi2.child(tr,'TH');
 			while(tmp){
 				if(tmp.code == code) return tmp;
-				tmp = $next(tmp,'TH');
+				tmp = mi2.next(tmp,'TH');
 			}
-			tr = $next(tr,'TR');			
+			tr = mi2.next(tr,'TR');			
 		}
 		return null;
 	};
 
 	proto.sortBy = function(th,asc){
-		if(typeof th == "string") th = this._findTh(th);
+		if(typeof th == "string") {
+			var thNode = this._findTh(th);
+			if(!thNode) return console.error('column not found '+th);
+			else th = thNode;
+		}
 		this.sortColumn = th;
 		if(th.sortable){
 			var opts = this.cols[th.code];
@@ -137,11 +141,12 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto.applySort = function(th, opts, asc){
-		if(this.tData.data){
+		if(this.tData && this.tData.data){
 			this.tData.data.sort(makeCompareFunc(this, opts.compareFunc,th.code));
 			if(!asc) this.tData.data.reverse();
 		}
-		this.__update(this.tData);
+		if(this.tData)
+			this.__update(this.tData);
 	};
 
 	proto.update = function(tData){
@@ -212,12 +217,12 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		var action = null;
 		while(bt.tagName != 'TD' && !action ){
 			action = bt.getAttribute("action");
+			param = bt.getAttribute("param");
 			bt=bt.parentNode;
 		}
-		param = bt.getAttribute("param");
 		if(! action ) action = "edit";
 		var tr = mi2.parent(bt,"TR");
-		this.parent.fireEvent("rowClick",{tr: tr, data:tr.data, td:td, code:td.code, action:action, param:param, src:this});
+		this.parent.fireEvent("rowClick",{tr: tr, data:tr.data, td:td, code:td.code, action:action, param:param, src:this, button:bt});
 	};
 
 	//we propagate all events to parent and add reference to self

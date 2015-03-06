@@ -23,6 +23,8 @@ function(comp, proto, superClass){
 		this.clearBt.setVisible(!this.attr("disable_clear_button"));
 		this.noEmpty = this.attr("no_empty");
 		this.emptyText = this.attr("empty_text",'');
+		this.freeText = this.attr("free_text",'0') != '0';
+
 		if(this.emptyText) this.setText(this.emptyText);
 		this.list = [];
 		this.showall = this.attr('showall');
@@ -31,12 +33,17 @@ function(comp, proto, superClass){
 
 		this.listen(this.textInput.el, "focus", function(evt){
 			this.hasFocus = true;
+			this.firstKey = true;
 			this.textInput.el.select();
 			this.callLoad(true);
 		});
 
 		this.listen(this.textInput.el, "blur", function(evt){
 			this.hasFocus = false;
+			if(this.freeText)
+				this.setValue(this.textInput);
+			else
+				this.setValue(this.getValue());
 			this.hide();
 		});
 
@@ -70,7 +77,9 @@ function(comp, proto, superClass){
 					i = evt.keyCode == 40 ? 0:this.count-1;
 				}
 				this.selectElem(this.list[i].el);
-			}			 
+			}else{
+				this.firstKey = false;
+			}		 
 			this.callLoad();
 		});
 	};
@@ -87,6 +96,9 @@ function(comp, proto, superClass){
 		else this.textInput.el.blur();
 	};
 
+	proto.focus = function(){
+		this.textInput.el.focus();
+	};
 	proto.hide = function(sel){
 		clearTimeout(this.hideTimer);
 		this.hideTimer = this.setTimeout(function(){	
@@ -164,8 +176,9 @@ function(comp, proto, superClass){
 				data.push(this.data[i]);
 			} 
 		}
-        if(data.length > 1 || !this.noEmpty || this.showall){
-	        if(this.showall) {
+		var showall = this.showall || this.firstKey;
+        if(data.length > 1 || !this.noEmpty || showall){
+	        if(showall) {
 	        	data = this.data;
 	           this.showResults(data, data.length > 0 ? data[0].id : null);
 	           if(firstIndex != -1 ) this.selectElem(this.list[firstIndex]); 

@@ -9,6 +9,7 @@ function(comp, proto, superClass){
 	*/
 	comp.constructor = function(el, tpl, parent){
 		this.info = {};
+		this.label = {};
 		superClass.constructor.call(this, el, tpl, parent);
 		if(!this.inp){
 			var m = 'This form is empty ' + this.getCompName();
@@ -17,6 +18,7 @@ function(comp, proto, superClass){
 		} 
 
 		this.event = this.attr('event','submit');
+		this.eventsToParent = this.attr('events-to-parent','1') == '1';
 
 		this.init();
 	};
@@ -49,7 +51,7 @@ function(comp, proto, superClass){
 
 	proto.focus = function(){
 		for(var p in this.inp){
-			if(this.inp[p].attr('firstInput') && this.inp[p].focus){
+			if(this.inp[p].attr('firstInput') && this.inp[p].focus && !this.inp[p].attr('readonly')){
 				this.inp[p].focus();
 				return;
 			}
@@ -73,14 +75,14 @@ function(comp, proto, superClass){
 				valid = false;
 			}
 		}
-		if(!valid) return data;
+		return valid ? null:data;
 	};
 
 	proto.markValidate = function(data){
 		data = data ||{};
 		for(var p in this.inp){
 			if(this.inp[p].markValidate)
-				this.inp[p].markValidate(data[p],this.info[p]);
+				this.inp[p].markValidate(data[p],this.info[p], this.label[p]);
 		}
 	};
 
@@ -93,7 +95,7 @@ function(comp, proto, superClass){
 	};
 
 	proto.fireEvent = function(name, evt){
-		if(name == 'afterCreate') {
+		if(!this.eventsToParent || name == 'afterCreate') {
 			superClass.prototype.fireEvent.call(this,name,evt);
 			return;
 		}

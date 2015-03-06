@@ -24,7 +24,7 @@ function(comp, proto, superClass){
 		this.unchecked = this.attr('unchecked',false);
 		if(el.type == 'checkbox'){
 			var n = el.nextElementSibling;
-			if(n.className && n.className.indexOf('checkboxLabel') != -1){
+			if(n && n.className && n.className.indexOf('checkboxLabel') != -1){
 				this.listen(n, 'click', function(){
 					this.inp.checked = !this.inp.checked;
 					this.fireIfChanged();
@@ -77,10 +77,10 @@ function(comp, proto, superClass){
 	// texts:
 	proto.formats = {
 		'email': {
-			format: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,4}$',
+			format: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$',
 			invalid: 'invalid_email_address'
 		},
-		'int':   { 
+		'int':   {
 			format: "^-*\\d+$", example:"123", 
 			invalid:'must_be_integer' 
 		},
@@ -117,32 +117,33 @@ function(comp, proto, superClass){
 			opts.format = predef.format;
 			if(!opts.example) opts.example = predef.example;
 			if(!opts.invalid) opts.invalid = predef.invalid;
-			var reg = new RegExp(opts.format);
-			if(!reg.test(v)){
-				var msg = t(opts.invalid || 'invalid_value')+' ! ';
-				if(opts.example) msg += t('example_correct_value')+': '+opts.example;
-				return {type:'invalid', message:msg};
-			}
-
-			var hasMin = typeof(opts.min) != 'undefined';
-			var hasMax = typeof(opts.max) != 'undefined';
-			if(hasMin || hasMax){
-				v = mi2.num(v);
-				var min = mi2.num(opts.min);
-				var max = mi2.num(opts.max);
-				if(hasMax && hasMin){
-					if(v<min || v>max) return {type:'invalid_range', message: t('must_be_between')+' '+opts.min+' & '+opts.max};
-				}else if(hasMax){
-					if(v>max) return {type:'invalid_range', message: t('max_allowed_value')+' '+opts.max};					
-				}else if(hasMin){
-					if(v<min) return {type:'invalid_range', message: t('min_allowed_value')+' '+opts.min};					
-				}
-			}
-			return null;
 		}
+
+		var reg = new RegExp(opts.format);
+		if(!reg.test(v)){
+			var msg = t(opts.invalid || 'invalid_value')+' ! ';
+			if(opts.example) msg += t('example_correct_value')+': '+opts.example;
+			return {type:'invalid', message:msg};
+		}
+
+		var hasMin = typeof(opts.min) != 'undefined';
+		var hasMax = typeof(opts.max) != 'undefined';
+		if(hasMin || hasMax){
+			v = mi2.num(v);
+			var min = mi2.num(opts.min);
+			var max = mi2.num(opts.max);
+			if(hasMax && hasMin){
+				if(v<min || v>max) return {type:'invalid_range', message: t('must_be_between')+' '+opts.min+' & '+opts.max};
+			}else if(hasMax){
+				if(v>max) return {type:'invalid_range', message: t('max_allowed_value')+' '+opts.max};					
+			}else if(hasMin){
+				if(v<min) return {type:'invalid_range', message: t('min_allowed_value')+' '+opts.min};					
+			}
+		}
+		return null;
 	};
 
-	proto.markValidate = function(data, info){
+	proto.markValidate = function(data, info, label){
 		data = data || {};
 		this.classIf('validationError', data._error);
 		if(info){
@@ -150,6 +151,7 @@ function(comp, proto, superClass){
 			info.setVisible(data._error && data._error.message);
 			if(data._error) info.html(data._error.message);			
 		}
+		if(label) label.classIf('validationError', data._error);
 	};
 
 	proto.focus = function(){
