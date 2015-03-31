@@ -27,6 +27,7 @@ function(comp, proto, superClass){
 
 		if(this.emptyText) this.setText(this.emptyText);
 		this.list = [];
+		this.displayLimit = mi2JS.num(this.attr('limit','999999'));
 		this.showall = this.attr('showall');
 		// sample data: [{id:1,text:"default"},{id:2, text:'other'}, {id:3, text:'other 2'}]
 		this.data = [];
@@ -175,11 +176,15 @@ function(comp, proto, superClass){
 				if(firstIndex == -1) firstIndex = i;
 				data.push(this.data[i]);
 			} 
+			if(data.length >= this.displayLimit) break;
 		}
 		var showall = this.showall || this.firstKey;
         if(data.length > 1 || !this.noEmpty || showall){
 	        if(showall) {
 	        	data = this.data;
+				if(data.length > this.displayLimit){
+					data = data.slice(0,this.displayLimit);
+				}
 	           this.showResults(data, data.length > 0 ? data[0].id : null);
 	           if(firstIndex != -1 ) this.selectElem(this.list[firstIndex]); 
 	        }else
@@ -188,6 +193,12 @@ function(comp, proto, superClass){
 	};
 
 	proto.showResults = function(data, proposal){
+		if(this.emptyText && this.showall){
+			var tmp = data;
+			data = [{id:'',text:this.emptyText}];
+			for(var i=0; i<tmp.length; i++) data.push(tmp[i]);
+		} 
+	
 		var num = this.count = data.length;
 		var selectedId = proposal || this.idInput.el.value;
 		for(var i=0; i<num; i++){
@@ -244,6 +255,20 @@ function(comp, proto, superClass){
 		return (this.textInput.el.value = str || '');
 	};
 
+	proto.validate = function(defReq){
+		var required = this.attr('required',defReq ? '1':'0') == '1';
+		if(required && !this.getValue()) return {message:t('required'), type:'required'}
+	};
+
+	proto.markValidate = function(data, info){
+		data = data || {};
+		this.textInput.classIf('validationError', data._error);
+		if(info){
+			info.classIf('validationError', data._error);
+			info.setVisible(data._error && data._error.message);
+			if(data._error) info.html(data._error.message);			
+		}
+	};
 
 });
 
