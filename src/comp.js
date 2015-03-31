@@ -96,7 +96,9 @@
 		comp.compName = name;
 		if(typeof(comp.constructor) != "function") console.log("constructor not function ",compName);
 
-		if(tpl && tpl.length > 7 && tpl.substring(0,7) == 'extend:') 
+		if(tpl && tpl == 'extend:') 
+			tpl = this.getTpl(supName);
+		else if(tpl && tpl.length > 7 && tpl.substring(0,7) == 'extend:') 
 			tpl = this.getTpl(tpl.substring(7));
 
 		if(tpl || tpl === '') 
