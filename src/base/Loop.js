@@ -23,9 +23,21 @@ function(comp, proto, superClass){
 	proto.itemTemplate.setAttribute('mi-comp','Base');
 
 	comp.constructor = function(el, tpl, parent){
-		superClass.constructor.call(this, el, tpl, parent);
+		if(tpl) el.innerHTML = tpl;
 
-		if(!this.itemsArea) this.itemsArea = this;
+		// support for components with inline template, and skip noData node
+		this.itemsArea = this.findItemsArea(el) || el;
+		var ch = this.itemsArea.firstChild;
+		while(ch && ch == ignore && !ch.tagName) ch=ch.nextSibling;
+
+		if(ch && ch.tagName){
+			this.itemTemplate = ch;
+			ch.parentNode.removeChild(ch);
+		}
+		// this was done before calling parent constructor to avoid stack overflow in case
+		// of component recursion using Loop component (example: tree-like structures)
+
+		superClass.constructor.call(this, el, tpl, parent);
 
 		var ignore = this.noData;
 		if(ignore){
@@ -33,20 +45,26 @@ function(comp, proto, superClass){
 			ignore.parentNode.remove(ignore.el);
 		}
 
-		// support for components with inline template, and skip noData node
-		var ch = this.itemsArea.el.firstChild;
-		while(ch && ch == ignore && !ch.tagName) ch=ch.nextSibling;
-
-		if(ch && ch.tagName){
-			this.itemTemplate = ch;
-			ch.parentNode.removeChild(ch);
-		} 
 
 		this.itemHtml = this.itemTemplate.innerHTML;
 
 		this.items = [];
 		this.count = 0;
 	};
+
+	proto.findItemsArea = function(el){
+		var ch = el.firstChild;
+		while(ch){
+			if(ch.getAttribute){
+				if (ch.getAttribute('p') == 'itemsArea') return ch;
+				if (!ch.hasAttribute('as')){
+					var found = this.findItemsArea(ch);
+					if(found) return found;
+				} 
+			} 
+			ch = ch.nextSibling;
+		}
+	}
 
 	proto.setValue = function(arr){
 		arr = arr || [];
@@ -74,7 +92,7 @@ function(comp, proto, superClass){
 	function defSetValue(){ }
 
 	proto.makeItem = function(newData,i){
-		var node = mi2.addTag(this.itemsArea.el, this.itemTemplate.tagName, '');
+		var node = mi2.addTag(this.itemsArea, this.itemTemplate.tagName, '');
 		node.innerHTML = this.itemHtml;
 
 		var attr = this.itemTemplate.attributes;
@@ -101,6 +119,10 @@ function(comp, proto, superClass){
 		this.parent.fireEvent('itemCreated',{item:item, index:i});
 	};
 
+	proto.setItemValue = function(item, newData){
+		item.setValue(newData);
+	};
+	
 	proto.setItem = function(newData,i){
 		var item = this.items[i];
 
@@ -108,7 +130,7 @@ function(comp, proto, superClass){
 
 		item.data = newData;
 		item.el.index = i;
-		item.setValue(newData);
+		this.setItemValue(item, newData);
 		item.setVisible(true);
 	};
  
