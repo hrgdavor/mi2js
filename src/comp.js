@@ -62,6 +62,7 @@
 	};
 
 	mi2.comp.add = function(name, supName, tpl, initializer){
+		if(this.def[name] || this.later[name]) console.error('Component with same name already defined '+name);
 		this.tags[name.replace('/','-').toUpperCase()] = name;
 		this.tags[name] = name; // cover cases where tag is upercase(HTL), or exact case (XHTML)
 
