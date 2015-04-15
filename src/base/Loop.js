@@ -20,7 +20,7 @@ function(comp, proto, superClass){
 	var $ = mi2.wrap;
 
 	proto.itemTemplate = document.createElement('DIV');
-	proto.itemTemplate.setAttribute('mi-comp','Base');
+	proto.itemTemplate.setAttribute('as','Base');
 
 	comp.constructor = function(el, tpl, parent){
 		if(tpl) el.innerHTML = tpl;
