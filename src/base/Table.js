@@ -214,7 +214,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	proto.rowClick = function(evt, mouseDown){
 		var bt = evt.target;
 		var td = bt.tagName == 'TD' ? bt:mi2.parent(bt,'TD');
-		var action = null;
+		var action = null, param = null;
 		while(bt.tagName != 'TD' && !action ){
 			action = bt.getAttribute("action");
 			param = bt.getAttribute("param");
