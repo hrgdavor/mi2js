@@ -26,11 +26,11 @@ function(comp, proto, superClass){
 	};
 
 	proto.update = function(table){
-		this.limit = table.limit || 10;
+		this.limit = table.limit || 0;
 		this.offset = table.offset || 0;
 		this.rowCount = table.rowcount || 0;
-		this.pagesCount = Math.ceil(table.rowcount / table.limit);
-		this.curPage = Math.ceil(table.offset / table.limit);
+		this.pagesCount = table.limit ? Math.ceil(table.rowcount / table.limit) : 0;
+		this.curPage = table.limit ? Math.ceil(table.offset / table.limit) : 0;
 		var offset = this.curPage - this.opts.pagesAbout;
 		if((offset + this.opts.pagesAbout * 2) > this.pageCount) offset = this.pagesCount - this.opts.pagesAbout * 2;
 		if(offset < 0) offset = 0;
