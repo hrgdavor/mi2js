@@ -51,6 +51,12 @@
 		return newNode;
 	};
 
+	mi2.intersect = function(a, b) {
+		return (a.left <= b.right &&
+			b.left <= a.right &&
+			a.top <= b.bottom &&
+			b.top <= a.bottom);
+	}
 
 	/** Add class to the element if condition is true, and remove if false. 
 		@parameter toAdd - className to add/remove 
