@@ -18,7 +18,7 @@ function(comp, proto, superClass){
 		} 
 
 		this.event = this.attr('event','submit');
-		this.eventsToParent = this.attr('events-to-parent','1') == '1';
+		this.eventsToParent = this.attr('events-to-parent','0') == '1';
 
 		this.init();
 	};
