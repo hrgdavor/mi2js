@@ -42,7 +42,7 @@ function(comp, proto, superClass){
 		while(el.options.length) el.options.remove(0);
 		var op;
 		for(var i=0; i<data.length; i++){
-			if(data[i].id) op = new Option(data[i].id, data[i].text);
+			if(data[i].id) op = new Option(data[i].text, data[i].id);
 			else op = new Option(data[i]);
 			el.options.add(op);
 		}
