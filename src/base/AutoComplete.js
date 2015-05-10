@@ -33,6 +33,7 @@ function(comp, proto, superClass){
 		this.data = [];
 
 		this.listen(this.textInput.el, "focus", function(evt){
+			if(this.isReadOnly()) return;
 			this.hasFocus = true;
 			this.firstKey = true;
 			this.textInput.el.select();
@@ -40,6 +41,7 @@ function(comp, proto, superClass){
 		});
 
 		this.listen(this.textInput.el, "blur", function(evt){
+			if(this.isReadOnly()) return;
 			this.hasFocus = false;
 			if(this.freeText)
 				this.setValue(this.textInput);
@@ -49,6 +51,7 @@ function(comp, proto, superClass){
 		});
 
 		this.listen(this.textInput.el, "keydown", function(evt){
+			if(this.isReadOnly()) return;
 			if(evt.keyCode == 13){
 				this.applySelection();
 				evt.stop();
@@ -69,6 +72,7 @@ function(comp, proto, superClass){
 		});
 		
 		this.listen(this.textInput.el, "keyup", function(evt){
+			if(this.isReadOnly()) return;
 			//KEY_UP=38,KEY_DOWN=40;
 			if((evt.keyCode == 38 || evt.keyCode == 40) && this.count > 0 ){
 				var sel = this.selected;
@@ -236,6 +240,14 @@ function(comp, proto, superClass){
 
 	proto.getSelectedData = function(){
 		return this.idInput.el.value == '' ? null:  this.selectedData;
+	};
+
+	proto.setReadOnly = function(readOnly){
+		this.textInput.el.readOnly = readOnly;
+	};
+
+	proto.isReadOnly = function(readOnly){
+		return this.textInput.el.readOnly;
 	};
 
 	proto.setValue = function(val){
