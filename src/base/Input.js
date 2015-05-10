@@ -48,6 +48,14 @@ function(comp, proto, superClass){
 		}
 	};
 
+	proto.setReadOnly = function(readOnly){
+		this.inp.readOnly = readOnly;
+	};
+
+	proto.isReadOnly = function(readOnly){
+		return this.inp.readOnly;
+	};
+
 	proto.setValue = function(value){
 
 		if(value === null || typeof(value) == 'undefined') value = '';
