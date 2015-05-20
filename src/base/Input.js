@@ -43,7 +43,7 @@ function(comp, proto, superClass){
 		var op;
 		for(var i=0; i<data.length; i++){
 			if(data[i].id) op = new Option(data[i].text, data[i].id);
-			else op = new Option(data[i]);
+			else op = new Option(data[i], data[i]);
 			el.options.add(op);
 		}
 	};
