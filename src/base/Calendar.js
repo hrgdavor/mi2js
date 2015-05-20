@@ -39,7 +39,10 @@ function(comp, proto, superClass){
 		if(!this.editDate) return;
 		this.insertBefore(this.widget.el, this.input.el);
 		this.widget.el.style.top = this.input.el.offsetHeight+'px';
-		this.widget.update(this.parseValue());
+		var val = this.input.el.value;
+		if(val == '' ) val = new Date();
+		else val = this.parseValue();
+		this.widget.update(val);
 		this.showWidget(true);
 	};
 	
