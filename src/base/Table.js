@@ -77,7 +77,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			opts.td = opts.td || defRender;
 			opts.th(tr,th,code,this);
 			if(opts.group){
-				var thGroup = mi.addTag(tr,"TH","group");
+				var thGroup = mi2.addTag(tr,"TH","group");
 				thGroup.innerHTML = opts.group.title;
 				span = opts.group.span || 2;
 				thGroup.setAttribute("colspan",span);
