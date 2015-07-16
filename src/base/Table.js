@@ -222,7 +222,17 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		}
 		if(! action ) action = "edit";
 		var tr = mi2.parent(bt,"TR");
-		this.parent.fireEvent("rowClick",{tr: tr, data:tr.data, td:td, code:td.code, action:action, param:param, src:this, button:bt});
+		this.parent.fireEvent("rowClick",{
+			tr: tr, 
+			data:tr.data, 
+			td:td, 
+			code:td.code, 
+			action:action, 
+			param:param, 
+			src:this, 
+			button:bt,
+			domEvent: evt
+		});
 	};
 
 	//we propagate all events to parent and add reference to self

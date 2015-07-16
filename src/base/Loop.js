@@ -162,5 +162,20 @@ function(comp, proto, superClass){
 			this.parent.fireEvent(name, evt);
 		}
 	};
-	
+
+	proto.callFunc = function(funcName, args){
+		for(var i=0; i<this.count; i++){
+			this.items[i][funcName].apply(this.items[i],args);
+		}
+	};
+
+	proto.customValue = function(funcName, arr){
+		for(var i=0; i<arr.length; i++){
+			var item = this.items[i];
+			if(!item) item = this.items[i] = this.makeItem(newData, i);
+			this.items[i][funcName](arr[i]);
+		}
+		this.count = arr.length;
+	};
+
 });
