@@ -32,6 +32,16 @@ if(!window.mi2JS) window.mi2JS = function(node){
 
 	};
 
+	/**
+	 * Extends one class with another.
+	 *
+	 * @param {Function} destination The class that should be inheriting things.
+	 * @param {Function} source The parent class that should be inherited from.
+	 * @return {Object} The prototype of the parent.
+	 * 
+	 * from Oliver Caldwell's blog:  Prototypical inheritance done right
+	 * http://oli.me.uk/2013/06/01/prototypical-inheritance-done-right/
+	 */
 	mi2.extend = function(destination, source) {
 		destination.prototype = Object.create(source.prototype);
 		destination.prototype.constructor = destination;
