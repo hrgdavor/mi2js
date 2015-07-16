@@ -45,7 +45,7 @@ describe( 'mi2.js Base library', function () {
 			expect(husky instanceof Husky ).toBeTruthy();
 		});
 
-		it('superClass properties from consturction', function () {
+		it('superClass properties from construction', function () {
 			// if superClass constructor was not called, dog would not have this property
 			expect(dog.animalName).toEqual('Dog');
 			
