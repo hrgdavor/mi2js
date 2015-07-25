@@ -97,7 +97,7 @@
 
 	*/
 	mi2Proto.html = function(html, el){
-		if(this.el.innerHTML != html) this.el.innerHTML = html;
+		if(this.el.innerHTML !== html) this.el.innerHTML = html;
 	};
 
 })(mi2JS);
