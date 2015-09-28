@@ -91,6 +91,7 @@ function(comp, proto, superClass){
 
 	
 	proto.on_clear = function(){
+		if(this.isReadOnly()) return;
 		this.setText(this.emptyText);
 		this.setValue('');
 		this.textInput.disabled = false;
@@ -243,6 +244,7 @@ function(comp, proto, superClass){
 	};
 
 	proto.setReadOnly = function(readOnly){
+		this.clearBt.setVisible(!readOnly);
 		this.textInput.el.readOnly = readOnly;
 	};
 

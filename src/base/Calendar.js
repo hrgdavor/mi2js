@@ -34,7 +34,16 @@ function(comp, proto, superClass){
 		elem.parentNode.insertBefore(before,elem);
 	};
 
+	proto.setReadOnly = function(readOnly){
+		this.input.el.readOnly = readOnly;
+	};
+
+	proto.isReadOnly = function(readOnly){
+		return this.input.el.readOnly;
+	};
+
 	proto.on_focus = function(evt){
+		if(this.isReadOnly()) return;
 		clearTimeout(this.hideTimer);
 		if(!this.editDate) return;
 		this.insertBefore(this.widget.el, this.input.el);
@@ -51,12 +60,14 @@ function(comp, proto, superClass){
 		this.widgetVisible = show;
 	};
 	proto.on_blur = function(evt){
+		if(this.isReadOnly()) return;
 		this.hideTimer =this.setTimeout(function(){
 			this.showWidget(false);
 		},100);
 	};
 
 	proto.on_change = function(evt){
+		if(this.isReadOnly()) return;
 		var val = this.parseValue();
 		if(val && this.widgetVisible) this.widget.update(val);
 	};

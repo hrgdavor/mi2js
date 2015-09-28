@@ -93,6 +93,14 @@ function(comp, proto, superClass){
 		}
 	};
 
+	proto.setReadOnly = function(readOnly){
+		for(var p in this.inp){
+			if(this.inp[p].setReadOnly){
+				this.inp[p].setReadOnly(readOnly);
+			}
+		}
+	};
+
 	proto.setValue = function(value){
 		for(var p in this.inp){
 			this.inp[p].setValue(value[p]);
