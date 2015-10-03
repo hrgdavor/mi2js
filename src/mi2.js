@@ -18,19 +18,19 @@ if(!window.mi2JS) window.mi2JS = function(node){
 		return new mi2(node);
 	};
 
-	mi2.bind = function(object, func){
+	// mi2.bind = function(object, func){
 
-		// dynamic
-		if(typeof(func) == "string")
-			return function() { object[func].apply(object, arguments); };
+	// 	// dynamic
+	// 	if(typeof(func) == "string")
+	// 		return function() { object[func].apply(object, arguments); };
 
-		// native implementation
-		if(func.bind) return func.bind(object);
+	// 	// native implementation
+	// 	if(func.bind) return func.bind(object);
 
-		// closure when native implementation not present
-		return function() { func.apply(object, arguments); };
+	// 	// closure when native implementation not present
+	// 	return function() { func.apply(object, arguments); };
 
-	};
+	// };
 
 	/**
 	 * Extends one class with another.

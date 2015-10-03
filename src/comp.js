@@ -180,11 +180,11 @@
 	//setTimeout and setInterval shortcut that by default binds callback function to current object
 	//so you can use this in callback without extra bloat otherwise needed
 	proto.setTimeout = function(fc,delay){
-		return setTimeout( mi2.bind(this,fc), delay );
+		return setTimeout( fc.bind(this), delay );
 	};
   
 	proto.setInterval = function(fc,delay){
-		return setInterval( mi2.bind(this,fc), delay );
+		return setInterval( fc.bind(this), delay );
 	};
 
 	proto.addListener = function(evtName,callback,thisObj){
@@ -193,7 +193,7 @@
 		if(!l) l = this.__listeners[evtName] = [];
 
 		// bind a scope to the callback function
-		if(thisObj) callback = mi2.bind( thisObj, callback );
+		if(thisObj) callback = callback.bind( thisObj );
 		
 		l.push(callback);
 	};

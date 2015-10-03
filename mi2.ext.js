@@ -177,8 +177,8 @@
 
 	if(!Base.rpcIdSeq) Base.rpcIdSeq = 1;
 	baseProto.rpc = function(method, params, callback, errback){
-		callback = mi2.bind(this,callback);
-		errback = !errback ? null: mi2.bind(this, errback);
+		callback = callback.bind(this);
+		errback = !errback ? null: errback.bind(this);
 		var data = {method:method, params:params, id: Base.rpcIdSeq++, 'jsonrpc':'2.0'};
 		function ajaxErrback(err){
 			if(errback) errback({ id:data.id, code: -32000, message: "network error", data: err});

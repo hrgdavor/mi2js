@@ -17,6 +17,7 @@ module.exports = function(config) {
     files: [
       'src/mi2.js',
       'src/comp.js',
+      'src/poly.bind.js',
       'src/*.js',
       'spec/*.js',
        {pattern: 'spec/test.json', included: false}

@@ -43,5 +43,24 @@ describe( 'comp.js Component utilities', function () {
 
 	});
 
+	describe('setTimeout-bind', function () {
+		var node = mi2.addHtml(null,'<b as="Base"></b>');
+		var comp = mi2.comp.make(node);
+
+		var self = null;
+
+		beforeEach(function(done) {
+			comp.setTimeout(function(){
+				self = this;
+				done();
+			},10);
+		});
+
+		it('should bind',function() {
+			expect(self).toEqual(comp);
+		});
+
+	});
+
 
 });

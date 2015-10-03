@@ -33,7 +33,6 @@ describe( 'ajax.js', function () {
 		// 	return errback.callCount > 0;
 		// }, "The Ajax call timed out.", 1000);
 
-		// runs(function() {
 		afterEach(function() {
 			expect(errback).toHaveBeenCalled();
 		});
