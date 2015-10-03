@@ -31,7 +31,7 @@ describe( 'comp.js Component utilities', function () {
 	});
 
 	it('make', function () {
-		var node = mi2.addHtml(null,'<b mi-comp="Base"></b>');
+		var node = mi2.addHtml(null,'<b as="Base"></b>');
 		var comp = mi2.comp.make(node);
 
 		comp.addClass('test');

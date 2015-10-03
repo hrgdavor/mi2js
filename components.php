@@ -15,7 +15,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 	border: solid 1px gray;
 }
 
-[mi-comp="base/Button"]{
+[as="base/Button"]{
 	cursor: pointer;
 }
 
@@ -114,17 +114,17 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
   border-radius: 3px;
 }
 
-[mi-comp="base/ShowHide"] {
+[as="base/ShowHide"] {
   padding: 4px;
   margin-top: 8px;
   background-color: #eeeeee;
 }
-[mi-comp="base/ShowHide"] [mi-set="title"] {
+[as="base/ShowHide"] [p="title"] {
   font-size: 14px;
   font-weight: bold;
   margin-right: 16px;
 }
-[mi-comp="base/ShowHide"] b {
+[as="base/ShowHide"] b {
   font-weight: normal;
 }
 
@@ -237,62 +237,62 @@ function test(){
 </script>
 <BODY onload="test()">
 
-<div id="test" mi-comp="Base">
-	<div mi-set="plain">plain element</div>
+<div id="test" as="Base">
+	<div p="plain">plain element</div>
 	<div class="sample"><b>Button</b>
-		<bt mi-comp="base/Button" event="bt1" mi-set="bt1">button1</bt>
+		<bt as="base/Button" event="bt1" p="bt1">button1</bt>
 	</div>
 	<div class="sample"><b>Input</b>
-		<input mi-set="inp1" mi-comp="base/Input"/>
-		<bt mi-comp="base/Button" event="inp1" mi-set="bt.inp1">input test</bt>
+		<input p="inp1" as="base/Input"/>
+		<bt as="base/Button" event="inp1" p="bt.inp1">input test</bt>
 	</div>
 
 	<div class="sample"><b>Form</b>
-		<div mi-comp="base/Form" mi-set="form1">
+		<div as="base/Form" p="form1">
 			name:
-			<input mi-set="inp.name" mi-comp="base/Input"/>
+			<input p="inp.name" as="base/Input"/>
 			age:
-			<input mi-set="inp.age"/>
-			<bt mi-comp="base/Button" event="form1" mi-set="bt.form1">form test</bt>
+			<input p="inp.age"/>
+			<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 		</div>
 	</div>
 
 	<div class="sample"><b>Calendar</b>
-		<span mi-set="cal1" mi-comp="base/Calendar"></span>
-		<bt mi-comp="base/Button" event="cal1" mi-set="bt.cal1">calendar test</bt>
+		<span p="cal1" as="base/Calendar"></span>
+		<bt as="base/Button" event="cal1" p="bt.cal1">calendar test</bt>
 	</div>
 
 	<div class="sample"><b>AutoComplete</b>
-		<span mi-set="ac1" mi-comp="base/AutoComplete"></span>
-		<bt mi-comp="base/Button" event="ac1" mi-set="bt.ac1">AutoComplete test</bt>
+		<span p="ac1" as="base/AutoComplete"></span>
+		<bt as="base/Button" event="ac1" p="bt.ac1">AutoComplete test</bt>
 	</div>
 
 	<div class="sample"><b>AutoComplete Extend</b>
-		<span mi-set="ac2" mi-comp="base/TestExtendUnordered"></span>
-		<bt mi-comp="base/Button" event="ac2" mi-set="bt.ac2">Extend test</bt>
+		<span p="ac2" as="base/TestExtendUnordered"></span>
+		<bt as="base/Button" event="ac2" p="bt.ac2">Extend test</bt>
 	</div>
 
 	<div class="sample"><b>List</b>
-		<span mi-set="list1" mi-comp="base/List">
-			<input mi-comp="base/Input" style="width:20px">
+		<span p="list1" as="base/List">
+			<input as="base/Input" style="width:20px">
 		</span>
-		<bt mi-comp="base/Button" event="list1" mi-set="bt.list1">List test</bt>
+		<bt as="base/Button" event="list1" p="bt.list1">List test</bt>
 	</div>
 
 	<div class="sample"><b>Show/Hide</b>
-		<div mi-set="sh1" mi-comp="base/ShowHide">first</div>
+		<div p="sh1" as="base/ShowHide">first</div>
 		<div>Bla Bla 1</div>
-		<div mi-set="sh1" mi-comp="base/ShowHide">second</div>
+		<div p="sh1" as="base/ShowHide">second</div>
 		<div class="hidden">Bla Bla 2</div>
 	</div>
 
 	<div class="sample"><b>Template</b>
-		<span mi-set="tpl1" mi-comp="base/Template">user: ${name} (${age})</span>
-		<bt mi-comp="base/Button" event="tpl1" mi-set="bt.tpl1">template test</bt>
+		<span p="tpl1" as="base/Template">user: ${name} (${age})</span>
+		<bt as="base/Button" event="tpl1" p="bt.tpl1">template test</bt>
 	</div>
 
 	<div class="sample"><b>Table</b>
-		<span mi-set="table1" mi-comp="base/Table"></span>
+		<span p="table1" as="base/Table"></span>
 	</div>
 
 </div>

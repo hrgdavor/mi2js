@@ -16,6 +16,7 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'src/mi2.js',
+      'src/comp.js',
       'src/*.js',
       'spec/*.js',
        {pattern: 'spec/test.json', included: false}
