@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/Table', 'Base', '<-TEMPLATE->',
+mi2JS.comp.add('base/RenderTable', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
