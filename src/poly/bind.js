@@ -1,3 +1,9 @@
+/**
+  Copied from developer.mozilla.org
+  https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Global_objects/Function/bind#Polyfill
+  
+  Not sure about the copyright on it, use a different polyfill if this one is not suitable.
+*/
 if (!Function.prototype.bind) {
   Function.prototype.bind = function(oThis) {
     if (typeof this !== 'function') {
