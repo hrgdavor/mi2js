@@ -2,19 +2,18 @@
 
 	mi2.joinUrl = function(pars){
 		if(!pars) return "";
-		if(typeof(pars) == 'string') return pars;
-		var arr = [], str='';
-		for(var p in pars){
-			if(typeof(pars[p]) == 'string' || typeof(pars[p]) == 'number')
-				arr.push(encodeURIComponent(p)+"="+encodeURIComponent(pars[p]));
-			else 
-				if(pars[p].length>0) for(var p2 in pars[p]) arr.push(encodeURIComponent(p)+"="+encodeURIComponent(pars[p][p2]));
+		// some properties can be arrays (when encoding multiple checkbox data)
+		var p, val, arr = [], e=encodeURIComponent; 
+		for(p in pars){
+			val = pars[p];
+			if(val == null) continue;
+			if(val instanceof Array)
+				for(var p2 in val) 
+					arr.push(e(p)+"="+e(val[p2]));
+			else
+				arr.push(e(p)+"="+e(pars[p]));
 		}
-		if(arr.length >0){
-			str = arr[0];
-			for(var i=1; i<arr.length; i++) str += '&'+arr[i];
-		}
-		return str;
+		return arr.join('&');
 	};
 
 }(mi2JS));
