@@ -139,6 +139,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="src/parse.js"></script>
 <script src="src/find.js"></script>
 <script src="src/comp.js"></script>
+<script src="src/comp.FormHandler.js"></script>
 
 <script src="mi2.ext.js"></script>
 
@@ -151,11 +152,10 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="build/en/base/ShowHide.js"></script>
 <script src="build/en/base/Template.js"></script>
 <script src="build/en/base/Pager.js"></script>
-<script src="build/en/base/Table.js"></script>
+<script src="build/en/base/RenderTable.js"></script>
 
 <script type="text/javascript">
-mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:base/AutoComplete',
-
+mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
 	comp.constructor = function(el, tpl, parent){
@@ -164,6 +164,11 @@ function(comp, proto, superClass){
 		this.data = [it(1,'John'), it(2,'Doe'), it(3, 'Monkey')];
 	};
 });
+mi2JS.comp.add('base/FormTest', 'base/Form', 'extend:',
+function(comp, proto, superClass){
+
+});
+
 </script>
 
 <script src="build/en/base/AutoComplete.js"></script>
@@ -248,7 +253,7 @@ function test(){
 	</div>
 
 	<div class="sample"><b>Form</b>
-		<div as="base/Form" p="form1">
+		<div as="base/FormTest" p="form1">
 			name:
 			<input p="inp.name" as="base/Input"/>
 			age:
@@ -292,7 +297,7 @@ function test(){
 	</div>
 
 	<div class="sample"><b>Table</b>
-		<span p="table1" as="base/Table"></span>
+		<span p="table1" as="base/RenderTable"></span>
 	</div>
 
 </div>

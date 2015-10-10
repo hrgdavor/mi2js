@@ -86,7 +86,8 @@
 
 	/** Remove a css class from the element (leaving others intact) */
 	mi2Proto.removeClass = function(toRemove) {
-		return this.el.classList.remove(name);
+		if(this.el.classList.length)
+			return this.el.classList.remove(toRemove);
 	};
 
 	/* Set html andavoid changing innerHTML if it is same value, 

@@ -193,7 +193,7 @@
 		if(!l) l = this.__listeners[evtName] = [];
 
 		// bind a scope to the callback function
-		if(thisObj) callback = callback.bind( thisObj );
+		if(thisObj) callback = mi2.bind( thisObj, callback );
 		
 		l.push(callback);
 	};
