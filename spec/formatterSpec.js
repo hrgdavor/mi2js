@@ -7,10 +7,10 @@ describe( 'formatter.js', function () {
 		expect(mi2.format(1,    'noNull')).toEqual(1);
 	});
 
-	// format: 'fixedStr'
-	it('/ fixedStr', function (){
-		expect(mi2.format(null, 'fixedStr')).toEqual('0.00');
-		expect(mi2.format(1,    'fixedStr')).toEqual('1.00');
+	// format: 'fixedStr2'
+	it('/ fixedStr2', function (){
+		expect(mi2.format(null, 'fixedStr2')).toEqual('0.00');
+		expect(mi2.format(1,    'fixedStr2')).toEqual('1.00');
 	});
 
 	// format: ['fixedStr',3]
@@ -47,7 +47,6 @@ describe( 'formatter.js', function () {
 	it('/ intStr', function (){
 		expect(mi2.format(null, ['noNull','intStr'] )).toEqual('');
 		expect(mi2.format(5.1,  ['noNull','intStr'] )).toEqual('5');
-
 	});
 
 	// format: ['noNull',myFunction]
