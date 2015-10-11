@@ -19,6 +19,7 @@
 	var numReg = /^[0-9]+(\.[0-9]+)?$/;
 
 	mi2.parseFormat = function(str){
+		if(str == null) return null;
 		var format = [];
 		var idx = str.indexOf(',');
 		var offset = 0;

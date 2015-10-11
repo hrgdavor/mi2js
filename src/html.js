@@ -18,7 +18,10 @@
 		var e = document.createElement(tag);
 
 		if(cls)    e.className = cls;
-		if(parent) parent.appendChild(e);
+		if(parent){
+			if(parent instanceof mi2) parent = parent.el;
+			parent.appendChild(e);
+		}
 		if(html)   e.innerHTML=html;
 		
 		if(attribs)
@@ -38,6 +41,8 @@
 	*/
 	mi2.addHtml = function( parent, html ){
 		
+		if(parent && parent instanceof mi2) parent = parent.el;
+
 		var tmp = mi2.addTag(null,"DIV",null,html);
 		var newNode = null;
 

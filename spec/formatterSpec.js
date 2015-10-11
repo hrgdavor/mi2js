@@ -71,6 +71,7 @@ describe( 'formatter.js', function () {
 
 	it('/ parse format', function (){
 		expect(mi2.parseFormat('ifNull,nope,fixedStr,1')).toEqual(['ifNull','nope','fixedStr',1]);
+		expect(mi2.parseFormat(null)).toEqual(null);
 		expect(mi2.parseFormat('ifNull,"11"')).toEqual(['ifNull','11']);
 		expect(mi2.parseFormat('ifNull,"11,12",x')).toEqual(['ifNull','11,12','x']);
 	});
