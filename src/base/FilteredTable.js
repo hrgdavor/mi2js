@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/FilteredTable', 'base/Table', 'extend:',
+mi2JS.comp.add('base/FilteredTable', 'base/RenderTable', 'extend:',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
