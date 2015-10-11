@@ -16,11 +16,49 @@
 		return f;
 	};
 
+	var numReg = /^[0-9]+(\.[0-9]+)?$/;
+
+	mi2.parseFormat = function(str){
+		var format = [];
+		var idx = str.indexOf(',');
+		var offset = 0;
+		// dd,"aaa,bbb",c
+		while(idx != -1){
+			var p = str.substring(offset,idx);
+			if(p.length > 0){
+				// allow commas inside quoted strings, if translated text includes
+				var first = p.charAt(0);
+				if(first == '"' || first == "'"){
+					offset++;// skip first quote
+					idx = str.indexOf(first,offset);
+					if(idx == -1) throw new Error('quote from char #'+offset+' not closed in format str: '+str)
+
+					p = str.substring(offset,idx);
+					//comma after second quote or end of text
+					idx = str.indexOf(',',idx);
+					if(idx == -1) idx = str.length;
+
+				}else{
+					// number if not quoted
+					if(numReg.test(p)) p = mi2.num(p);
+				}
+			}
+			format.push(p);
+			offset = idx+1;
+			idx = str.indexOf(',',offset);
+			if(idx == -1 && offset < str.length) idx = str.length;
+		}
+		console.log("str "+str+" parsed format "+format);
+		return format;
+	};
+
 	mi2.formatNext = function(value,args,skip){
 		return mi2.format(value, Array.prototype.slice.call(args,skip));
 	};
 
 	mi2.format = function(value, fName){
+		if(!fName) return value;
+
 		if(fName instanceof Array){
 			var ret = value, arr = fName, f,params, paramCount;
 			while(arr.length){

@@ -69,4 +69,10 @@ describe( 'formatter.js', function () {
 		expect(mi2.format(7,    ['ifNull','nope','fixedStr',1] )).toEqual('7.0');
 	});
 
+	it('/ parse format', function (){
+		expect(mi2.parseFormat('ifNull,nope,fixedStr,1')).toEqual(['ifNull','nope','fixedStr',1]);
+		expect(mi2.parseFormat('ifNull,"11"')).toEqual(['ifNull','11']);
+		expect(mi2.parseFormat('ifNull,"11,12",x')).toEqual(['ifNull','11,12','x']);
+	});
+
 });

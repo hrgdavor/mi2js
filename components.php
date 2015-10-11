@@ -297,7 +297,9 @@ function test(){
 	</div>
 
 	<div class="sample"><b>Table</b>
-		<span p="table1" as="base/RenderTable"></span>
+		<span p="table1" as="base/RenderTable">		
+			<cell-age-template></cell-age-template>
+		</span>
 	</div>
 
 </div>
