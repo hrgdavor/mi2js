@@ -22,16 +22,6 @@ function str_ends($str, $sufix){
  </HEAD>
 <BODY>
 <div class="menu">
-  <a href="anim.php">Animation</a>
-  <a href="find.php">Find/query</a>
-  <a href="assign.php">Assign</a>
-  <a href="drag.php">Drag</a>
-  <a href="progress.php">Progress bar</a>
-  <a href="scrollbar.php">Scrollbar</a>
-  <a href="calendar.php">Calendar</a>
-  <a href="checkForm.php">Check Form</a>
-  <a href="reorder.php">Reorder</a>
-  <a href="crop.php">Crop</a>
   <a href="components.php">Components</a>
   <a href="build.php">Build</a>
 </div>

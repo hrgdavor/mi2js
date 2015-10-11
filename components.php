@@ -258,8 +258,8 @@ function test(){
 			<input p="inp.name" as="base/Input"/>
 			age:
 			<input p="inp.age"/>
-			<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 		</div>
+		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 	</div>
 
 	<div class="sample"><b>Calendar</b>

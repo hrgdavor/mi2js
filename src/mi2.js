@@ -50,9 +50,14 @@ if(!window.mi2JS) window.mi2JS = function(node){
 
 	mi2.update = function(dest, update){
 		if(dest && update ){
-			for (var prop in update) dest[prop] = update[prop];
+			for (var prop in update)
+				if(update.hasOwnProperty(prop)) dest[prop] = update[prop];
 		}
 		return dest;
+	};
+
+	mi2.clone = function(data){
+		return mi2.update({},data);
 	};
 	
 	mi2.num = function(str){
