@@ -3,7 +3,7 @@ describe( 'template.js', function () {
 	mi2.addFormatter('specTest', function(value){ return value+'--'});
 
 	it('/ not found', function (){
-		expect(mi2.parseTemplate('ifNull,"11,12"')).toEqual(null);
+		expect(mi2.parseTemplate('some text without template')).toEqual(null);
 	});
 
 	it('/ simple', function (){
@@ -23,7 +23,7 @@ describe( 'template.js', function () {
 		expect(comp.el.getAttribute('my-attr')).toEqual('John');
 	});
 
-	it('/ template component', function (){
+	it('/ template component complex', function (){
 		var node = mi2.addHtml(null,'<base-template my-attr="${name}">X:${last:specTest}:X</base-template>');
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'Adam', last:'Jones'});
