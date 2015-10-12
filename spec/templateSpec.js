@@ -7,19 +7,22 @@ describe( 'template.js', function () {
 	});
 
 	it('/ simple', function (){
-		var p = mi2.parseTemplate('Name:${name}');
-		expect(p({name:'John'})).toEqual('Name:John');
+		var builderFunc = mi2.parseTemplate('Name:${name}');
+
+		expect(builderFunc({name:'John'})).toEqual('Name:John');
 	});
 
 	it('/ formatted', function (){
-		var p = mi2.parseTemplate('Name:${name:specTest}');
-		expect(p({name:'John'})).toEqual('Name:John--');
+		var builderFunc = mi2.parseTemplate('Name:${name:specTest}');
+
+		expect(builderFunc({name:'John'})).toEqual('Name:John--');
 	});
 
 	it('/ template component', function (){
 		var node = mi2.addHtml(null,'<b as="base/Template" my-attr="${name}"></b>');
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'John'});
+
 		expect(comp.el.getAttribute('my-attr')).toEqual('John');
 	});
 
@@ -27,6 +30,7 @@ describe( 'template.js', function () {
 		var node = mi2.addHtml(null,'<base-template my-attr="${name}">X:${last:specTest}:X</base-template>');
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'Adam', last:'Jones'});
+
 		expect(comp.el.getAttribute('my-attr')).toEqual('Adam');
 		expect(comp.el.innerHTML).toEqual('X:Jones--:X');
 	});
