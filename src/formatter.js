@@ -19,10 +19,12 @@
 	var numReg = /^[0-9]+(\.[0-9]+)?$/;
 
 	mi2.parseFormat = function(str){
-		if(str == null) return null;
+		if(str === null || str === '') return null;
 		var format = [];
 		var idx = str.indexOf(',');
 		var offset = 0;
+		if(idx == -1) return [str];
+
 		// dd,"aaa,bbb",c
 		while(idx != -1){
 			var p = str.substring(offset,idx);
@@ -49,7 +51,6 @@
 			idx = str.indexOf(',',offset);
 			if(idx == -1 && offset < str.length) idx = str.length;
 		}
-		console.log("str "+str+" parsed format "+format);
 		return format;
 	};
 
@@ -75,29 +76,6 @@
 		}
 		return mi2.getFormatter(fName).apply(null,[value]);
 	};
-
-	mi2.addFormatter('noNull',function(value){
-		return value === null ? '' : mi2.formatNext(value, arguments, 1);
-	},-1);
-
-	mi2.addFormatter('ifNull',function(value, def){
-		return value === null ? def : mi2.formatNext(value, arguments, 2);
-	},-1);
-
-	mi2.addFormatter('fixedStr', function(value,decimals){
-		value = mi2.num(value);
-		return value.toFixed(decimals);
-	},1);
-
-
-	mi2.formatters.fixedStr2 = function(value){
-		return mi2.formatters.fixedStr(value,2);
-	};
-
-	mi2.formatters.intStr = function(value){
-		value = mi2.num(value);
-		return value.toFixed(0);
-	}
 
 
 }(mi2JS));

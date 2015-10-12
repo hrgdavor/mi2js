@@ -4,6 +4,8 @@ mi2JS.comp.add('base/Template', 'Base', '',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
 
+	var mi2 = mi2JS;
+
 	comp.constructor = function(el, tpl, parent){
 		superClass.constructor.call(this, el, tpl, parent);
 		this.template = this.loadTemplate(el);
@@ -17,50 +19,54 @@ function(comp, proto, superClass){
 		return (typeof(data[code]) != "undefined") ? data[code]: '';
 	};
 
+	var tplReg = /\$\{([a-zA-z_0-9]+)\}/g;
 	proto.fillTemplate = function(list, data){
-		var tplReg = /\$\{([a-zA-z_0-9]+)\}/g;
-		var self = this;
-		var func = function(match,code){ return self.extractData(data,code)};
 		var count = list.length;
-		var def, text; // def: [str, node, attribute] - attribute is optional
 		for(var i=0; i<count; i++){
-			def = list[i];
-			text = def[0].replace(tplReg, func);
-			if(def[2]){
-				def[1].setAttribute(def[2], text);
-			}else
-				def[1].nodeValue = text;
+			list[i](data);
 		}
 	};
 
+	function forAttr(attr, func){
+		attr.value = '';
+		return function(data){
+			var str = func(data);
+			if(attr.value != str) attr.value = str; // avoid updating DOM if not needed
+		}
+	}
+
+	function forTextNode(node, func){
+		node.nodeValue = '';
+		return function(data){
+			var str = func(data);
+			if(node.nodeValue != str) node.nodeValue = str; // avoid updating DOM if not needed
+		}
+	}
+
 	proto.loadTemplate = function(el, list){
-		var tplReg = /\$\{([a-zA-z_0-9]+)\}/;
 		list = list || [];
 		var a = el.attributes;
 		var count = a.length;
-		var idx;
+		var idx, updater;
 		for(var i=0; i<count; i++){
 			if(!a[i].value) continue;
-			if(tplReg.test(a[i].value))
-				list.push([a[i].value, el, a[i].name]);
+			updater = mi2.parseTemplate(a[i].value);
+			if(updater) list.push(forAttr(a[i], updater));
 		}
 
 		var ch = el.firstChild;
 		while(ch){
 			if(ch.tagName){
-				if(!ch.getAttribute('as'))// each component handles own template
+				if(!ch.getAttribute('as')) // each component handles own template
 					this.loadTemplate(ch,list);
 			}else{
-				var str = ch.nodeValue;
-				if(tplReg.test(str)){
-					list.push([str, ch]);
-				}
+				// TextNode
+				updater = mi2.parseTemplate(ch.nodeValue);
+				if(updater) list.push(forTextNode(ch,updater));
 			}
 			ch = ch.nextSibling;
 		}
-
 		return list;
 	};
 
-	
 });

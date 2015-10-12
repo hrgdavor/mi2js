@@ -17,7 +17,6 @@ describe( 'parse.js', function () {
 		var comp = mi2.parse(node);
 
 		expect(comp.bt).toBeDefined();
-		console.log(comp.bt);
 		expect(comp.bt.length).toEqual(2);
 		expect(comp.bt[0] instanceof mi2).toBeTruthy();
 	});

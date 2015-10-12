@@ -18,9 +18,10 @@ module.exports = function(config) {
       'src/mi2.js',
       'src/comp.js',
       'src/poly/bind.js',
-      'src/util/formatter.trace.js',
       'src/*.js',
-      'spec/*.js',
+      'src/util/formatter.sample.js',
+      'src/base/Template.js',
+      'spec/templateSpec.js',
        {pattern: 'spec/test.json', included: false}
     ],
 
