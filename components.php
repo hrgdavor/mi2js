@@ -137,9 +137,9 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="src/mi2.js"></script>
 <script src="src/html.js"></script>
 <script src="src/parse.js"></script>
-<script src="src/find.js"></script>
 <script src="src/comp.js"></script>
 <script src="src/comp.FormHandler.js"></script>
+<script src="src/template.js"></script>
 
 <script src="mi2.ext.js"></script>
 
@@ -148,7 +148,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="build/en/base/Form.js"></script>
 <script src="build/en/base/Calendar.js"></script>
 <script src="build/en/base/CalendarWidget.js"></script>
-<script src="build/en/base/List.js"></script>
+<script src="build/en/base/Loop.js"></script>
 <script src="build/en/base/ShowHide.js"></script>
 <script src="build/en/base/Template.js"></script>
 <script src="build/en/base/Pager.js"></script>
@@ -278,7 +278,7 @@ function test(){
 	</div>
 
 	<div class="sample"><b>List</b>
-		<span p="list1" as="base/List">
+		<span p="list1" as="base/Loop">
 			<input as="base/Input" style="width:20px">
 		</span>
 		<bt as="base/Button" event="list1" p="bt.list1">List test</bt>

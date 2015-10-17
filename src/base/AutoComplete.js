@@ -4,7 +4,7 @@ mi2JS.comp.add('base/AutoComplete', 'Base', '<-TEMPLATE->',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
 
-	var $ = mi2JS.wrap;
+	var $ = mi2JS;
 /*
  attributes:
    no_empty - [0/1] - does not allow empty value and disables selection when only one option is possible

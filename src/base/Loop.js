@@ -16,8 +16,7 @@ example in separate template file:
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
 	
-	var mi2 = mi2JS;
-	var $ = mi2.wrap;
+	var $ = mi2JS;
 
 	proto.itemTemplate = document.createElement('DIV');
 	proto.itemTemplate.setAttribute('as','Base');
@@ -28,7 +27,7 @@ function(comp, proto, superClass){
 		// support for components with inline template, and skip noData node
 		this.itemsArea = this.findItemsArea(el) || el;
 		var ch = this.itemsArea.firstChild;
-		while(ch && ch == ignore && !ch.tagName) ch=ch.nextSibling;
+		while(ch && !ch.tagName) ch=ch.nextSibling;
 
 		if(ch && ch.tagName){
 			this.itemTemplate = ch;
@@ -92,13 +91,13 @@ function(comp, proto, superClass){
 	function defSetValue(){ }
 
 	proto.makeItem = function(newData,i){
-		var node = mi2.addTag(this.itemsArea, this.itemTemplate.tagName, '');
+		var node = $.addTag(this.itemsArea, this.itemTemplate.tagName, '');
 		node.innerHTML = this.itemHtml;
 
 		var attr = this.itemTemplate.attributes;
 		if(attr) for(var i=0; i<attr.length; i++) node.setAttribute(attr[i].name, attr[i].value);
 
-		var comp = mi2.comp.make(node, null, this);
+		var comp = $.comp.make(node, null, this);
 
 		if(!comp.getValue) comp.getValue = defGetValue;
 		if(!comp.setValue) comp.setValue = defSetValue;

@@ -5,8 +5,7 @@ function(comp, proto, superClass){
 /*
 data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 */
-	var mi2 = mi2JS;
-	var $ = mi2.wrap;
+	var $ = mi2JS;
 
 	comp.constructor = function(el, tpl, parent){
 		superClass.constructor.call(this, el, tpl, parent);
@@ -55,11 +54,11 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.classIf('hidden', optsIn.pager == 'hidden');
 		this.pager2.classIf('hidden', optsIn.pager == 'hidden');
 		var i=0;
-		var tr = mi2.addTag(this.thead.el, "TR");
-		var tr2 = mi2.addTag(this.thead.el,"TR");
+		var tr = $.addTag(this.thead.el, "TR");
+		var tr2 = $.addTag(this.thead.el,"TR");
 		var span = 0;
 		for(var code in this.cols){
-			var th = mi2.addTag(tr,"TH");
+			var th = $.addTag(tr,"TH");
 			var opts = this.cols[code];
 			th.code = code;
 			if(opts.compareFunc) opts.sortable = 1;
@@ -77,7 +76,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			opts.td = opts.td || defRender;
 			opts.th(tr,th,code,this);
 			if(opts.group){
-				var thGroup = mi2.addTag(tr,"TH","group");
+				var thGroup = $.addTag(tr,"TH","group");
 				thGroup.innerHTML = opts.group.title;
 				span = opts.group.span || 2;
 				thGroup.setAttribute("colspan",span);
@@ -99,7 +98,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto.theadClick = function(evt){
-		var th = evt.target; if(th.tagName != 'TH') th = mi2.parent(th,'TH');
+		var th = evt.target; if(th.tagName != 'TH') th = $.parent(th,'TH');
 		// if it was asc(ascending) before the click, we will reverse it
 		// this is also when is not sorted as well
 		var asc = !$(th).hasClass("asc");
@@ -107,14 +106,14 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto._findTh = function(code){
-		var tr = mi2.child(this.thead.el,'TR');
+		var tr = this.thead.find('TR');
 		while(tr){
-			var tmp = mi2.child(tr,'TH');
+			var tmp = tr.firstElementChild;
 			while(tmp){
-				if(tmp.code == code) return tmp;
-				tmp = mi2.next(tmp,'TH');
+				if(tmp.code == code && tmp.tagName == 'TH') return tmp;
+				tmp = tmp.nextElementSibling;
 			}
-			tr = mi2.next(tr,'TR');			
+			tr = tr.nextElementSibling;			
 		}
 		return null;
 	};
@@ -129,10 +128,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		if(th.sortable){
 			var opts = this.cols[th.code];
 			if(opts.compareFunc){
-				var tmp = mi2.child(th.parentNode,'TH');
+				var tmp = th.parentNode.firstElementChild;
 				while(tmp){
 					if(tmp.sortable) tmp.className = "sortable";
-					tmp = mi2.next(tmp,'TH');
+					tmp = tmp.nextElementSibling;
 				}
 				th.className = asc ? "sortable asc": "sortable desc";
 				this.applySort(th,opts, asc);
@@ -173,10 +172,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.tbody.html('');
 		for(var i=0; i<tData.data.length; i++){
 			var row = tData.data[i];
-			var tr = mi2.addTag(this.tbody.el,"TR","high");
+			var tr = $.addTag(this.tbody.el,"TR","high");
 			tr.data = tData.data[i];
 			for(var code in this.cols){
-				var td = mi2.addTag(tr,"TD",'cell_'+code);
+				var td = $.addTag(tr,"TD",'cell_'+code);
 				td.code = code;
 				var opts = this.cols[code];
 				opts.td(tr,td,code,tr.data,this);
@@ -198,22 +197,22 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		if(isBefore) this.toBlink = {col:col, value: value};
 		else this.toBlink = null;
 
-		var tr = mi2.child(this.tbody.el,"TR");
+		var tr = this.tbody.firstElementChild;
 		while(tr){
-			if(tr.data[col] == value){
+			if(tr.tagName == 'TR' && tr.data[col] == value){
 				if(isBefore){
 					tr.style.opacity = '0';				
 				}else
 					$(tr).fadeIn();
 				return;
 			}
-			tr = mi2.next(tr,"TR");
+			tr = tr.nextElementSibling;
 		}
 	};
 
 	proto.rowClick = function(evt, mouseDown){
 		var bt = evt.target;
-		var td = bt.tagName == 'TD' ? bt:mi2.parent(bt,'TD');
+		var td = bt.tagName == 'TD' ? bt:$.parent(bt,'TD');
 		var action = null, param = null;
 		while(bt.tagName != 'TD' && !action ){
 			action = bt.getAttribute("action");
@@ -221,7 +220,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			bt=bt.parentNode;
 		}
 		if(! action ) action = "edit";
-		var tr = mi2.parent(bt,"TR");
+		var tr = $.parent(bt,"TR");
 		this.parent.fireEvent("rowClick",{
 			tr: tr, 
 			data:tr.data, 

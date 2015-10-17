@@ -153,6 +153,9 @@
 
 	var proto = Base.prototype; //
 
+	proto.find    = function(search){ return mi2.find   (this.el, search); }
+	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
+
 	proto.getCompName = function(){
 		if(this.el && this.el.getAttribute){
 			return this.el.getAttribute('as');
@@ -187,15 +190,15 @@
 		return setInterval( fc.bind(this), delay );
 	};
 
-	proto.addListener = function(evtName,callback,thisObj){
+	proto.addListener = function(evtName,callback, scope){
 		if(!this.__listeners) this.__listeners = {};
 		var l = this.__listeners[evtName];
 		if(!l) l = this.__listeners[evtName] = [];
 
 		// bind a scope to the callback function
-		if(thisObj) callback = mi2.bind( thisObj, callback );
+		if(scope) callback = mi2.bind( scope, callback );
 		
-		l.push(callback);
+		l.push({callback:callback, scope:scope });
 	};
 
 	proto.fireEvent = function(evtName, ex){
@@ -208,8 +211,11 @@
 		if(this.__listeners) l=this.__listeners[evtName];
 		if(l) for(var i=0; i<l.length; i++){
 			try{
-				l[i](ex);
-			}catch(e){console.log(e);}
+				l[i].callback(ex);
+			}catch(e){
+				console.log('Error firing event ',evtName, ex, 'listener', l[i].scope, 'error', e);
+				console.error(e.message);
+			}
 		}
 		if(typeof(this['on_'+evtName]) == 'function') this['on_'+evtName](ex);
 	};

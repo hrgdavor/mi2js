@@ -21,7 +21,10 @@ module.exports = function(config) {
       'src/*.js',
       'src/util/formatter.sample.js',
       'src/base/Template.js',
-      'spec/templateSpec.js',
+      'src/base/Table.js',
+      'spec/*.js',
+      // 'spec/mi2Spec.js',
+      // 'spec/tableSpec.js',
        {pattern: 'spec/test.json', included: false}
     ],
 
@@ -72,7 +75,7 @@ module.exports = function(config) {
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: [
         'PhantomJS',
-        // 'PhantomJS'
+        // 'Chrome'
     ],
 
 

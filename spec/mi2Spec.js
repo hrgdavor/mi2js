@@ -1,5 +1,5 @@
 describe( 'mi2.js Base library', function () { 
-	var mi2 = mi2JS;
+	var $ = mi2JS;
 
 	describe( 'extend', function () { 
 
@@ -9,13 +9,13 @@ describe( 'mi2.js Base library', function () {
 
 		// function declarations are processed before rest of the code in the scope
 		// so we can call this before the function is declared in the code
-		var DogSuper = mi2.extend(Dog, Animal);
+		var DogSuper = $.extend(Dog, Animal);
 		function Dog(name){
 			Dog.superClass.constructor.call(this, 'Dog');
 			this.dogName = name;
 		}
 
-		var HuskySuper = mi2.extend(Husky, Dog);
+		var HuskySuper = $.extend(Husky, Dog);
 		function Husky(){
 			// alternative aproach and minimizer friendly version
 			// HuskySuper is identical to Husky.superClass
@@ -56,5 +56,27 @@ describe( 'mi2.js Base library', function () {
 
 	});
 
+	it(' / wrapper', function () {
+
+		var node = document.createElement('DIV');
+		var v1 = $(node);
+		var v2 = new $(node);
+
+		// check if $ function is implemented so that it returns "new $(node)" when called without "new"
+		expect( v1 instanceof $ ).toBeTruthy();
+		expect( v2 instanceof $ ).toBeTruthy();
+	});
+
+	it(' / find', function () {
+		var node = document.createElement('DIV');
+		node.innerHTML = '<a></a><b></b><i></i>';
+
+		var a = $.find('A',node);
+		expect(node.getElementsByTagName('A')).not.toBeNull();// case insensitive in HTML
+		expect(node.getElementsByTagName('A').length).toEqual(1);
+		expect(a).not.toBeNull();
+		expect(a.tagName).toEqual('A');
+
+	});
 
 });

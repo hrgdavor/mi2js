@@ -3,7 +3,9 @@ mi2JS.comp.add('base/ShowHide', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(comp, proto, superClass){
-	var mi2 = mi2JS;
+
+	var $ = mi2JS;
+
 	comp.constructor = function(el, tpl, parent){
 		var html = el.innerHTML;
 		el.innerHTML = '';
@@ -18,7 +20,7 @@ function(comp, proto, superClass){
 	// we can not do this in the constructor, as we need the component next in DOM
 	proto.getPanel = function(){
 		if(!this.panel){
-			var next = mi2.next(this.el);
+			var next = this.el.nextElementSibling;
 			if(!next) { console.log("Component to show/hide must be after this ", this.el); return;}
 			var cd = this.parent.children;
 			var comp, count = cd.length;
@@ -28,7 +30,7 @@ function(comp, proto, superClass){
 					break;
 				}
 			}
-			if(!comp) comp = mi2.wrap(next);
+			if(!comp) comp = new $(next);
 			comp.addClass('ShowHidePanel');
 			this.panel = comp;
 		}
@@ -36,8 +38,12 @@ function(comp, proto, superClass){
 	};
 
 	proto.updateButton = function(sel){
-		var idx = this.getPanel().isVisible() ? 1:0;
-		this.button.html(this.texts[idx]);
+		try{
+			var idx = this.getPanel().isVisible() ? 1:0;
+			this.button.html(this.texts[idx]);
+		}catch(e){
+			console.error('updateButton error '+e.message);
+		}
 	};
 
 	proto.on_showHide = function(sel){
