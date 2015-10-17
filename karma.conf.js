@@ -21,9 +21,10 @@ module.exports = function(config) {
       'src/*.js',
       'src/util/formatter.sample.js',
       'src/base/Template.js',
+      'src/base/Loop.js',
       'src/base/Table.js',
       'spec/*.js',
-      // 'spec/mi2Spec.js',
+      // 'spec/loopSpec.js',
       // 'spec/tableSpec.js',
        {pattern: 'spec/test.json', included: false}
     ],

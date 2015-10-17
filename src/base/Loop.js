@@ -18,8 +18,11 @@ function(comp, proto, superClass){
 	
 	var $ = mi2JS;
 
-	proto.itemTemplate = document.createElement('DIV');
-	proto.itemTemplate.setAttribute('as','Base');
+	proto.itemTpl = {
+		tag:'DIV',
+		attr: { as: 'Base' },
+		html: ''
+	};
 
 	comp.constructor = function(el, tpl, parent){
 		if(tpl) el.innerHTML = tpl;
@@ -30,9 +33,12 @@ function(comp, proto, superClass){
 		while(ch && !ch.tagName) ch=ch.nextSibling;
 
 		if(ch && ch.tagName){
-			this.itemTemplate = ch;
+			this.itemTpl = $.toTemplate(ch);
+			// default component is Base
+			this.itemTpl.attr.as = this.itemTpl.attr.as || proto.itemTpl.attr.as;
 			ch.parentNode.removeChild(ch);
 		}
+
 		// this was done before calling parent constructor to avoid stack overflow in case
 		// of component recursion using Loop component (example: tree-like structures)
 
@@ -45,7 +51,7 @@ function(comp, proto, superClass){
 		}
 
 
-		this.itemHtml = this.itemTemplate.innerHTML;
+		this.itemHtml = this.itemTpl.innerHTML;
 
 		this.items = [];
 		this.count = 0;
@@ -91,11 +97,7 @@ function(comp, proto, superClass){
 	function defSetValue(){ }
 
 	proto.makeItem = function(newData,i){
-		var node = $.addTag(this.itemsArea, this.itemTemplate.tagName, '');
-		node.innerHTML = this.itemHtml;
-
-		var attr = this.itemTemplate.attributes;
-		if(attr) for(var i=0; i<attr.length; i++) node.setAttribute(attr[i].name, attr[i].value);
+		var node = $.addTag(this.itemsArea, this.itemTpl);
 
 		var comp = $.comp.make(node, null, this);
 
@@ -115,7 +117,8 @@ function(comp, proto, superClass){
 	This distinction also avoids Loop inside a Loopp accidentaly coliding for this event. 
 	*/
 	proto.itemCreated = function(item, i){
-		this.parent.fireEvent('itemCreated',{item:item, index:i});
+		if(this.parent)
+			this.parent.fireEvent('itemCreated',{item:item, index:i});
 	};
 
 	proto.setItemValue = function(item, newData){

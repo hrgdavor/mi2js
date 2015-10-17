@@ -3,7 +3,13 @@
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
 	/** Create a html node. <br>
-		Example: mi2.addHtml(document.body, 'DIV', 'freaky-line', '<b>Title:</b>Sunshine');
+		Example: mi2.addTag(document.body, 
+			{	tag:'DIV', 
+				html: '<b>Title:</b>Sunshine', 
+				attr:{'class':'freaky-line'}
+			}
+		);
+		Example: mi2.addTag(document.body, 'DIV', 'freaky-line', '<b>Title:</b>Sunshine');
 
 		@param {HTMLElement} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
 		@param {string} tag - tag name, must be uppercase
@@ -14,7 +20,14 @@
 		@returns {HTMLElement} new node
 	*/
 	mi2.addTag = function(parent, tag, cls, html, attribs){
-		
+
+		// transitional version, until all code switches to object parameter
+		if(typeof tag != 'string'){
+			html = tag.html;
+			attribs = tag.attr;
+			tag = tag.tag;
+		}
+
 		var e = document.createElement(tag);
 
 		if(cls)    e.className = cls;
@@ -61,6 +74,15 @@
 			b.left <= a.right &&
 			a.top <= b.bottom &&
 			b.top <= a.bottom);
+	}
+
+	mi2.toTemplate = function(node){
+		var tpl = { tag: node.tagName, html: node.innerHTML};
+		var attr = {};
+		var it = node.attributes;
+   		if(it) for(var i=0; i<it.length; i++) attr[it[i].name] = it[i].value;
+		tpl.attr = attr;
+		return tpl;
 	}
 
 	/** Add class to the element if condition is true, and remove if false. 
