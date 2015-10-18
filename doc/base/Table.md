@@ -5,7 +5,7 @@
 to setup table you can define the template in this way:
 
 ```html
-<table>
+<table as="base/Table">
     <tr>
         <th column="first" sort></th><td gender="${gender}">${first}</td>
         <th column="last" sort></th> <td>${last}</td>
@@ -22,7 +22,7 @@ to move columns in temmplate as TH and TR are together. Both variants can be use
 when configuring the Table cmponent.
 
 ```html
-<table as="abe/Table">
+<table as="base/Table">
     <thead>
         <th column="first" sort=""></th>
         <th column="last" sort=""></th>
@@ -30,11 +30,49 @@ when configuring the Table cmponent.
     </thead>
     <tbody>
         <tr as="base/Tpl">
-            <td gender="${gender}">$(first)</td>
-            <td>$(last)</td>
-            <td>$(age)</td>
+            <td gender="${gender}">${first}</td>
+            <td>${last}</td>
+            <td>${age}</td>
         </tr>
     </tbody>
 </table>
 ```
 
+ - The first row will be used as template for creating new rows depending on number of elements
+   provided in setValue(data).
+ - default component for the row is base/Tpl
+ - if using a custom component, it has to handle te display of the data itself
+
+Data can now be displayed by calling setValue.
+
+```javascript
+var data = [
+    {first:"John", last:'Doe',   age:44, gender:'M'},
+    {first:"Mary", last:'Blast', age:33, gender:'F'}
+];
+table.setValue(data);
+```
+
+results in this HTML
+
+```html
+<table as="base/Table">
+    <thead>
+        <th column="first" sort=""></th>
+        <th column="last" sort=""></th>
+        <th column="age" sort=""></th>
+    </thead>
+    <tbody>
+        <tr as="base/Tpl">
+            <td gender="M">John</td>
+            <td>Doe</td>
+            <td>44</td>
+        </tr>
+        <tr as="base/Tpl">
+            <td gender="F">Mary</td>
+            <td>Blast</td>
+            <td>33</td>
+        </tr>
+    </tbody>
+</table>
+```
