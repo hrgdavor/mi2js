@@ -139,7 +139,7 @@ var scripts = {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/Template": {
+	"base/Tpl": {
 		"desc": "", 
 		"require":["comp"]
 	}

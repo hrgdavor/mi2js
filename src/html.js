@@ -76,9 +76,9 @@
 			b.top <= a.bottom);
 	}
 
-	mi2.toTemplate = function(node){
+	mi2.toTemplate = function(node, defAttr){
 		var tpl = { tag: node.tagName, html: node.innerHTML};
-		var attr = {};
+		var attr = defAttr ? mi2.clone(defAttr) : {};
 		var it = node.attributes;
    		if(it) for(var i=0; i<it.length; i++) attr[it[i].name] = it[i].value;
 		tpl.attr = attr;

@@ -9,7 +9,6 @@ example with inline template:
 
 example in separate template file:
 	<div class="title">title</div>
-	<div p="noData">There are no results avaialble</div>
 	<div p="itemsArea"></div>
 */
 
@@ -27,34 +26,30 @@ function(comp, proto, superClass){
 	comp.constructor = function(el, tpl, parent){
 		if(tpl) el.innerHTML = tpl;
 
+
 		// support for components with inline template, and skip noData node
 		this.itemsArea = this.findItemsArea(el) || el;
-		var ch = this.itemsArea.firstChild;
-		while(ch && !ch.tagName) ch=ch.nextSibling;
 
-		if(ch && ch.tagName){
-			this.itemTpl = $.toTemplate(ch);
-			// default component is Base
-			this.itemTpl.attr.as = this.itemTpl.attr.as || proto.itemTpl.attr.as;
-			ch.parentNode.removeChild(ch);
-		}
+		this.loadItemTpl(el);
 
 		// this was done before calling parent constructor to avoid stack overflow in case
 		// of component recursion using Loop component (example: tree-like structures)
 
 		superClass.constructor.call(this, el, tpl, parent);
 
-		var ignore = this.noData;
-		if(ignore){
-			ignore = ignore.el;
-			ignore.parentNode.remove(ignore.el);
-		}
-
-
-		this.itemHtml = this.itemTpl.innerHTML;
-
 		this.items = [];
 		this.count = 0;
+	};
+
+	proto.loadItemTpl = function(el){
+		var ch = this.itemsArea.firstChild;
+		while(ch && !ch.tagName) ch=ch.nextSibling;
+
+		if(ch && ch.tagName){
+			ch.parentNode.removeChild(ch);
+			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
+		}
+		// else if not found, we inherit the value from the prototype
 	};
 
 	proto.findItemsArea = function(el){

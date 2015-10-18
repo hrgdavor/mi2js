@@ -150,7 +150,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="build/en/base/CalendarWidget.js"></script>
 <script src="build/en/base/Loop.js"></script>
 <script src="build/en/base/ShowHide.js"></script>
-<script src="build/en/base/Template.js"></script>
+<script src="build/en/base/Tpl.js"></script>
 <script src="build/en/base/Pager.js"></script>
 <script src="build/en/base/RenderTable.js"></script>
 
@@ -292,7 +292,7 @@ function test(){
 	</div>
 
 	<div class="sample"><b>Template</b>
-		<span p="tpl1" as="base/Template">user: ${name} (${age})</span>
+		<span p="tpl1" as="base/Tpl">user: ${name} (${age})</span>
 		<bt as="base/Button" event="tpl1" p="bt.tpl1">template test</bt>
 	</div>
 
