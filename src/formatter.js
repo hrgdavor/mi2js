@@ -21,7 +21,7 @@
 		var format = str.split(',');
 
 		// resolve the formatter immediatelly (early error)
-		if(format.length && resolve) format[0] = mi2.getFormatter(format[0]);
+		if(resolve && format.length ) format[0] = mi2.getFormatter(format[0]);
 
 		return format;
 	};
