@@ -8,7 +8,7 @@
 		this.group = group;
 	}
 
-	var proto = mi2.comp.GroupHandler.prototype;
+	var proto = mi2.GroupHandler.prototype;
 
 	function makeMap(arr, val){
 		var obj = {};
