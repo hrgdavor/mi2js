@@ -6,9 +6,9 @@ describe( 'base/Table.js', function () {
 		var node = mi2.addHtml(null,
 '<table as="base/Table">'+
     '<tr>'+
-        '<th column="first" sort></th><td gender="${gender}">$(first)</td>'+
-        '<th column="last" sort></th> <td>$(last)</td>'+
-        '<th column="age" sort></th>  <td>$(age)</td>'+
+        '<th column="first" sort></th><td gender="${gender}">${first}</td>'+
+        '<th column="last" sort></th><td>${last}</td>'+
+        '<th column="age" sort></th><td>${age}</td>'+
     '</tr>'+
 '</table>'
 			);
@@ -16,21 +16,46 @@ describe( 'base/Table.js', function () {
 		var comp = mi2.comp.make(node);
 
 		var data = [
-			{name:"John", last:'Doe', age:44},
-			{name:"Mary", last:'Blast', age:33}
+			{first:"John", last:'Doe',   age:44, gender:'M'},
+			{first:"Mary", last:'Blast', age:33, gender:'F'}
 		];
 
 		// after reading template
-// 		expect(comp.el.innerHTML).toEqual(
-// '<thead>'+
-// '</thead>'+
-// '<tbody>'+
-// '</tbody>'
-// 		);
+		expect(comp.el.innerHTML).toEqual(
+'<tbody>'+
+'</tbody>'+
+'<thead>'+
+    '<th column="first" sort=""></th>'+
+    '<th column="last" sort=""></th>'+
+    '<th column="age" sort=""></th>'+
+'</thead>'
+		);
 
+		expect(comp.itemTpl.html).toEqual('<td gender="${gender}">${first}</td><td>${last}</td><td>${age}</td>');
 
 		//after setting data
 		comp.setValue(data);
+
+		expect(comp.el.innerHTML).toEqual(
+'<tbody>'+
+    '<tr as="base/Tpl">'+
+        '<td gender="M">John</td>'+
+        '<td>Doe</td>'+
+        '<td>44</td>'+
+    '</tr>'+
+    '<tr as="base/Tpl">'+
+        '<td gender="F">Mary</td>'+
+        '<td>Blast</td>'+
+        '<td>33</td>'+
+    '</tr>'+
+'</tbody>'+
+'<thead>'+
+    '<th column="first" sort=""></th>'+
+    '<th column="last" sort=""></th>'+
+    '<th column="age" sort=""></th>'+
+'</thead>'
+		);
+
 	});
 
 

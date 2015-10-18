@@ -20,12 +20,14 @@ module.exports = function(config) {
       'src/poly/bind.js',
       'src/*.js',
       'src/util/formatter.sample.js',
-      'src/base/Template.js',
+      'src/base/Tpl.js',
       'src/base/Loop.js',
       'src/base/Table.js',
+
       'spec/*.js',
       // 'spec/loopSpec.js',
       // 'spec/tableSpec.js',
+
        {pattern: 'spec/test.json', included: false}
     ],
 

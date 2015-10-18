@@ -46,8 +46,8 @@ function(comp, proto, superClass){
 		while(ch && !ch.tagName) ch=ch.nextSibling;
 
 		if(ch && ch.tagName){
-			ch.parentNode.removeChild(ch);
 			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
+			ch.parentNode.removeChild(ch);
 		}
 		// else if not found, we inherit the value from the prototype
 	};
