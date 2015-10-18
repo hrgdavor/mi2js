@@ -75,13 +75,17 @@ var scripts = {
 		"desc": "Base utilities, required by most" , 
 		"require":[]
 	},
-	"find":{
-		"desc": "Nodes search utilities, is a kind of alternative to parse.js" , 
-		"require":["mi2"]
-	},
 	"html":{
 		"desc": "Html utility function for wrapped object" , 
 		"require":["mi2"]
+	},
+	"formatter":{
+		"desc": "Value formatters" , 
+		"require":["mi2"]
+	},
+	"template":{
+		"desc": "String template rendering, values can be transformed by formatters" , 
+		"require":["mi2","formatter"]
 	},
 	"parse": {
 		"desc": "Binding DOM nodes to script objects and components if com.js included", 
@@ -91,9 +95,17 @@ var scripts = {
 		"desc": "Simple component abstraction over HTML nodes", 
 		"require":["mi2","html","parse"]
 	},
+	"comp.FormHandler": {
+		"desc": "", 
+		"require":["comp"]
+	},
+	"comp.GroupHandler": {
+		"desc": "", 
+		"require":["comp"]
+	},
 	"ajax": {
 		"desc": "Simple, minimal ajax implementation", 
-		"require":[]
+		"require":["mi2"]
 	},
 	"base/AutoComplete": {
 		"desc": "", 
@@ -113,17 +125,25 @@ var scripts = {
 	},
 	"base/Form": {
 		"desc": "", 
-		"require":["comp"]
+		"require":["comp.FormHandler"]
 	},
 	"base/Input": {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/List": {
-		"desc": "", 
-		"require":["comp"]
+	"base/Tpl": {
+		"desc": "Render values via template (template strings in html and attributes)", 
+		"require":["comp","template"]
 	},
-	"base/Pager": {
+	"base/Loop": {
+		"desc": "", 
+		"require":["comp","Tpl"]
+	},
+	"base/Table": {
+		"desc": "", 
+		"require":["comp","loop"]
+	},
+	"base/TabPane": {
 		"desc": "", 
 		"require":["comp"]
 	},
@@ -131,15 +151,11 @@ var scripts = {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/Table": {
+	"base/Pager": {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/TabPane": {
-		"desc": "", 
-		"require":["comp"]
-	},
-	"base/Tpl": {
+	"base/RenderTable": {
 		"desc": "", 
 		"require":["comp"]
 	}

@@ -5,25 +5,32 @@ var $ = window.mi2JS = window.mi2JS || function(node, root){
 		this.el = node instanceof String ? $.find(node, root) : node;
 		if(this.el === null) throw new Error('null node or not found '+node);			
 	}else 
-		return new $(node);
+		return new $(node, root);
 };
 
 $.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 
 $.find = function(search, root){
 	$.nn('find',{search:search});//ASSERT
+
 	root = root || document.body;
 	if(root instanceof $) root = root.el;
+
 	if(search.charAt(0) == '#') return root.getElementById(search.substring(1));
-	if($.tagNameReg.test(search)) root.getElementsByTagName(search)[0];
+
+	if($.tagNameReg.test(search)) return root.getElementsByTagName(search)[0];
+
 	return root.querySelector(search); 
 }
 
 $.findAll = function(search, root){
 	$.nn('find',{search:search});//ASSERT
+
 	root = root || document.body;
 	if(root instanceof $) root = root.el;
-	if($.tagNameReg.test(search)) root.getElementsByTagName(search);
+
+	if($.tagNameReg.test(search)) return root.getElementsByTagName(search);
+
 	return root.querySelectorAll(search); 
 }
 

@@ -1,6 +1,7 @@
 (function(){
 
 	mi2JS.FormHandler = function(inp, label, info, required){
+		if(!(this instanceof mi2JS.FormHandler)) return new mi2JS.FormHandler(inp, label, info, required);
 		this.inp = inp;
 		this.label = label || {};
 		this.info = info || {};

@@ -2,7 +2,9 @@
 
 	var mi2 = mi2JS;
 
-	mi2.comp.GroupHandler = mi2.comp.GroupHandler || function(group){
+	mi2.GroupHandler = mi2.GroupHandler || function(group){
+		if(!(this instanceof mi2JS.GroupHandler)) return new mi2JS.GroupHandler(group);
+
 		this.group = group;
 	}
 
