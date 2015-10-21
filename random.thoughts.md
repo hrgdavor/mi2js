@@ -7,12 +7,27 @@
  - RenderTable - fire to parent (dir:down, hops:1) or (call on parent, hops:0)
  - List - forward dir:down events, preserve hops
 
+## components delegating stuff to parent (transitive)
+ - transitive components are just placeholders, used by some other component
+  - example1: `base/Loop` with multiple copies of a component (multi address editor)
+ - When extending, component can be made non-transitive again by overriding `isTransitive` to `return false`
+ - event should be recognized somehow so transitive component can forward it up or down
+ - formatting is transitive for transitive component
+ - if multiple things can have different behavior for transitive component
+  - ? how to handle situation when you want to have partial transitive behavior
+
+Use case fo `base/Button` 
+ - fires action event to parent directly
+ - parent does not have to add listener to each button, just add `on_actionName` method
+ - transient component should forward the event to the parent
+
 ## components firing events down to parent
  - should have event="xxx" attribute to change event name
  - should have action="xxx" attribute to enable one event handler handlig similar actions
   - example: event="changeLanguage" action="en"
   - example: event="delete" action="archive"
   - example: event="rowClick" action="preview"
+
 
 ## show/hide event
  - afterCreate event becomes obsolete after this works (used only by ShowHide component now)
@@ -29,7 +44,7 @@
 # formaters
  - formats a value to another value (number,string,object) 
  - some textual format examples: date, datetime, datetime-with-seconds ... etc 
- - some are language specefic
+ - some are locale specific
   - date (31.12.2015)
   - decimal (1.000,00 or 1,000.00 )
  - format(x,'date') returns x formatted as date 
@@ -37,8 +52,10 @@
  - null handling
   - ifNull,empty 
 
+## formatters in transitive components
+ - 
 
-# renderers
+## renderers
  - render HTML (for short formated texts without using components)
  - __actually it is a regualr formatter, but receiving side mut allow the HTML to be injected and not converted to plain text__
  - 
