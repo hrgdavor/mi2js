@@ -13,7 +13,7 @@
  - When extending, component can be made non-transitive again by overriding `isTransitive` to `return false`
  - event should be recognized somehow so transitive component can forward it up or down
  - formatting is transitive for transitive component
- - if multiple things can have different behavior for transitive component
+ - if multiple functionalities can have different behavior for transitive component
   - ? how to handle situation when you want to have partial transitive behavior
 
 Use case fo `base/Button` 
