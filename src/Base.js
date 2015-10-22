@@ -17,19 +17,17 @@
 		this.el = el;
 
 		if(tpl) el.innerHTML = tpl;
-		mi2.parseChildren(el,this);
+		if(!this.lazyInit) this.parseChildren();
+	};
+
+	proto.parseChildren = function(){
+		mi2.parseChildren(this.el,this);
 	};
 
 	proto.getCompName = function(){
 		if(this.el && this.el.getAttribute){
 			return this.el.getAttribute('as');
 		}
-	};
-
-	proto.getCompClass = function(){
-		var compName = this.getCompName();
-		if(compName)
-			return mi2.comp.get(compName);
 	};
 
 	/** listener shortcut that by default binds callback function to current object/component
@@ -74,7 +72,10 @@
 		if(evtName == 'show'){
 			if(!this.isVisible()) return; // not yet visible
 			// if not initialized yet, fire init event first
-			if(!this.__initialized) this.fireEvent('init',{ eventFor: 'children' });
+			if(!this.__initialized){
+				if(this.lazyInit) this.parseChildren();
+				this.fireEvent('init',{ eventFor: 'children' });
+			} 
 		}
 
 		// allow for init to be fired even when hidden (and then skipped on_show)
