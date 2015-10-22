@@ -12,6 +12,9 @@
 	mi2.comp.make = function(el, compName, parent, parNode){
 		try{
 
+			// sanitize, to allow === null check to work later
+			if(!parent) parent = null;
+
 			if( !compName ){
 				compName = el.getAttribute('as');
 				if(!compName) compName = this.tags[el.tagName];
@@ -24,9 +27,11 @@
 			c.construct(el, this.getTpl(compName), parent);
 
 			c.setParent(parent);
+
 			if(parent === null && c.isVisible()){
-				// if ROOT component is not hidden, fire show event to cause init event also
-				// so component is properly initialized 
+				// if ROOT component is not hidden, fire show event 
+				// this will cause init event to be fired
+				// component depending on this can be properly initialized 
 				c.fireEvent('show',{eventFor:'children'});
 			}
 

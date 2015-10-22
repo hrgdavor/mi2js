@@ -180,7 +180,7 @@ function t(code) {return code;}
 
 function test(){
 	var comp = window.MAIN_APP = mi2JS.parse(document.getElementById('test'));
-
+	comp.setVisible(true);
 
 	comp.on_bt1 = function(evt){
 		console.log("bt1",this, this.bt1);
@@ -244,7 +244,7 @@ function test(){
 </script>
 <BODY onload="test()">
 
-<div id="test" as="Base">
+<div id="test" as="Base" h-idden>
 	<div p="plain">plain element</div>
 	<div class="sample"><b>Button</b>
 		<bt as="base/Button" event="bt1" p="bt1">button1</bt>
@@ -290,7 +290,7 @@ function test(){
 		<div p="sh1" as="base/ShowHide">first</div>
 		<div>Bla Bla 1</div>
 		<div p="sh1" as="base/ShowHide">second</div>
-		<div class="hidden">Bla Bla 2</div>
+		<div hidden>Bla Bla 2</div>
 	</div>
 
 	<div class="sample"><b>Template</b>

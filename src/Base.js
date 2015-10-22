@@ -20,9 +20,6 @@
 		mi2.parseChildren(el,this);
 	};
 
-	proto.find    = function(search){ return mi2.find   (this.el, search); }
-	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
-
 	proto.getCompName = function(){
 		if(this.el && this.el.getAttribute){
 			return this.el.getAttribute('as');
@@ -72,9 +69,12 @@
 
 	proto.fireEvent = function(evtName, ex){
 
-		// if not initialized yet, fire init event first
-		if(evtName == 'show' && !this.__initialized){
-			this.fireEvent('init',{ eventFor: 'children' });
+		if(evtName == 'hide' && !this.isVisible()) return; // already hidden
+
+		if(evtName == 'show'){
+			if(!this.isVisible()) return; // not yet visible
+			// if not initialized yet, fire init event first
+			if(!this.__initialized) this.fireEvent('init',{ eventFor: 'children' });
 		}
 
 		// allow for init to be fired even when hidden (and then skipped on_show)
@@ -136,6 +136,21 @@
 		if(p  && p.addChild) p.addChild(this);
 	};
 
+	proto.find    = function(search){ return mi2.find   (this.el, search); }
+	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
+
+	/* find component that is holding the DOM node */
+	proto.findComp = function(toFind){
+		var cd = this.children;
+		var comp, count = cd.length;
+		for(var i=0; i<count; i++){
+			if(cd[i].el === toFind){
+				comp = cd[i];
+				break;
+			}
+		}		
+	}
+
 	/** Use this when the tag on which the component is defined*/
 	proto.replaceTag = function(el,tag){
 		var ret = document.createElement(tag);
@@ -152,6 +167,8 @@
 	};
 
 	proto.setVisible = function(visible){
+		if(visible == this.isVisible()) return;
+
 		mi2Proto.setVisible.call(this, visible);
 		this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
 	};

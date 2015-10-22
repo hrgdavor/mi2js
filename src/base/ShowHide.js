@@ -14,7 +14,10 @@ function(proto, superProto, comp, superComp){
 		this.texts = this.button.attr('texts').split(',');
 
 		this.title.setHtml(html);
-		this.listen(parent,'afterCreate', 'updateButton');
+	};
+
+	proto.on_init = function(evt){
+		this.updateButton();
 	};
 
 	// we can not do this in the constructor, as we need the component next in DOM
@@ -22,14 +25,7 @@ function(proto, superProto, comp, superComp){
 		if(!this.panel){
 			var next = this.el.nextElementSibling;
 			if(!next) { console.log("Component to show/hide must be after this ", this.el); return;}
-			var cd = this.parent.children;
-			var comp, count = cd.length;
-			for(var i=0; i<count; i++){
-				if(cd[i].el == next){
-					comp = cd[i];
-					break;
-				}
-			}
+			var comp = this.parent.findComp(next);
 			if(!comp) comp = new $(next);
 			comp.addClass('ShowHidePanel');
 			this.panel = comp;
@@ -37,7 +33,7 @@ function(proto, superProto, comp, superComp){
 		return this.panel;
 	};
 
-	proto.updateButton = function(sel){
+	proto.updateButton = function(){
 		try{
 			var idx = this.getPanel().isVisible() ? 1:0;
 			this.button.setText(this.texts[idx]);
