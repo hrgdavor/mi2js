@@ -51,7 +51,7 @@ function(proto, superProto, comp, superComp){
 				data = tmp;				
 		}
 
-		superClass.prototype.update.call(this, {data:data, offset:0, totalrows:data.length});
+		superProto.update.call(this, {data:data, offset:0, totalrows:data.length});
 	};
 
 });

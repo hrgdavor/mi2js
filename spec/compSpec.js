@@ -55,6 +55,17 @@ describe( 'comp.js Component utilities', function () {
 
 	});
 
+	it(' / make3', function () {
+		var comp = mi2.addComp(null,{tag:'B', attr:{as:'Base'}, html:'<b p="btOk" as="base/Button">ok</b>'});
+
+		comp.btOk.setVisible(false);
+
+		expect(comp instanceof mi2).toBeTruthy();
+		expect(comp instanceof mi2.comp.get('Base')).toBeTruthy();
+		expect(comp.btOk instanceof mi2.comp.get('base/Button')).toBeTruthy();
+
+	});
+
 	describe('setTimeout-bind', function () {
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base'}});
 		var comp = mi2.comp.make(node);

@@ -15,7 +15,7 @@ function(proto, superProto, comp, superComp){
 
 		this.addClass('Calendar');
 
-		this.widget = mi2.comp.make('DIV', 'base/CalendarWidget',this);
+		this.widget = mi2.addComp(this,{tag:'DIV', attr:{as:'base/CalendarWidget'}});
 		this.widget.setVisible(false);
 		
 		this.listen(this.input.el,'focus', 'on_focus');

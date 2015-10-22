@@ -182,7 +182,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.addListener = function(evtName,callback,thisObj){
 		if(evtName == 'change') this.trackChanges();
-		superClass.prototype.addListener.call(this,evtName,callback,thisObj);
+		superProto.addListener.call(this,evtName,callback,thisObj);
 	};	
 
 	proto.trackChanges = function(){

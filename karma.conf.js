@@ -21,6 +21,7 @@ module.exports = function(config) {
       'src/*.js',
       'src/util/formatter.sample.js',
       'src/base/Tpl.js',
+      'src/base/Button.js',
       'src/base/Loop.js',
       'src/base/Table.js',
 

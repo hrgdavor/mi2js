@@ -73,8 +73,8 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
   color: #cccccc;
 }
 
-.hidden {
-  display: none;
+*[hidden] {
+  display: none; !important;
 }
 
 .AutoComplete {
@@ -136,8 +136,10 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 </style>
 <script src="src/mi2.js"></script>
 <script src="src/html.js"></script>
+<script src="src/html.common.js"></script>
 <script src="src/parse.js"></script>
 <script src="src/comp.js"></script>
+<script src="src/Base.js"></script>
 <script src="src/comp.FormHandler.js"></script>
 <script src="src/template.js"></script>
 
@@ -177,7 +179,7 @@ function(proto, superProto, comp, superComp){
 function t(code) {return code;}
 
 function test(){
-	var comp = mi2JS.parse(document.getElementById('test'));
+	var comp = window.MAIN_APP = mi2JS.parse(document.getElementById('test'));
 
 
 	comp.on_bt1 = function(evt){

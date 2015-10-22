@@ -19,7 +19,7 @@ function(proto, superProto, comp, superComp){
 		var num = this.opts.pagesAbout * 2+1;
 		for(var i=0; i<num; i++){
 			if(i>=this.pages.length){
-				this.pages[i] = mi2.comp.make("B","base/Button", this, this.pagesArea.el);
+				this.pages[i] = mi2.addComp(this,{tag:'B', attr:{as:"base/Button"}}, this.pagesArea);
 				this.pages[i].setText(i+1);
 			}
 		}
