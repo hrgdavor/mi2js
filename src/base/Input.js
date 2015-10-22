@@ -20,8 +20,9 @@ function(proto, superProto, comp, superComp){
 		}
 
 		// type=checkbox support
-		this.useValue = this.attr('value',true);
-		this.unchecked = this.attr('unchecked',false);
+		this.useValue = this.attrDef('value',true);
+		this.unchecked = this.attrDef('unchecked',false);
+
 		if(el.type == 'checkbox'){
 			var n = el.nextElementSibling;
 			if(n && n.className && n.className.indexOf('checkboxLabel') != -1){
@@ -32,8 +33,8 @@ function(proto, superProto, comp, superComp){
 			}
 		}
 
-		this.notNull = this.attr('not-null',false);
-		this.def = this.attr('default','');
+		this.notNull = this.attrDef('not-null',false);
+		this.def     = this.attrDef('default','');
 	};
 
 	proto.setData = function(data){
@@ -101,8 +102,10 @@ function(proto, superProto, comp, superComp){
 	//texts:
 	// required, invalid_value, example_correct_value, min_allowed_value, max_allowed_value, must_be_between
 	proto.validate = function(defReq){
+		var attr = this.attr('required');
+		var required = attr === null ? defReq : attr  == '1';
 		var opts ={
-			required: this.attr('required',defReq ? '1':'0') == '1',
+			required: required,
 			format:   this.attr('format'),
 			invalid:  this.attr('invalid'),
 			min:  this.attr('min'),

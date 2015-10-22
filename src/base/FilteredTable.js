@@ -8,7 +8,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.construct = function(el, tpl, parent){
 		superProto.construct.call(this, el, tpl, parent);
-		this.columns = this.attr('search-columns','name').split(',');
+		this.columns = (this.attr('search-columns') || 'name').split(',');
 	};
 
 	proto.buildSearch = function(data){

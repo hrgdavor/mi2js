@@ -9,6 +9,7 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, tpl, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
 		superProto.construct.call(this, el, tpl, parent);
+
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
 		this.editDate = t == 'date' || t =='datetime';
@@ -79,7 +80,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.validate = function(defReq){
-		var required = this.attr('required',defReq ? '1':'0') == '1';
+		var attr = this.attr('required');
+		var required = attr === null ? defReq : attr  == '1';
 		var v = this.input.el.value;
 		if(!v){
 			if(required) return {type:'required', message:t('required')};

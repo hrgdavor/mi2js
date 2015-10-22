@@ -18,16 +18,16 @@ function(proto, superProto, comp, superComp){
 
 		this.addClass("AutoComplete");
 
-		this.idInput.el.setAttribute("name", this.attr("name"));
+		this.idInput.attr("name", this.attr("name"));
 
 		this.clearBt.setVisible(!this.attr("disable_clear_button"));
 		this.noEmpty = this.attr("no_empty");
-		this.emptyText = this.attr("empty_text",'');
-		this.freeText = this.attr("free_text",'0') != '0';
+		this.emptyText = this.attr("empty_text") || '';
+		this.freeText = (this.attr("free_text") || '0') != '0';
 
 		if(this.emptyText) this.setText(this.emptyText);
 		this.list = [];
-		this.displayLimit = mi2JS.num(this.attr('limit','999999'));
+		this.displayLimit = mi2JS.num(this.attr('limit') || 999999);
 		this.showall = this.attr('showall');
 		// sample data: [{id:1,text:"default"},{id:2, text:'other'}, {id:3, text:'other 2'}]
 		this.data = [];
@@ -270,7 +270,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.validate = function(defReq){
-		var required = this.attr('required',defReq ? '1':'0') == '1';
+		var attr = this.attr('required');
+		var required = attr === null ? defReq : attr  == '1';
 		if(required && !this.getValue()) return {message:t('required'), type:'required'}
 	};
 

@@ -24,9 +24,8 @@ function(proto, superProto, comp, superComp){
 		} 
 
 
-		this.stopSubmit = this.attr('stop-submit','1') == '1';
-		this.event = this.attr('event','submit');
-		this.eventsToParent = this.attr('events-to-parent','1') == '1';
+		this.stopSubmit = (this.attr('stop-submit') || '1') == '1';
+		this.event = this.attr('event') || 'submit';
 
 		this.init();
 	};
@@ -48,7 +47,9 @@ function(proto, superProto, comp, superComp){
 			if(this.stopSubmit) return false;
 		});
 
-		this.handler = new mi2JS.FormHandler(this.inp, this.label, this.info, this.attr('required','1') == '1');
+		var attr = this.attr('required');
+		var required = attr === null || attr  == '1';
+		this.handler = new mi2JS.FormHandler(this.inp, this.label, this.info, required);
 	};
 
 	proto.focus = function(){ this.handler.focus(); };

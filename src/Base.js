@@ -148,7 +148,7 @@
 	};
 
 	proto.attrInt = function(name, def){
-		return mi2.num( this.attr(name,def) );
+		return mi2.num( this.attr(name) || def );
 	};
 
 	proto.setVisible = function(visible){

@@ -12,9 +12,9 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	proto.construct = function(el, tpl, parent){
 		superProto.construct.call(this, el, tpl, parent);
 
-		this.noData.innerHTML = t(this.attr("no_data","no_data_to_display"));
+		this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
 
-		this.showPager = this.attr('show_pager','when_needed')// when_neede / always
+		this.showPager = this.attr('show_pager') || 'when_needed';// when_neede / always
 
 		this.opts = {};
 		this.listen(this.tbody.el,"click",this.rowClick);

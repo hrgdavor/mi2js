@@ -7,8 +7,8 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, tpl, parent){
 		superProto.construct.call(this, el, tpl, parent);
 
-		this.action = this.attr("action", "action");
-		this.event = this.attr("event", "action");
+		this.action = this.attr("action") || "action";
+		this.event  = this.attr("event")  || "action";
 		this.lastClick = 0;
 		this.listen(el,"click",function(evt){
 			evt.stop();

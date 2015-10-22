@@ -65,6 +65,12 @@
 		return tpl;
 	}
 
+	mi2Proto.attrDef = function(name, def){
+		var val = this.el.getAttribute(name);
+		if(val === null) return def;
+		return val;
+	};
+
 	mi2Proto.attr = function(name, val){
 		if(arguments.length > 1){
 			if(val === null){
