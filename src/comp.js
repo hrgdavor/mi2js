@@ -4,19 +4,19 @@
 
 	var mi2Proto = mi2.prototype;
 
+	mi2.addComp = function(parent, tag, parNode){
+		var node = mi2.addTag(parent, tag);
+		return mi2.comp.make(node, null, parent, parNode);
+	}
+
 	mi2.comp.make = function(el, compName, parent, parNode){
 		try{
-
-			// string template for the element is provided when creating from scratch
-			if(typeof(el) == 'string'){
-				if(!parNode && parent) parNode = parent.el;
-				el = mi2.addTag( parNode, el );
-			} 
 
 			if( !compName ){
 				compName = el.getAttribute('as');
 				if(!compName) compName = this.tags[el.tagName];
-			} 
+			}
+
 			el.setAttribute('as', compName);
 
 			var compDef = this.get(compName, el);
