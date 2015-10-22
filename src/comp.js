@@ -24,10 +24,11 @@
 			compDef.constructor.call(c, el, this.getTpl(compName), parent );
 
 			c.setParent(parent);
-
-			c.fireEvent('afterCreate');
-			// fired only once
-			if(c.__listeners) delete c.__listeners.afterCreate;
+			if(parent === null && c.isVisible()){
+				// if ROOT component is not hidden, fire show event to cause init event also
+				// so component is properly initialized 
+				c.fireEvent('show',{eventFor:'children'});
+			}
 
 			return c;
 
@@ -112,13 +113,6 @@
 
 	/* ***********************  basic html nodes extension  ***************************** */
 
-	mi2Proto.isVisible = function(){
-		return !this.hasClass('hidden');
-	};
-	mi2Proto.setVisible = function(visible){
-		this.classUnless('hidden',visible);
-	};
-
 	mi2Proto.isEnabled = function(){
 		return !this.hasClass('disabled');
 	};
@@ -201,11 +195,27 @@
 		l.push({callback:callback, scope:scope });
 	};
 
+	proto.isTransitive = function(){ return false; };
+
 	proto.fireEvent = function(evtName, ex){
+
+		if(evtName == 'show' && !this.__initialized){
+			this.fireEvent('init',{ eventFor: 'children' });
+		}
+
+		// allow for init to be initiated even when hidden (and then skipped on_show)
+		if(evtName == 'init'){
+			this.__initialized = true;
+		}
 		
 		if(!ex) ex = {};
 		ex.name = evtName;
 		ex.target = this;
+
+		if(ex.eventFor == 'parent' && this.isTransitive()){
+			if(this.parent) this.parent.fireEvent(evtName, ex);
+			return;
+		}
 
 		var l;
 		if(this.__listeners) l=this.__listeners[evtName];
@@ -218,6 +228,12 @@
 			}
 		}
 		if(typeof(this['on_'+evtName]) == 'function') this['on_'+evtName](ex);
+
+		if(ex.eventFor == 'children' && this.children){
+			for(var i=0; i<this.children.length; i++){
+				this.children[i].fireEvent(evtName, ex);
+			}
+		}
 	};
 
 	proto.addChild = function(c){
@@ -261,14 +277,9 @@
 		return mi2.num( this.attr(name,def) );
 	};
 
-	proto.attr = function(name, def){
-		if(!this.el.hasAttribute(name)) return def;
-		return this.el.getAttribute(name);
-	};
-
 	proto.setVisible = function(visible){
-		this.classUnless('hidden',visible);
-		this.fireEvent(visible ? 'show':'hide',{});
+		mi2Proto.setVisible.call(this, visible);
+		this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
 	};
 
 

@@ -31,7 +31,7 @@ describe( 'comp.js Component utilities', function () {
 	});
 
 	it('make', function () {
-		var node = mi2.addHtml(null,'<b as="Base"></b>');
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base'}});
 		var comp = mi2.comp.make(node);
 
 		comp.addClass('test');
@@ -44,7 +44,7 @@ describe( 'comp.js Component utilities', function () {
 	});
 
 	describe('setTimeout-bind', function () {
-		var node = mi2.addHtml(null,'<b as="Base"></b>');
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base'}});
 		var comp = mi2.comp.make(node);
 
 		var self = null;

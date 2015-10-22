@@ -23,6 +23,8 @@ function(comp, proto, superClass){
 		html: ''
 	};
 
+	proto.isTransitive = function(){ return true; };
+
 	comp.constructor = function(el, tpl, parent){
 		if(tpl) el.innerHTML = tpl;
 
@@ -146,20 +148,6 @@ function(comp, proto, superClass){
 		this.count++;
 	};
 	
-	//we propagate all events from items to parent and add reference to self
-	proto.fireEvent = function(name,evt){
-		if(name == 'afterCreate') {
-			superClass.prototype.fireEvent.call(this,name,evt);
-			return;
-		}
-
-		if(this.parent && this.parent.fireEvent){
-			evt = evt || {};
-			evt.loop = this;
-			this.parent.fireEvent(name, evt);
-		}
-	};
-
 	proto.callFunc = function(funcName, args){
 		for(var i=0; i<this.count; i++){
 			this.items[i][funcName].apply(this.items[i],args);

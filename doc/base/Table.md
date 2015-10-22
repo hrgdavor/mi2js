@@ -7,9 +7,9 @@ to setup table you can define the template in this way:
 ```html
 <table as="base/Table">
     <tr>
-        <th column="first" sort></th><td gender="${gender}">${first}</td>
-        <th column="last" sort></th> <td>${last}</td>
-        <th column="age" sort></th>  <td>${age}</td>
+        <th column="first" sort>First</th><td gender="${gender}">${first}</td>
+        <th column="last" sort>Last</th>  <td>${last}</td>
+        <th column="age" sort>Age</th>    <td>${age}</td>
     </tr>
 </table>
 ```
@@ -24,9 +24,9 @@ when configuring the Table cmponent.
 ```html
 <table as="base/Table">
     <thead>
-        <th column="first" sort=""></th>
-        <th column="last" sort=""></th>
-        <th column="age" sort=""></th>
+        <th column="first" sort="">First</th>
+        <th column="last" sort="">Last</th>
+        <th column="age" sort="">Age</th>
     </thead>
     <tbody>
         <tr as="base/Tpl">
@@ -58,9 +58,9 @@ results in this HTML
 ```html
 <table as="base/Table">
     <thead>
-        <th column="first" sort=""></th>
-        <th column="last" sort=""></th>
-        <th column="age" sort=""></th>
+        <th column="first" sort="">First</th>
+        <th column="last" sort="">Last</th>
+        <th column="age" sort="">Age</th>
     </thead>
     <tbody>
         <tr as="base/Tpl">

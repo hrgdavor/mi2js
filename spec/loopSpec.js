@@ -3,11 +3,10 @@ describe( 'base/Loop.js', function () {
 	mi2.addFormatter('loopTest', function(value){ return value+'--'});
 
 	it('/ basic ', function (){
-		var node = mi2.addHtml(null,
-'<div as="base/Loop">'+
-    '<div as="base/Tpl">Name: ${name}, Last: ${last}</div>'+
-'</div>'
-			);
+		var node = mi2.addTag(null, {tag:'DIV', 
+				attr: {as:'base/Loop'},
+				html: '<div as="base/Tpl">Name: ${name}, Last: ${last}</div>' 
+			});
 
 		var comp = mi2.comp.make(node);
 

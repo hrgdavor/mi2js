@@ -19,7 +19,7 @@ describe( 'template.js', function () {
 	});
 
 	it('/ template component', function (){
-		var node = mi2.addHtml(null,'<b as="base/Tpl" my-attr="${name}"></b>');
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'John'});
 
@@ -27,7 +27,7 @@ describe( 'template.js', function () {
 	});
 
 	it('/ template component complex', function (){
-		var node = mi2.addHtml(null,'<base-tpl my-attr="${name}">X:${last:specTest}:X</base-tpl>');
+		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last:specTest}:X'} );
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 

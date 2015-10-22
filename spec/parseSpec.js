@@ -2,7 +2,7 @@ describe( 'parse.js', function () {
 	var mi2 = mi2JS;
 
 	it('/ parse', function () { 
-		var node = mi2.addHtml(null,'<div as="Base"><b p="b1"></b></div>');
+		var node = mi2.addTag(null, {tag:'DIV', attr:{as:'Base'}, html:'<b p="b1"></b>'});
 		var comp = mi2.parse(node);
 
 		expect(comp instanceof mi2).toBeTruthy();
@@ -13,7 +13,7 @@ describe( 'parse.js', function () {
 	});
 
 	it('/ parse list', function () { 
-		var node = mi2.addHtml(null,'<div as="Base"><b p="bt.">x</b><b p="bt.">y</b></div>');
+		var node = mi2.addTag(null, {tag:'DIV', attr:{as:'Base'}, html:'<b p="bt.">x</b><b p="bt.">y</b>'});
 		var comp = mi2.parse(node);
 
 		expect(comp.bt).toBeDefined();
@@ -22,7 +22,7 @@ describe( 'parse.js', function () {
 	});
 
 	it('/ parse list', function () { 
-		var node = mi2.addHtml(null,'<div as="Base"><b p="bt.x">x</b><b p="bt.y" as="Base">y</b></div>');
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base'}, html:'<b p="bt.x">x</b><b p="bt.y" as="Base">y</b>'});
 		var comp = mi2.parse(node);
 
 		expect(comp.bt).toBeDefined();

@@ -20,7 +20,7 @@ function(comp, proto, superClass){
 		for(var i=0; i<num; i++){
 			if(i>=this.pages.length){
 				this.pages[i] = mi2.comp.make("B","base/Button", this, this.pagesArea.el);
-				this.pages[i].html(i+1);
+				this.pages[i].setText(i+1);
 			}
 		}
 	};
@@ -39,7 +39,7 @@ function(comp, proto, superClass){
 		for(var i=0; i<count; i++){
 			this.pages[i].setVisible(i+offset<this.pagesCount);
 			this.pages[i].classIf("current", i+offset == this.curPage);
-			this.pages[i].html(i+offset+1);
+			this.pages[i].setText(i+offset+1);
 			this.pages[i].action = i+offset;
 			this.pages[i].event = "page";
 		}

@@ -157,7 +157,7 @@ function(comp, proto, superClass){
 		if(info){
 			info.classIf('validationError', data._error);
 			info.setVisible(data._error && data._error.message);
-			if(data._error) info.html(data._error.message);			
+			if(data._error) info.setText(data._error.message);			
 		}
 		if(label) label.classIf('validationError', data._error);
 	};

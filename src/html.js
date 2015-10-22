@@ -2,6 +2,8 @@
 
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
+	mi2.hiddenAttribute = 'hidden';
+
 	/** Create a html node. <br>
 		Example: mi2.addTag(document.body, 
 			{	tag:'DIV', 
@@ -44,31 +46,7 @@
 		return e;
 	};
 
-	/** Add nodes from html to the parent node and return the first top level node(with tagName) from the snippet.<br/>
-		Usual use case would not have more than one top level node, but in cas needed, it is supported.
-
-		@param {string} html - html code
-		@param {HTMLElement} [parent] - parent to add the new node to
-
-		@returns {HTMLElement} new node
-	*/
-	mi2.addHtml = function( parent, html ){
-		
-		if(parent && parent instanceof mi2) parent = parent.el;
-
-		var tmp = mi2.addTag(null,"DIV",null,html);
-		var newNode = null;
-
-		var n = tmp.firstChild;
-		while(n){
-			if(!newNode && n.tagName) newNode = n;
-			if(parent) parent.appendChild(n);
-			n = n.nextSibling;
-		}
-
-		return newNode;
-	};
-
+	/** Check if two rectangles are intersecting */
 	mi2.intersect = function(a, b) {
 		return (a.left <= b.right &&
 			b.left <= a.right &&
@@ -84,6 +62,27 @@
 		tpl.attr = attr;
 		return tpl;
 	}
+
+	mi2Proto.attr = function(name, val){
+		if(arguments.length > 1){
+			if(val === null){
+				if(this.el.hasAttribute(name)) this.el.removeAttribute(name);
+			}else{
+				if(val !== this.el.getAttribute(name)) 
+					this.el.setAttribute(name,val);
+			}
+		}else{
+			return this.el.getAttribute(name);
+		}
+	};
+
+	mi2Proto.isVisible = function(){
+		return !this.el.hasAttribute(mi2.hiddenAttribute);
+	};
+
+	mi2Proto.setVisible = function(visible){
+		this.attr(mi2.hiddenAttribute, visible ? null:'');
+	};
 
 	/** Add class to the element if condition is true, and remove if false. 
 		@parameter toAdd - className to add/remove 
@@ -117,15 +116,12 @@
 			return this.el.classList.remove(toRemove);
 	};
 
-	/* Set html andavoid changing innerHTML if it is same value, 
-	so selection and copy/paste can work when html is updated with identical value.
-	Setting same html clears selection even no visible change will be on the gui.
-	
-	@paramteter {string} html 
-
-	*/
-	mi2Proto.html = function(html, el){
+	mi2Proto.setHtml = function(html){
 		if(this.el.innerHTML !== html) this.el.innerHTML = html;
+	};
+
+	mi2Proto.setText = function(text){
+		if(this.el.textContent !== text) this.el.textContent = text;	
 	};
 
 })(mi2JS);

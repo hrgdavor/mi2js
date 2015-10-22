@@ -9,7 +9,7 @@ function(comp, proto, superClass){
 	comp.constructor = function(el, tpl, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
 		superClass.constructor.call(this, el, tpl, parent);
-		var t = this.editType = this.attr('type','date').toLowerCase();
+		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
 		this.editDate = t == 'date' || t =='datetime';
 

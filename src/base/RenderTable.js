@@ -7,6 +7,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 */
 	var $ = mi2JS;
 
+	proto.isTransitive = function(){ return true; };
+
 	comp.constructor = function(el, tpl, parent){
 		superClass.constructor.call(this, el, tpl, parent);
 
@@ -169,7 +171,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.setVisible(this.showPager == 'always' ||  this.pager1.pagesCount > 1);
 		this.pager2.setVisible(this.showPager == 'always' ||  this.pager2.pagesCount > 1);
 
-		this.tbody.html('');
+		this.tbody.setHtml('');
 		for(var i=0; i<tData.data.length; i++){
 			var row = tData.data[i];
 			var tr = $.addTag(this.tbody.el,"TR","high");
@@ -232,22 +234,6 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			button:bt,
 			domEvent: evt
 		});
-	};
-
-	//we propagate all events to parent and add reference to self
-	proto.fireEvent = function(name,evt){
-		if(name == 'afterCreate') {
-			superClass.prototype.fireEvent.call(this,name,evt);
-			return;
-		}
-		evt = evt || {};
-		evt.table = this;
-		if (name == 'page'){
-			evt.src = this;
-		}
-
-		if(this.parent.fireEvent)
-			this.parent.fireEvent(name, evt);
 	};
 
 });

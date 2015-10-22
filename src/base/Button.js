@@ -20,7 +20,13 @@ function(comp, proto, superClass){
 			if(this.isEnabled() && this.parent.fireEvent){
 				var now = new Date().getTime();
 				if(now -this.lastClick > 300){ // one click per second
-					this.parent.fireEvent(this.event, {action: this.action, button:this, domEvent: evt, src:this}); 
+					this.parent.fireEvent(this.event, {
+						action: this.action, 
+						button:this, 
+						domEvent: evt, 
+						src:this,
+						eventFor: 'parent'
+					}); 
 					this.lastClick = now;
 				} 
 			}

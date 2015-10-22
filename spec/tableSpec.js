@@ -3,15 +3,14 @@ describe( 'base/Table.js', function () {
 	mi2.addFormatter('ageTest', function(value){ return value+'--'});
 
 	it('/ basic ', function (){
-		var node = mi2.addHtml(null,
-'<table as="base/Table">'+
+		var node = mi2.addTag(null, { tag: 'TABLE', attr:{as:'base/Table'},
+            html:
     '<tr>'+
         '<th column="first" sort></th><td gender="${gender}">${first}</td>'+
         '<th column="last" sort></th><td>${last}</td>'+
         '<th column="age" sort></th><td>${age}</td>'+
-    '</tr>'+
-'</table>'
-			);
+    '</tr>'
+			});
 
 		var comp = mi2.comp.make(node);
 

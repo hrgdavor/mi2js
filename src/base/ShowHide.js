@@ -13,7 +13,7 @@ function(comp, proto, superClass){
 		superClass.constructor.call(this, el, tpl, parent);
 		this.texts = this.button.attr('texts').split(',');
 
-		this.title.html(html);
+		this.title.setHtml(html);
 		this.listen(parent,'afterCreate', 'updateButton');
 	};
 
@@ -40,7 +40,7 @@ function(comp, proto, superClass){
 	proto.updateButton = function(sel){
 		try{
 			var idx = this.getPanel().isVisible() ? 1:0;
-			this.button.html(this.texts[idx]);
+			this.button.setText(this.texts[idx]);
 		}catch(e){
 			console.error('updateButton error '+e.message);
 		}
