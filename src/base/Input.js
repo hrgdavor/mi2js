@@ -2,12 +2,12 @@
 mi2JS.comp.add('base/Input', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly
 
-	comp.constructor = function(el, tpl, parent){
-		superClass.constructor.call(this, el, tpl, parent);
+	proto.construct = function(el, tpl, parent){
+		superProto.construct.call(this, el, tpl, parent);
 		if(!this.input) this.input = this;
 		// input html node
 		this.inp=this.input.el;

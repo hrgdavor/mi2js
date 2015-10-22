@@ -90,30 +90,6 @@
 
 
 	// ----------------------------  extra functions for wrapped nodes (and components consequently)   ----------------
-	mi2Proto.isVisible = function(){
-		return !this.hasClass('hidden');
-	};
-	mi2Proto.setVisible = function(visible){
-		this.classUnless('hidden',visible);
-	};
-	baseProto.setVisible = function(visible){
-		this.classUnless('hidden',visible);
-		this.fireEvent(visible ? 'show':'hide',{});
-	};
-
-	mi2Proto.isEnabled = function(){
-		return !this.hasClass('disabled');
-	};
-	mi2Proto.setEnabled = function(enabled){
-		this.classUnless('disabled', enabled);
-	};
-
-	mi2Proto.isSelected = function(){
-		return this.hasClass('selected');
-	};
-	mi2Proto.setSelected = function(selected){
-		this.classIf('selected', selected);
-	};
 
 	mi2Proto.fade = function(op1,op2, hide){
 		var s = this.el.style;

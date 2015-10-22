@@ -2,15 +2,15 @@
 mi2JS.comp.add('base/Form', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	/**
 		@param event - name of the event to fire on parent (default: submit)
 	*/
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		this.info = {};
 		this.label = {};
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 		if(this.getCompName() == 'base/Form'){
 			var m = 'base/Form must be extended, rather use mi2JS.FormHandler inside: ' + parent.getCompName();
 			console.log(m,this.el, this);

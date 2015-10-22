@@ -1,7 +1,7 @@
 mi2JS.comp.add('base/RenderTable', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 /*
 data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 */
@@ -9,8 +9,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 
 	proto.isTransitive = function(){ return true; };
 
-	comp.constructor = function(el, tpl, parent){
-		superClass.constructor.call(this, el, tpl, parent);
+	proto.construct = function(el, tpl, parent){
+		superProto.construct.call(this, el, tpl, parent);
 
 		this.noData.innerHTML = t(this.attr("no_data","no_data_to_display"));
 

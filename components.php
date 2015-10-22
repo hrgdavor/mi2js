@@ -157,15 +157,15 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script type="text/javascript">
 mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:',
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
-	comp.constructor = function(el, tpl, parent){
-		superClass.constructor.call(this, el, tpl, parent);
+function(proto, superProto, comp, superComp){
+	proto.construct = function(el, tpl, parent){
+		superProto.construct.call(this, el, tpl, parent);
 		function it(id,text) {return { id:id, text:text}; }
 		this.data = [it(1,'John'), it(2,'Doe'), it(3, 'Monkey')];
 	};
 });
 mi2JS.comp.add('base/FormTest', 'base/Form', 'extend:',
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 });
 

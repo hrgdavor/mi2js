@@ -2,8 +2,6 @@
 
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
-	mi2.hiddenAttribute = 'hidden';
-
 	/** Create a html node. <br>
 		Example: mi2.addTag(document.body, 
 			{	tag:'DIV', 
@@ -46,6 +44,10 @@
 		return e;
 	};
 
+	mi2.add = function(parent,tag){
+		return new mi2(mi2.addTag(parent,tag));
+	}
+
 	/** Check if two rectangles are intersecting */
 	mi2.intersect = function(a, b) {
 		return (a.left <= b.right &&
@@ -74,14 +76,6 @@
 		}else{
 			return this.el.getAttribute(name);
 		}
-	};
-
-	mi2Proto.isVisible = function(){
-		return !this.el.hasAttribute(mi2.hiddenAttribute);
-	};
-
-	mi2Proto.setVisible = function(visible){
-		this.attr(mi2.hiddenAttribute, visible ? null:'');
 	};
 
 	/** Add class to the element if condition is true, and remove if false. 

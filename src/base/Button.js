@@ -2,10 +2,10 @@
 mi2JS.comp.add('base/Button', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
-	comp.constructor = function(el, tpl, parent){
-		superClass.constructor.call(this, el, tpl, parent);
+	proto.construct = function(el, tpl, parent){
+		superProto.construct.call(this, el, tpl, parent);
 
 		this.action = this.attr("action", "action");
 		this.event = this.attr("event", "action");

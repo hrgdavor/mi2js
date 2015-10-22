@@ -2,13 +2,13 @@
 mi2JS.comp.add('base/TabPane', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		// template is not pased because it will be used only if no inline template is defined
-		superClass.constructor.call(this, el, '', parent);
+		superProto.construct.call(this, el, '', parent);
 
 		if(!this.buttonsArea){// no inline template, so we use default one
 			var arr = [];

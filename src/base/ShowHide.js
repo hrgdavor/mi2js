@@ -2,15 +2,15 @@
 mi2JS.comp.add('base/ShowHide', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var $ = mi2JS;
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		var html = el.innerHTML;
 		el.innerHTML = '';
 		// template is not pased because it will be used only if no inline template is defined
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 		this.texts = this.button.attr('texts').split(',');
 
 		this.title.setHtml(html);

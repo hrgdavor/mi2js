@@ -19,14 +19,14 @@ describe( 'html.js', function () {
 
 	it('/ attr', function () { 
 		var tpl = {tag:'DIV', attr:{as:'Base', 'my-attr':'test'}, html:''};
-		var div = mi2(mi2.addTag(null, tpl));
+		var div = mi2.add(null, tpl);
 
 		expect(div.attr('my-attr')).toEqual('test');
 	});
 
 	it('/ setVisible', function () {
 		var tpl = {tag:'DIV', attr:{}, html:''};
-		var div = mi2(mi2.addTag(null, tpl));
+		var div = mi2.add(null, tpl);
 
 		expect(div.isVisible()).toBeTruthy();
 
@@ -37,7 +37,7 @@ describe( 'html.js', function () {
 
 	it('/ setHtml', function () {
 		var tpl = {tag:'DIV', attr:{}, html:''};
-		var div = mi2(mi2.addTag(null, tpl));
+		var div = mi2.add(null, tpl);
 
 		expect(div.el.firstElementChild).toEqual(null);
 

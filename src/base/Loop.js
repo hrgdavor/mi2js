@@ -13,7 +13,7 @@ example in separate template file:
 */
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 	
 	var $ = mi2JS;
 
@@ -25,7 +25,7 @@ function(comp, proto, superClass){
 
 	proto.isTransitive = function(){ return true; };
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		if(tpl) el.innerHTML = tpl;
 
 
@@ -37,7 +37,7 @@ function(comp, proto, superClass){
 		// this was done before calling parent constructor to avoid stack overflow in case
 		// of component recursion using Loop component (example: tree-like structures)
 
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 
 		this.items = [];
 		this.count = 0;

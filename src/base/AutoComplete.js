@@ -2,7 +2,7 @@
 mi2JS.comp.add('base/AutoComplete', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var $ = mi2JS;
 /*
@@ -12,9 +12,9 @@ function(comp, proto, superClass){
    showall - show all options when filtering, just select first match
 */
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 
 		this.addClass("AutoComplete");
 

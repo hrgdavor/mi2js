@@ -21,7 +21,7 @@
 
 			var compDef = this.get(compName, el);
 			var c = new compDef();
-			compDef.constructor.call(c, el, this.getTpl(compName), parent );
+			c.construct(el, this.getTpl(compName), parent);
 
 			c.setParent(parent);
 			if(parent === null && c.isVisible()){
@@ -33,7 +33,7 @@
 			return c;
 
 		}catch(e){
-			// log the compnent and the node where the error happened
+			// log the component and the node where the error happened
 			// this will occur for each parent too as the error is rethrown
 			// and error will show up in console for inspection of execution stack
 			console.log('error while creating a component ',compName, el, e);
@@ -83,20 +83,12 @@
 			comp = eval('(function '+name.replace('/','_')+'(){})');
 			comp.superClass = superClass;
 			mi2.extend( comp, superClass );
-			// nasty hard to catch bug happens if a comp def does not put a 
-			// constructor with the 3 parameters. 
-			// compDef.constructor.call fails with error: "SyntaxError: malformed formal parameter"
-			// so here is the default one
-			comp.constructor = function defaultConstructor(el, tpl, parent){
-				superClass.constructor.call(this, el, tpl, parent);
-			};
 		}
 		// else: 
 		// hapens when reloading component in runtime
 		// changes to the component prototype can be applied to the already instantiated components
-		initializer(comp, comp.prototype, superClass);
+		initializer(comp.prototype, superClass.prototype, comp, superClass);
 		comp.compName = name;
-		if(typeof(comp.constructor) != "function") console.log("constructor not function ",compName);
 
 		if(tpl && tpl == 'extend:') 
 			tpl = this.getTpl(supName);
@@ -107,180 +99,6 @@
 			this.tpl[name] = tpl;
 
 		return (this.def[name] = comp);
-
 	};
-
-
-	/* ***********************  basic html nodes extension  ***************************** */
-
-	mi2Proto.isEnabled = function(){
-		return !this.hasClass('disabled');
-	};
-	mi2Proto.setEnabled = function(enabled){
-		this.classUnless('disabled', enabled);
-	};
-
-	mi2Proto.isSelected = function(){
-		return this.hasClass('selected');
-	};
-	mi2Proto.setSelected = function(selected){
-		this.classIf('selected', selected);
-	};
-
-/* ********************* Base component   ***********************************/
-
-	function Base(){}
-
-	Base.constructor = function(el,tpl){
-		Base.superClass.constructor.call(this,el);
-
-		if(tpl) el.innerHTML = tpl;
-		mi2.parseChildren(el,this);
-
-	};
-
-	mi2.comp.def.Base = Base;
-	mi2.comp.tpl.Base = '';
-	Base.compName = 'Base';
-	// extend mi2JS to get addClass and other html utility functions (html.js must be included in the bundle to have them)
-	mi2.extend(Base, mi2);
-
-	var proto = Base.prototype; //
-
-	proto.find    = function(search){ return mi2.find   (this.el, search); }
-	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
-
-	proto.getCompName = function(){
-		if(this.el && this.el.getAttribute){
-			return this.el.getAttribute('as');
-		}
-	};
-
-	proto.getCompClass = function(){
-		var compName = this.getCompName();
-		if(compName)
-			return mi2.comp.get(compName);
-	};
-
-	/** listener shortcut that by default binds callback function to current object/component
-	so you can use this in callback without extra bloat otherwise needed
-	*/
-	proto.listen = function(el,evt,listener){
-		listener = listener || this['on_'+evt];
-
-		if(el.addListener){
-			el.addListener( evt, listener, this);
-		}else //dom node
-			mi2.listen( el, evt, listener, this); 
-	};
-
-	//setTimeout and setInterval shortcut that by default binds callback function to current object
-	//so you can use this in callback without extra bloat otherwise needed
-	proto.setTimeout = function(fc,delay){
-		return setTimeout( fc.bind(this), delay );
-	};
-  
-	proto.setInterval = function(fc,delay){
-		return setInterval( fc.bind(this), delay );
-	};
-
-	proto.addListener = function(evtName,callback, scope){
-		if(!this.__listeners) this.__listeners = {};
-		var l = this.__listeners[evtName];
-		if(!l) l = this.__listeners[evtName] = [];
-
-		// bind a scope to the callback function
-		if(scope) callback = mi2.bind( scope, callback );
-		
-		l.push({callback:callback, scope:scope });
-	};
-
-	proto.isTransitive = function(){ return false; };
-
-	proto.fireEvent = function(evtName, ex){
-
-		if(evtName == 'show' && !this.__initialized){
-			this.fireEvent('init',{ eventFor: 'children' });
-		}
-
-		// allow for init to be initiated even when hidden (and then skipped on_show)
-		if(evtName == 'init'){
-			this.__initialized = true;
-		}
-		
-		if(!ex) ex = {};
-		ex.name = evtName;
-		ex.target = this;
-
-		if(ex.eventFor == 'parent' && this.isTransitive()){
-			if(this.parent) this.parent.fireEvent(evtName, ex);
-			return;
-		}
-
-		var l;
-		if(this.__listeners) l=this.__listeners[evtName];
-		if(l) for(var i=0; i<l.length; i++){
-			try{
-				l[i].callback(ex);
-			}catch(e){
-				console.log('Error firing event ',evtName, ex, 'listener', l[i].scope, 'error', e);
-				console.error(e.message);
-			}
-		}
-		if(typeof(this['on_'+evtName]) == 'function') this['on_'+evtName](ex);
-
-		if(ex.eventFor == 'children' && this.children){
-			for(var i=0; i<this.children.length; i++){
-				this.children[i].fireEvent(evtName, ex);
-			}
-		}
-	};
-
-	proto.addChild = function(c){
-		if(!this.el) {
-			var msg = 'Component not propery initialized. Must call Base constructor before parseChildren';
-			console.log(msg, this, this.el);
-			throw new Error(msg);
-		}
-		if(!this.children) this.children = [];
-		var cnt = this.children.length >>> 0;
-		for(var i =0; i<cnt; i++) if(c == this.children[i]) return; 
-		this.children.push(c);
-	};
-
-	proto.removeChild = function(){
-		var found = -1, cnt = this.children.length >>> 0;
-		for(var i =0; i<cnt; i++) if(c == this.children[i]) return; 
-		if(found != -1) this.children.splice(found,1);
-	};
-
-	proto.setParent = function(p){
-		var old = this.parent;
-		if(old && old.removeChild) 
-			old.removeChild(this);
-		this.parent = p;
-		if(p  && p.addChild) p.addChild(this);
-	};
-
-	/** Use this when the tag on which the component is defined*/
-	proto.replaceTag = function(el,tag){
-		var ret = document.createElement(tag);
-		var arr = el.attributes;
-		for(var i=0; i<arr.length; i++){
-			ret.setAttribute(arr[i].name, arr[i].value);
-		}
-		el.parentNode.replaceChild(ret,el);
-		return ret;
-	};
-
-	proto.attrInt = function(name, def){
-		return mi2.num( this.attr(name,def) );
-	};
-
-	proto.setVisible = function(visible){
-		mi2Proto.setVisible.call(this, visible);
-		this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
-	};
-
 
 }(mi2JS));

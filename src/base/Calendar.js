@@ -2,13 +2,13 @@
 mi2JS.comp.add('base/Calendar', 'Base', '<input p="input" as="base/Input">',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly 
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
 		this.editDate = t == 'date' || t =='datetime';

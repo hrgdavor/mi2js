@@ -5,7 +5,7 @@ mi2JS.comp.add('base/Table', 'base/Loop', '',
 */
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 	
 	var $ = mi2JS;
 
@@ -16,7 +16,7 @@ function(comp, proto, superClass){
 	};
 
 
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		var THEAD = this.THEAD = findOrAdd(el, 'THEAD');
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
 
@@ -32,7 +32,7 @@ function(comp, proto, superClass){
 		// move them to THEAD
 		for(var i=0; i<arr.length; i++) THEAD.appendChild(arr[i]);
 
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 	};
 
 	function findOrAdd(el,tag){

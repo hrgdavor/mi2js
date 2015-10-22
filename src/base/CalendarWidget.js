@@ -2,13 +2,13 @@
 mi2JS.comp.add('base/CalendarWidget', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(comp, proto, superClass){
+function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly 
 	
-	comp.constructor = function(el, tpl, parent){
+	proto.construct = function(el, tpl, parent){
 		// template is not pased because it will be used only if no inline template is defined
-		superClass.constructor.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 		this.dayOffset = 1;
 
 		this.addClass('CalendarWidget');
