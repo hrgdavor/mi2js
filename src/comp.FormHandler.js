@@ -1,7 +1,9 @@
 (function(){
 
-	mi2JS.FormHandler = function(inp, label, info, required){
-		if(!(this instanceof mi2JS.FormHandler)) return new mi2JS.FormHandler(inp, label, info, required);
+	var DEF = mi2JS.FormHandler = function(inp, label, info, required){
+		// better we fix the case when called without "new" operator than confusing developer with err later
+		if(!(this instanceof DEF)) return new DEF(inp, label, info, required);
+		
 		this.inp = inp;
 		this.label = label || {};
 		this.info = info || {};
@@ -18,7 +20,7 @@
 		}
 	};
 
-	var proto = mi2JS.FormHandler.prototype;
+	var proto = DEF.prototype;
 
 	proto.focus = function(){
 		for(var p in this.inp){

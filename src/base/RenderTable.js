@@ -53,8 +53,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.setup(optsIn.pager || {});
 		this.pager2.setup(optsIn.pager || {});
 		this.cols = optsIn.columns || {};
-		this.pager1.classIf('hidden', optsIn.pager == 'hidden');
-		this.pager2.classIf('hidden', optsIn.pager == 'hidden');
+		this.pager1.setVisible(optsIn.pager != 'hidden');
+		this.pager2.setVisible(optsIn.pager != 'hidden');
 		var i=0;
 		var tr = $.addTag(this.thead.el, "TR");
 		var tr2 = $.addTag(this.thead.el,"TR");
@@ -162,9 +162,12 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto.__update = function(tData){
+		console.log('__update', tData);
 		var empty = tData.data.length == 0;
-		this.noData.classIf("hidden", !empty);
-		this.data.classIf("hidden", empty);
+		console.log('empty', empty);
+		this.noData.setVisible(empty);
+		this.data.setVisible(!empty);
+
 		this.pager1.update(tData);
 		this.pager2.update(tData);
 

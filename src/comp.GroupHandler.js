@@ -2,13 +2,15 @@
 
 	var mi2 = mi2JS;
 
-	mi2.GroupHandler = mi2.GroupHandler || function(group){
-		if(!(this instanceof mi2JS.GroupHandler)) return new mi2JS.GroupHandler(group);
+	var DEF = mi2.GroupHandler = function(group){
+
+		// better we fix the case when called without "new" operator than confusing developer with err later
+		if(!(this instanceof DEF)) return new DEF(group);
 
 		this.group = group;
 	}
 
-	var proto = mi2.GroupHandler.prototype;
+	var proto = DEF.prototype;
 
 	function makeMap(arr, val){
 		var obj = {};

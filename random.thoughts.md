@@ -1,6 +1,21 @@
 # general
  - avoid programming inside templates (no code evaluation or property expansion)
 
+# cleanup
+ - remove leftovers of previous approach to inputs 
+   - remove support for augmenting `<input>` fields and `<form>` elements 
+   - abandon `<form>` element as it fails for nested forms (editing object graph)
+ - rethink if distinction between augmented html node and real component is needed
+   - augmented node has no other information except the node reference
+ - rethink form validation
+   - ? remove label reference and info box reference
+ - rethink validation error format
+   - for combining form default validation and custom validation after
+   - format for getting validation error from server
+   - for easier adding validation errors
+   - ? validation object with some utiliy metohds
+
+
 # event (and direction for fire)
  - Button - fire to parent (dir:down, hops:1) or (call on parent, hops:0)
  - visibility(show/hide) - fire to children to notify visibility changed (propagation based on visibility)
@@ -9,7 +24,7 @@
 
 ## components delegating stuff to parent (transitive)
  - transitive components are just placeholders, used by some other component
-  - example1: `base/Loop` with multiple copies of a component (multi address editor)
+   - example1: `base/Loop` with multiple copies of a component (multi address editor)
  - When extending, component can be made non-transitive again by overriding `isTransitive` to `return false`
  - event should be recognized somehow so transitive component can forward it up or down
  - formatting is transitive for transitive component
@@ -24,36 +39,35 @@ Use case fo `base/Button`
 ## components firing events down to parent
  - should have event="xxx" attribute to change event name
  - should have action="xxx" attribute to enable one event handler handlig similar actions
-  - example: event="changeLanguage" action="en"
-  - example: event="delete" action="archive"
-  - example: event="rowClick" action="preview"
+   - example: event="changeLanguage" action="en"
+   - example: event="delete" action="archive"
+   - example: event="rowClick" action="preview"
 
 
 ## show/hide event
- - afterCreate event becomes obsolete after this works (used only by ShowHide component now)
- - ? should ti be event
- - parent show:
-  - visible child: forward
-  - hidden  child: ignore
- - parent hide:
-  - visible child: forward
-  - hidden  child: ignore
- - check parent visibility before firing (if parent is hiden hide was fired already)
- - initial show event must be fired to avoid incosistencies
+ - [x] parent show:
+   - [x] visible child: forward
+   - [x] hidden  child: ignore
+ - [x] parent hide:
+   - [x] visible child: forward
+   - [x] hidden  child: ignore
+ - [ ] check parent visibility before firing (if parent is hiden hide was fired already)
+ - [x] initial show event must be fired to avoid incosistencies
 
 # formaters
  - formats a value to another value (number,string,object) 
  - some textual format examples: date, datetime, datetime-with-seconds ... etc 
  - some are locale specific
-  - date (31.12.2015)
-  - decimal (1.000,00 or 1,000.00 )
+   - date (31.12.2015)
+   - decimal (1.000,00 or 1,000.00 )
  - format(x,'date') returns x formatted as date 
  - format(x,['decimal',2]) returns x formatted as decimal (options:[2] , understood as 2 decimal places)
  - null handling
-  - ifNull,empty 
+   - ifNull,empty 
 
 ## formatters in transitive components
- - 
+ - is local formatting needed ? 
+ - maybe work on nicer looking data transformation when preparing for ViewPort
 
 ## renderers
  - render HTML (for short formated texts without using components)
