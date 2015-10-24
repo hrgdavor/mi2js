@@ -2,7 +2,7 @@
 
 	var mi2 = mi2JS;
 
-	var DEF = mi2.GroupHandler = function(group){
+	var DEF = mi2.Group = function(group){
 
 		// better we fix the case when called without "new" operator than confusing developer with err later
 		if(!(this instanceof DEF)) return new DEF(group);

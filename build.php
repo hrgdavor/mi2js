@@ -99,7 +99,7 @@ var scripts = {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"comp.GroupHandler": {
+	"Group": {
 		"desc": "", 
 		"require":["comp"]
 	},
