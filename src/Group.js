@@ -9,8 +9,8 @@
 
 		this.items = group;
 
-		this.forEachCollect = group instanceof Array ? 
-			this.forEachCollectArray : this.forEachCollectObject;
+		this.forEachGet = group instanceof Array ? 
+			this.forEachGetArray : this.forEachGetObject;
 	}
 
 	var proto = DEF.prototype;
@@ -69,8 +69,13 @@
 		}
 	}
 
+	proto.forEachGet = function(func, params){
+		return this.items instanceof Array ? 
+			this.forEachGetArray(func, params) : this.forEachGetObject(func, params);
+	};
+
 	/* call function on each element, but collect returned values */
-	proto.forEachCollectArray = function(func, params){
+	proto.forEachGetArray = function(func, params){
 		var items = this.items;
 		var ret = [], fromFunc;
 		for(p in items){
@@ -81,7 +86,7 @@
 	}
 
 	/* call function on each element, but collect returned values */
-	proto.forEachCollectObject = function(func, params){
+	proto.forEachGetObject = function(func, params){
 		var items = this.items;
 		var ret = {}, fromFunc;
 		for(p in items){

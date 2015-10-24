@@ -44,7 +44,7 @@ describe( 'Group.js', function () {
 		expect(root.el.innerHTML).toEqual('<b as="test/GroupTest">John</b><b as="test/GroupTest">Doe</b>');
 
 		// collect data
-		var newData = group.forEachCollect(function(child, prop){
+		var newData = group.forEachGet(function(child, prop){
 			return child.getValue();
 		});
 
@@ -54,7 +54,7 @@ describe( 'Group.js', function () {
 		group.item('last').setValue(undefined);
 
 		// collect data
-		newData = group.forEachCollect(function(child, prop){
+		newData = group.forEachGet(function(child, prop){
 			return child.getValue();
 		});
 
@@ -83,7 +83,7 @@ describe( 'Group.js', function () {
 		expect(root.el.innerHTML).toEqual('<b as="test/GroupTest">John</b><b as="test/GroupTest">Doe</b>');
 
 		// collect data
-		var newData = group.forEachCollect(function(child, prop){
+		var newData = group.forEachGet(function(child, prop){
 			return child.getValue();
 		});
 
@@ -93,7 +93,7 @@ describe( 'Group.js', function () {
 		group.item(1).setValue(undefined);
 
 		// collect data
-		newData = group.forEachCollect(function(child, prop){
+		newData = group.forEachGet(function(child, prop){
 			return child.getValue();
 		});
 
