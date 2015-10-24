@@ -5,6 +5,7 @@ mi2JS.comp.add('base/Tpl', 'Base', '',
 function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS;
+	var mi2Proto = mi2.prototype;
 
 	proto.construct = function(el, tpl, parent){
 		superProto.construct.call(this, el, tpl, parent);
@@ -27,11 +28,10 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
-	function forAttr(attr, func){
-		attr.value = '';
+	function forAttr(el, attr, func){
+		el.attr(attr, null);
 		return function(data){
-			var str = func(data);
-			if(attr.value != str) attr.value = str; // avoid updating DOM if not needed
+			el.attr(attr, func(data));
 		}
 	}
 
@@ -45,13 +45,20 @@ function(proto, superProto, comp, superComp){
 
 	proto.loadTemplate = function(el, list){
 		list = list || [];
-		var a = el.attributes;
-		var count = a.length;
-		var idx, updater;
-		for(var i=0; i<count; i++){
-			if(!a[i].value) continue;
-			updater = mi2.parseTemplate(a[i].value);
-			if(updater) list.push(forAttr(a[i], updater));
+		var attribs = el.attributes;
+		var count = attribs.length;
+		var idx, updater, wrapped;
+
+		// We go in reverse because templated attributes are removed right away.
+		// This way we do not go out of bounds ot the collection as it shortens
+		for(var i=count-1; i>=0; i--){
+			if(!attribs[i].value) continue;
+
+			updater = mi2.parseTemplate(attribs[i].value);
+			if(updater){
+				if(wrapped == null) wrapped = new mi2(el); // create wrapper only if needed
+				list.push(forAttr(wrapped, attribs[i].name, updater));
+			}
 		}
 
 		var ch = el.firstChild;
