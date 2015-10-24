@@ -26,12 +26,12 @@
 		return format;
 	};
 
-	mi2.formatNext = function(value,args,skip){
-		return mi2.format(value, Array.prototype.slice.call(args,skip));
+	mi2.formatNext = function(value, args, skip){
+		return mi2.format(value, Array.prototype.slice.call(args,skip+2), args[1], args[2]);
 	};
 
-	/** null formatter or empty value or '' formatter return original value withour formatting */
-	mi2.format = function(value, fName){
+	/** formatters: null, undefined, '', []  will return the original value without formatting */
+	mi2.format = function(value, fName, propName, data){
 		if(!fName) return value;
 
 		if(fName instanceof Array){
@@ -40,12 +40,13 @@
 			var arr = fName, f, params;
 			fName = arr[0];
 			f = mi2.getFormatter(fName);
-			params = [value];
+			params = [value, propName, data];
 			if(arr.length > 1) params = params.concat(arr.slice(1));
 
 			return f.apply(null,params);
 		}
-		return mi2.getFormatter(fName).apply(null,[value]);
+
+		return mi2.getFormatter(fName).apply(null,[value, propName, data]);
 	};
 
 
