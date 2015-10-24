@@ -143,13 +143,14 @@
 	/* find component that is holding the DOM node */
 	proto.findComp = function(toFind){
 		var cd = this.children;
-		var comp, count = cd.length;
+		var comp = null, count = cd.length;
 		for(var i=0; i<count; i++){
 			if(cd[i].el === toFind){
 				comp = cd[i];
 				break;
 			}
-		}		
+		}
+		return comp;
 	}
 
 	/** Use this when the tag on which the component is defined*/
