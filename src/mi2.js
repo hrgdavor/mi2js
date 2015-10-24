@@ -1,6 +1,6 @@
 (function(){
 
-var $ = window.mi2JS = window.mi2JS || function Mi2JSDomNodeWrapper(node, root){
+var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 	if( this instanceof $){ // called as "new mi2JS(node);"
 		this.el = node instanceof String ? $.find(node, root) : node;
 		if(this.el === null) throw new Error('null node or not found '+node);			
