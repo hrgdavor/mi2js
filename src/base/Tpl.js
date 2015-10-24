@@ -16,11 +16,6 @@ function(proto, superProto, comp, superComp){
 		this.fillTemplate(this.template, data);
 	};
 
-	proto.extractData = function(data, code){
-		return (typeof(data[code]) != "undefined") ? data[code]: '';
-	};
-
-	var tplReg = /\$\{([a-zA-z_0-9]+)\}/g;
 	proto.fillTemplate = function(list, data){
 		var count = list.length;
 		for(var i=0; i<count; i++){

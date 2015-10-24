@@ -73,7 +73,7 @@
 
 	mi2Proto.attr = function(name, val){
 		if(arguments.length > 1){
-			if(val === null || val === undefined){
+			if(val === null || val === void 0){
 				if(this.el.hasAttribute(name)) this.el.removeAttribute(name);
 			}else{
 				if(val !== this.el.getAttribute(name)) 

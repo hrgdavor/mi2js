@@ -139,7 +139,7 @@ function(proto, superProto, comp, superComp){
 		var arr = [],data;
 		for(var i=0; i<this.count; i++){
 			data = this.allItems[i].getValue();
-			if(data !== undefined) arr.push(data);
+			if(data !== void 0) arr.push(data);
 		}
 		return arr;
 	};

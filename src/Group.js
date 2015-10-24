@@ -75,7 +75,7 @@
 		var ret = [], fromFunc;
 		for(p in items){
 			fromFunc = func(items[p],p,items, params);
-			if(fromFunc !== undefined) ret.push(fromFunc);
+			if(fromFunc !== void 0) ret.push(fromFunc);
 		}
 		return ret;
 	}
@@ -86,7 +86,7 @@
 		var ret = {}, fromFunc;
 		for(p in items){
 			fromFunc = func(items[p],p,items, params);
-			if(fromFunc !== undefined) ret[p] = fromFunc;
+			if(fromFunc !== void 0) ret[p] = fromFunc;
 		}
 		return ret;
 	}
