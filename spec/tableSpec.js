@@ -8,7 +8,7 @@ describe( 'base/Table.js', function () {
     '<tr>'+
         '<th column="first" sort></th><td gender="${gender}">${first}</td>'+
         '<th column="last" sort></th><td>${last}</td>'+
-        '<th column="age" sort></th><td>${age}</td>'+
+        '<th column="age" sort as="Base"></th><td>${age}</td>'+
     '</tr>'
 			});
 
@@ -26,7 +26,7 @@ describe( 'base/Table.js', function () {
 '<thead>'+
     '<th column="first" sort=""></th>'+
     '<th column="last" sort=""></th>'+
-    '<th column="age" sort=""></th>'+
+    '<th column="age" sort="" as="Base"></th>'+
 '</thead>'
 		);
 
@@ -51,12 +51,14 @@ describe( 'base/Table.js', function () {
 '<thead>'+
     '<th column="first" sort=""></th>'+
     '<th column="last" sort=""></th>'+
-    '<th column="age" sort=""></th>'+
+    '<th column="age" sort="" as="Base"></th>'+
 '</thead>'
 		);
 
+        expect(comp.columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
+
 	});
 
-
+    
 
 });

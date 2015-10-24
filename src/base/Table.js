@@ -24,15 +24,27 @@ function(proto, superProto, comp, superComp){
 		var it = TBODY.getElementsByTagName('TH');
 		var arr = [];
 		for(var i=0; i<it.length;i++){
-			var th = it[i];
-			var colName = th.getAttribute('column');
-			arr.push(th);
+			arr.push(it[i]);
 		}
 
 		// move them to THEAD
 		for(var i=0; i<arr.length; i++) THEAD.appendChild(arr[i]);
 
 		superProto.construct.call(this, el, tpl, parent);
+
+		var tmp = {};
+		// create Group for columns, by collecting each TH with "column" attribute
+		for(var i=0; i<arr.length; i++){
+			var colName = arr[i].getAttribute('column');
+			if(colName){
+				if(arr[i].hasAttribute('as') || arr[i].hasAttribute('p')){
+					// it is a NodeWrapper/Component, and is inside this.children
+					tmp[colName] = this.findComp(arr[i]);
+				}else // create new NodeWrapper
+					tmp[colName] = new $(arr[i]);
+			}
+		}
+		this.columns = new $.Group(tmp);
 	};
 
 	function findOrAdd(el,tag){
