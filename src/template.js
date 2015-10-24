@@ -6,7 +6,7 @@
 
 		// format extracted value
 		format = mi2.parseFormat(format);
-		return function(data){ return mi2.format(data[prop], format); };
+		return function(data){ return mi2.format(data[prop], format, prop, data); };
 	}
 
 	function genPrinter(arr){
@@ -21,6 +21,7 @@
 	}
 
 	var tplReg = /\$\{([a-zA-z_0-9]+):?([^\}]+)?\}/g;
+
 	mi2.parseTemplate = function(str){
 		var arr = [];
 		var offset = 0;
