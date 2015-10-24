@@ -7,7 +7,7 @@
 		// better we fix the case when called without "new" operator than confusing developer with err later
 		if(!(this instanceof DEF)) return new DEF(group);
 
-		this.group = group;
+		this.items = group;
 	}
 
 	var proto = DEF.prototype;
@@ -43,15 +43,26 @@
 	proto.toggle = function(funcName, arr, on, off){
 		var what = makeMap(arr, on);
 
-		for(var p in this.group){
-			this.group[p][funcName]( what.hasOwnProperty(p) ? what[p] : off );
+		for(var p in this.items){
+			this.items[p][funcName]( what.hasOwnProperty(p) ? what[p] : off );
 		}
 	};
 
 	proto.callFunc = function(funcName, args){
-		for(var p in this.group){
-			this.group[p][funcName].apply(this.group[p],args);
+		for(var p in this.items){
+			this.items[p][funcName].apply(this.items[p],args);
 		}
 	};
+
+	proto.item = function(code){
+		return this.items[code];
+	};
+
+	proto.forEach = function(func){
+		var items = this.items;
+		for(p in items){
+			func(items[p],p,items);
+		}
+	}
 
 }());
