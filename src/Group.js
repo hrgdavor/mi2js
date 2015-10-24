@@ -8,6 +8,9 @@
 		if(!(this instanceof DEF)) return new DEF(group);
 
 		this.items = group;
+
+		this.forEachCollect = group instanceof Array ? 
+			this.forEachCollectArray : this.forEachCollectObject;
 	}
 
 	var proto = DEF.prototype;
@@ -48,9 +51,9 @@
 		}
 	};
 
-	proto.callFunc = function(funcName, args){
+	proto.callFunc = function(funcName, params){
 		for(var p in this.items){
-			this.items[p][funcName].apply(this.items[p],args);
+			this.items[p][funcName].apply(this.items[p],params);
 		}
 	};
 
@@ -58,11 +61,34 @@
 		return this.items[code];
 	};
 
-	proto.forEach = function(func){
+	/* call function on each element */
+	proto.forEach = function(func, params){
 		var items = this.items;
 		for(p in items){
-			func(items[p],p,items);
+			func(items[p], p, items, params);
 		}
+	}
+
+	/* call function on each element, but collect returned values */
+	proto.forEachCollectArray = function(func, params){
+		var items = this.items;
+		var ret = [], fromFunc;
+		for(p in items){
+			fromFunc = func(items[p],p,items, params);
+			if(fromFunc !== undefined) ret.push(fromFunc);
+		}
+		return ret;
+	}
+
+	/* call function on each element, but collect returned values */
+	proto.forEachCollectObject = function(func, params){
+		var items = this.items;
+		var ret = {}, fromFunc;
+		for(p in items){
+			fromFunc = func(items[p],p,items, params);
+			if(fromFunc !== undefined) ret[p] = fromFunc;
+		}
+		return ret;
 	}
 
 }());

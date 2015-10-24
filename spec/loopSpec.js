@@ -17,7 +17,7 @@ describe( 'base/Loop.js', function () {
 
 		comp.setValue(data);
 
-		expect(comp.items.length).toEqual(2);
+		expect(comp.getItems().length).toEqual(2);
 		expect(comp.el.innerHTML).toEqual(
 '<div as="base/Tpl">Name: John, Last: Doe</div>'+
 '<div as="base/Tpl">Name: Mary, Last: Blast</div>'

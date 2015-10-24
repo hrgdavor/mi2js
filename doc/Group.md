@@ -8,4 +8,9 @@ Utility for handling group of named node wrappers or components.
    - show some and hide others
    - add class to some and remove from others
 
+```javascript
+var group = $.Group(this.buttons);
 
+
+
+```

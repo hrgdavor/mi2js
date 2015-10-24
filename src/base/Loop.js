@@ -39,7 +39,9 @@ function(proto, superProto, comp, superComp){
 
 		superProto.construct.call(this, el, tpl, parent);
 
+		this.allItems = [];
 		this.items = [];
+		this.group = new $.Group(this.items);
 		this.count = 0;
 	};
 
@@ -76,18 +78,17 @@ function(proto, superProto, comp, superComp){
 		this.count = arr.length;
 		if(this.noData) this.noData.setVisible(!this.count);
 
-		for(var i=arr.length; i<this.items.length; i++){
-			this.items[i].setVisible(false);
+		// update items array to match visible elements
+		this.group.items = this.items = this.allItems.slice(0,this.count);
+
+		for(var i=arr.length; i<this.allItems.length; i++){
+			this.allItems[i].setVisible(false);
 		}
 	};
 
 	/** returns only active items (do not access .times property directly as it contains also disabled ones) */
-	proto.getItems = function(id){
-		var it = [];
-		for(var i=0; i<this.count; i++){
-			it.push(this.items[i]);
-		}
-		return it;
+	proto.getItems = function(){
+		return this.items;
 	};
 
 	function defGetValue(){ return this.data;}
@@ -123,9 +124,10 @@ function(proto, superProto, comp, superComp){
 	};
 	
 	proto.setItem = function(newData,i){
-		var item = this.items[i];
+		var item = this.allItems[i];
 
-		if(!item) item = this.items[i] = this.makeItem(newData, i);
+		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
+		this.group.items = this.items = this.allItems;
 
 		item.data = newData;
 		item.el.index = i;
@@ -136,9 +138,8 @@ function(proto, superProto, comp, superComp){
 	proto.getValue = function(){
 		var arr = [],data;
 		for(var i=0; i<this.count; i++){
-			data = this.items[i].getValue();
-			if(data !== null && this.items[i].isVisible())
-				arr.push(data);
+			data = this.allItems[i].getValue();
+			if(data !== undefined) arr.push(data);
 		}
 		return arr;
 	};
@@ -150,17 +151,8 @@ function(proto, superProto, comp, superComp){
 	
 	proto.callFunc = function(funcName, args){
 		for(var i=0; i<this.count; i++){
-			this.items[i][funcName].apply(this.items[i],args);
+			this.allItems[i][funcName].apply(this.allItems[i],args);
 		}
-	};
-
-	proto.customValue = function(funcName, arr){
-		for(var i=0; i<arr.length; i++){
-			var item = this.items[i];
-			if(!item) item = this.items[i] = this.makeItem(newData, i);
-			this.items[i][funcName](arr[i]);
-		}
-		this.count = arr.length;
 	};
 
 });
