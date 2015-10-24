@@ -17,40 +17,17 @@
 
 	function makeMap(arr, val){
 		var obj = {};
-		for(var i=0; i<arr.length; i++){
-			obj[arr[i]] = val;
+		if(arr instanceof array){
+			for(var i=0; i<arr.length; i++){
+				obj[arr[i]] = val;
+			}			
+		}else{
+			obj[arr] = val;
 		}
 		return obj;
 	}
 
-	/* this is usefull to add a group of elements, os they can be changed together */
-	proto.setVisible  = function(v){ this.callFunc('setVisible', [v]); };
-	proto.setSelected = function(v){ this.callFunc('setSelected',[v]); };
-	proto.setEnabled  = function(v){ this.callFunc('setEnabled', [v]); };
-	proto.classIf     = function(){ this.callFunc('classIf', arguments); };
-	proto.addClass    = function(){ this.callFunc('addClass', arguments); };
-	proto.removeClass = function(){ this.callFunc('removeClass', arguments); };
-
-	proto.visibleIs  = function(){ this.toggle('setVisible', arguments, true, false); }
-	proto.selectedIs = function(){ this.toggle('setSelected', arguments, true, false);	}
-	proto.enabledIs  = function(){ this.toggle('setEnabled', arguments, true, false); }
-
-	proto.hiddenIs     = function(){ this.toggle('setVisible', arguments, false, true); }
-	proto.deselectedIs = function(){ this.toggle('setSelected', arguments, false, true);	}
-	proto.disabledIs   = function(){ this.toggle('setEnabled', arguments, false, true); }
-
-	/* what - what to set visible
-	          supports either string code for single item , or object with multiple keys (and different values),
-	   def - default value if not specified     
-	*/
-	proto.toggle = function(funcName, arr, on, off){
-		var what = makeMap(arr, on);
-
-		for(var p in this.items){
-			this.items[p][funcName]( what.hasOwnProperty(p) ? what[p] : off );
-		}
-	};
-
+	/** Call func on all items */
 	proto.callFunc = function(funcName, params){
 		for(var p in this.items){
 			this.items[p][funcName].apply(this.items[p],params);
@@ -95,5 +72,64 @@
 		}
 		return ret;
 	}
+
+
+
+/* ************************************************************************************************** */
+
+	/* Toggle functionalities EXPERIMENTAL */
+
+	/* this is usefull to add a group of elements, so they can be changed together */
+	proto.visibleIs  = function(){ this.toggleParams('setVisible',  arguments, [true], [false]); };
+	proto.selectedIs = function(){ this.toggleParams('setSelected', arguments, [true], [false]); };
+	proto.enabledIs  = function(){ this.toggleParams('setEnabled',  arguments, [true], [false]); };
+
+	proto.visibleNot  = function(){ this.toggleParams('setVisible',  arguments, [false], [true]); };
+	proto.selectedNot = function(){ this.toggleParams('setSelected', arguments, [false], [true]); };
+	proto.enabledNot  = function(){ this.toggleParams('setEnabled',  arguments, [false], [true]); };
+
+	proto.toggleClass = function(className){
+		this.toggleCall(
+			Array.prototype.slice.call(arguments, 1),
+			function(item){
+				item.classIf(className, true);
+			},
+			function(item){
+				item.classIf(className, false);
+			}
+		); 
+	};
+
+	proto.toggleAttr = function(name, on, off){
+		this.toggleCall(
+			Array.prototype.slice.call(arguments, 3),
+			function(item){
+				item.attr(name, on);
+			},
+			function(item){
+				item.attr(name, off);
+			}
+		); 
+	};
+
+	proto.toggleParams = function(funcName, arr, on, off){
+		var what = makeMap(arr, on), items = this.items, params, item;
+
+		for(var p in items){
+			params = what.hasOwnProperty(p) ? on : off;
+			item = items[p];
+			item[funcName].apply( item, params );
+		}
+	};
+
+	proto.toggleCall = function(arr, onFunc, offFunc){
+		var what = makeMap(arr, true), func, items = this.items;
+
+		for(var p in items){
+			func = what.hasOwnProperty(p) ? onFunc : offFunc;
+			func(items[p],p,items);
+		}
+	};
+
 
 }());

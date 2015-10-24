@@ -122,7 +122,7 @@ function(proto, superProto, comp, superComp){
 	proto.setItemValue = function(item, newData){
 		item.setValue(newData);
 	};
-	
+
 	proto.setItem = function(newData,i){
 		var item = this.allItems[i];
 
@@ -134,21 +134,18 @@ function(proto, superProto, comp, superComp){
 		this.setItemValue(item, newData);
 		item.setVisible(true);
 	};
- 
+
 	proto.getValue = function(){
-		var arr = [],data;
-		for(var i=0; i<this.count; i++){
-			data = this.allItems[i].getValue();
-			if(data !== void 0) arr.push(data);
-		}
-		return arr;
+		return this.group.forEachGet(function(item){
+			return item.getValue();
+		});
 	};
 
 	proto.add = function(data){
 		this.setItem(data,this.count);
 		this.count++;
 	};
-	
+
 	proto.callFunc = function(funcName, args){
 		for(var i=0; i<this.count; i++){
 			this.allItems[i][funcName].apply(this.allItems[i],args);
