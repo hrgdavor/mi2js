@@ -41,9 +41,16 @@ function(proto, superProto, comp, superComp){
 
 		this.allItems = [];
 		this.items = [];
-		this.group = new $.Group(this.items);
 		this.count = 0;
 	};
+
+	// add functions from Group (mixin) but do not override any
+	// this assumes both use this.items for keeping list of items
+	!function(){
+		var ext = $.Group.prototype;
+		for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
+	}();
+
 
 	proto.loadItemTpl = function(el){
 		var ch = this.itemsArea.firstChild;
@@ -79,7 +86,7 @@ function(proto, superProto, comp, superComp){
 		if(this.noData) this.noData.setVisible(!this.count);
 
 		// update items array to match visible elements
-		this.group.items = this.items = this.allItems.slice(0,this.count);
+		this.items = this.allItems.slice(0,this.count);
 
 		for(var i=arr.length; i<this.allItems.length; i++){
 			this.allItems[i].setVisible(false);
@@ -127,7 +134,7 @@ function(proto, superProto, comp, superComp){
 		var item = this.allItems[i];
 
 		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
-		this.group.items = this.items = this.allItems;
+		this.items = this.allItems;
 
 		item.data = newData;
 		item.el.index = i;
@@ -136,7 +143,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getValue = function(){
-		return this.group.forEachGet(function(item){
+		return this.forEachGet(function(item){
 			return item.getValue();
 		});
 	};

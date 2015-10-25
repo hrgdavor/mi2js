@@ -61,4 +61,45 @@ describe( 'base/Loop.js', function () {
 
 	});
 
+	it('/ visible is', function (){
+		var loop = mi2.addComp(null, {tag: 'B', attr:{as:'base/Loop'}, html:'<b as="test/LoopTest"></b>'});
+		var data = [ 'John', 'Doe' ];
+
+		loop.setValue(data);
+
+		// chect inserted html
+		expect(loop.el.innerHTML).toEqual('<b as="test/LoopTest">John</b><b as="test/LoopTest">Doe</b>');
+
+		loop.visibleIs([0]);
+		expect(loop.item(0).isVisible()).toEqual(true);
+		expect(loop.item(1).isVisible()).toEqual(false);
+
+		// none provided, so all are visible
+		loop.visibleNot([]);
+		expect(loop.item(0).isVisible()).toEqual(true);
+		expect(loop.item(1).isVisible()).toEqual(true);
+
+		loop.visibleIs([0]);
+		loop.callFunc('setVisible',[true]); //equivalent to : loop.visibleNot([]);
+
+		expect(loop.item(0).isVisible()).toEqual(true);
+		expect(loop.item(1).isVisible()).toEqual(true);
+	});
+
+	it('/ selected is', function (){
+		var loop = mi2.addComp(null, {tag: 'B', attr:{as:'base/Loop'}, html:'<b as="test/LoopTest"></b>'});
+		var data = [ 'John', 'Doe' ];
+
+		loop.setValue(data);
+
+		// chect inserted html
+		expect(loop.el.innerHTML).toEqual('<b as="test/LoopTest">John</b><b as="test/LoopTest">Doe</b>');
+
+		loop.selectedIs([0]);
+		expect(loop.item(0).isSelected()).toEqual(true);
+		expect(loop.item(1).isSelected()).toEqual(false);
+
+	});
+
+
 });
