@@ -207,7 +207,7 @@ function generateFiles () {
 	}
 	delim = '';
 	// preserve defined order, by not traversing selOpts for url generation
-	// "for(p in selOpts)" could give incompatible order of scripts
+	// "for(var p in selOpts)" could give incompatible order of scripts
 	for(var p in scripts){ 
 		if(selOpts[p]){
 			incStr += delim+p;
