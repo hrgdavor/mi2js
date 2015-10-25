@@ -28,7 +28,7 @@ describe( 'Group.js', function () {
 		var root = mi2.addComp(null, {tag: 'B', attr:{as:'Base'}});
 		var data = { first: 'John', last:'Doe'};
 		var tmp = {};
-		for(p in data){
+		for(var p in data){
 			tmp[p] = mi2.addComp(root, {tag: 'B', attr:{as:'test/GroupTest'}});
 		}
 
@@ -67,7 +67,7 @@ describe( 'Group.js', function () {
 		var root = mi2.addComp(null, {tag: 'B', attr:{as:'Base'}});
 		var data = [ 'John', 'Doe' ];
 		var tmp = [];
-		for(p in data){
+		for(var p in data){
 			tmp[p] = mi2.addComp(root, {tag: 'B', attr:{as:'test/GroupTest'}});
 		}
 
