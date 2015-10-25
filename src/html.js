@@ -84,6 +84,19 @@
 		}
 	};
 
+	mi2Proto.data = function(name, val){
+		if(arguments.length > 1){
+			if(val === null || val === void 0){
+				if(this.el.dataset[name] !== void 0) delete this.el.dataset[name];
+			}else{
+				if(val !== this.el.dataset[name]) 
+					this.el.dataset[name] = val;
+			}
+		}else{
+			return this.el.dataset[name];
+		}
+	};
+
 	/** Add class to the element if condition is true, and remove if false. 
 		@parameter toAdd - className to add/remove 
 		@parameter condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
