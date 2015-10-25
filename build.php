@@ -95,9 +95,9 @@ var scripts = {
 		"desc": "Simple component abstraction over HTML nodes", 
 		"require":["mi2","html","parse"]
 	},
-	"comp.FormHandler": {
+	"FormHandler": {
 		"desc": "", 
-		"require":["comp"]
+		"require":["comp", "Group"]
 	},
 	"Group": {
 		"desc": "", 
@@ -137,7 +137,7 @@ var scripts = {
 	},
 	"base/Loop": {
 		"desc": "", 
-		"require":["comp","Tpl"]
+		"require":["comp","Group","Tpl"]
 	},
 	"base/Table": {
 		"desc": "", 

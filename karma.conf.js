@@ -18,6 +18,8 @@ module.exports = function(config) {
       'src/mi2.js',
       'src/comp.js',
       'src/poly/bind.js',
+      'src/Group.js',
+      'src/FormHandler.js',
       'src/*.js',
       'src/util/formatter.sample.js',
       'src/base/Tpl.js',
