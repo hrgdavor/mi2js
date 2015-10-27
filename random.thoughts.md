@@ -14,6 +14,7 @@
    - format for getting validation error from server
    - for easier adding validation errors
    - ? validation object with some utiliy metohds
+ - refactor FormGroup to extend Group
 
 
 # event (and direction for fire)
