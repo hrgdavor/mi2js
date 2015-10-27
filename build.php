@@ -8,6 +8,7 @@ include "rebuild_comp.php";
 $_start = microtime(true);
 
 rebuild_comp("en");
+rebuild_comp("hr");
 echo "<br>".((microtime(true) - $_start)*1000)." ms</br>";
 
 if($_GET['baseName'] == '') $_GET['baseName'] = 'mi2'; 
