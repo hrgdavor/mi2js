@@ -1,6 +1,7 @@
 # general
  - avoid programming inside templates (no code evaluation or property expansion)
 
+
 # cleanup
  - remove leftovers of previous approach to inputs 
    - remove support for augmenting `<input>` fields and `<form>` elements 
@@ -32,7 +33,7 @@
  - if multiple functionalities can have different behavior for transitive component
   - ? how to handle situation when you want to have partial transitive behavior
 
-Use case fo `base/Button` 
+Use case for `base/Button` 
  - fires action event to parent directly
  - parent does not have to add listener to each button, just add `on_actionName` method
  - transient component should forward the event to the parent
@@ -52,8 +53,12 @@ Use case fo `base/Button`
  - [x] parent hide:
    - [x] visible child: forward
    - [x] hidden  child: ignore
- - [ ] check parent visibility before firing (if parent is hiden hide was fired already)
+ - [x] check parent visibility before firing (if parent is hiden hide was fired already)
  - [x] initial show event must be fired to avoid incosistencies
+
+# data source
+ - syntax like formatters (name and parameters separated by commas)
+ - yesNo
 
 # formaters
  - formats a value to another value (number,string,object) 
