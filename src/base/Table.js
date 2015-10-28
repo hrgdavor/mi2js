@@ -44,7 +44,7 @@ function(proto, superProto, comp, superComp){
 					tmp[colName] = new $(arr[i]);
 			}
 		}
-		this.columns = new $.Group(tmp);
+		this.columns = new $.NWGroup(tmp);
 	};
 
 	function findOrAdd(el,tag){

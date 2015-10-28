@@ -12,7 +12,7 @@ function(proto, superProto, comp, superComp){
 		this.label = {};
 		superProto.construct.call(this, el, tpl, parent);
 		if(this.getCompName() == 'base/Form'){
-			var m = 'base/Form must be extended, rather use mi2JS.FormHandler inside: ' + parent.getCompName();
+			var m = 'base/Form must be extended, rather use mi2JS.InputGroup inside: ' + parent.getCompName();
 			console.log(m,this.el, this);
 			throw new Error(m);			
 		}
@@ -22,7 +22,6 @@ function(proto, superProto, comp, superComp){
 			console.log(m,this.el, this);
 			throw new Error(m);
 		} 
-
 
 		this.stopSubmit = (this.attr('stop-submit') || '1') == '1';
 		this.event = this.attr('event') || 'submit';
@@ -49,7 +48,7 @@ function(proto, superProto, comp, superComp){
 
 		var attr = this.attr('required');
 		var required = attr === null || attr  == '1';
-		this.handler = new mi2JS.FormHandler(this.inp, this.label, this.info, required);
+		this.handler = new mi2JS.InputGroup(this.inp, required);
 	};
 
 	proto.focus = function(){ this.handler.focus(); };

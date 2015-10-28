@@ -15,12 +15,12 @@ describe( 'Group.js', function () {
 
 
 	it('/ fetch + callback', function (){
-		var v1 = mi2.Group({});
-		var v2 = new mi2.Group({});
+		var v1 = mi2.NWGroup({});
+		var v2 = new mi2.NWGroup({});
 
 		// check if function is implemented so that it returns "new func(...)" when called without "new"
-		expect( v1 instanceof mi2.Group ).toBeTruthy();
-		expect( v2 instanceof mi2.Group ).toBeTruthy();
+		expect( v1 instanceof mi2.NWGroup ).toBeTruthy();
+		expect( v2 instanceof mi2.NWGroup ).toBeTruthy();
 	});
 
 
@@ -34,7 +34,7 @@ describe( 'Group.js', function () {
 
 		expect(root.el.innerHTML).toEqual('<b as="test/GroupTest"></b><b as="test/GroupTest"></b>');
 
-		var group = mi2.Group(tmp);
+		var group = mi2.NWGroup(tmp);
 
 		group.forEach(function(child, prop){
 			child.setValue(data[prop]);
@@ -73,7 +73,7 @@ describe( 'Group.js', function () {
 
 		expect(root.el.innerHTML).toEqual('<b as="test/GroupTest"></b><b as="test/GroupTest"></b>');
 
-		var group = mi2.Group(tmp);
+		var group = mi2.NWGroup(tmp);
 
 		group.forEach(function(child, prop){
 			child.setValue(data[prop]);

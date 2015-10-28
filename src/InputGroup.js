@@ -1,7 +1,7 @@
 (function(){
 	var mi2 = mi2JS;
 
-	var DEF = mi2.FormHandler = function FormHandler(inp, label, info, required){
+	var DEF = mi2.InputGroup = function InputGroup(inp, label, info, required){
 		// better we fix the case when called without "new" operator than confusing developer with err later
 		if(!(this instanceof DEF)) return new DEF(inp, label, info, required);
 		this.items = inp;
@@ -13,11 +13,11 @@
 		this.fixItems();
 	};
 
-	mi2.extend(DEF, mi2.Group);
+	mi2.extend(DEF, mi2.NWGroup);
 	// extend must happen before gettign reference to the prototype
 	var proto = DEF.prototype;
 
-	// TODO do these functions using forEach and other methods inherited from Group
+	// TODO do these functions using forEach and other methods inherited from NWGroup
 	proto.fixItems = function(){
 		for(var p in this.items){
 			var comp = this.items[p];

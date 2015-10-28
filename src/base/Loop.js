@@ -44,10 +44,10 @@ function(proto, superProto, comp, superComp){
 		this.count = 0;
 	};
 
-	// add functions from Group (mixin) but do not override any
+	// add functions from NWGroup (mixin) but do not override any
 	// this assumes both use this.items for keeping list of items
 	!function(){
-		var ext = $.Group.prototype;
+		var ext = $.NWGroup.prototype;
 		for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
 	}();
 

@@ -140,7 +140,8 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="src/parse.js"></script>
 <script src="src/comp.js"></script>
 <script src="src/Base.js"></script>
-<script src="src/comp.FormHandler.js"></script>
+<script src="src/NWGroup.js"></script>
+<script src="src/InputGroup.js"></script>
 <script src="src/template.js"></script>
 
 <script src="mi2.ext.js"></script>
