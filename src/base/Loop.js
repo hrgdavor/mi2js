@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/Loop', 'Base', '',
+mi2JS.comp.add('base/Loop', 'base/Group', '',
 
 /**
 if component extends Loop and has an element bound to itemsArea it will be used instead
@@ -43,14 +43,6 @@ function(proto, superProto, comp, superComp){
 		this.items = [];
 		this.count = 0;
 	};
-
-	// add functions from NWGroup (mixin) but do not override any
-	// this assumes both use this.items for keeping list of items
-	!function(){
-		var ext = $.NWGroup.prototype;
-		for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
-	}();
-
 
 	proto.loadItemTpl = function(el){
 		var ch = this.itemsArea.firstChild;
