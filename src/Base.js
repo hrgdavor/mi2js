@@ -67,10 +67,7 @@
 
 	proto.fireEvent = function(evtName, ex){
 
-		if(evtName == 'hide' && !this.isVisible()) return; // already hidden
-
 		if(evtName == 'show'){
-			if(!this.isVisible()) return; // not yet visible
 			// if not initialized yet, fire init event first
 			if(!this.__initialized){
 				if(this.lazyInit) this.parseChildren();
@@ -104,9 +101,14 @@
 		}
 		if(typeof(this['on_'+evtName]) == 'function') this['on_'+evtName](ex);
 
+		var child;
 		if(ex.eventFor == 'children' && this.children){
 			for(var i=0; i<this.children.length; i++){
-				this.children[i].fireEvent(evtName, ex);
+				child = this.children[i];
+				// if hidden no need for hide/show event to propagate
+				if(!child.isVisible() && (evtName == 'hide' || evtName == 'show' )) continue; 
+				
+				child.fireEvent(evtName, ex);
 			}
 		}
 	};
@@ -168,11 +170,24 @@
 		return mi2.num( this.attr(name) || def );
 	};
 
+	proto.isVisibleTruly = function(){
+		var c = this;
+		while(c){
+			if(!c.isVisible()) return false;
+			c = c.parent;
+		}
+		return true;
+	};
+
 	proto.setVisible = function(visible){
 		if(visible == this.isVisible()) return;
 
 		mi2Proto.setVisible.call(this, visible);
-		this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
+
+		// when hidden by parent, there is no point in firing the event
+		// correct event will be fired when parent becomes visible
+		if(!this.parent || this.parent.isVisibleTruly()) 
+			this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
 	};
 
 }(mi2JS));
