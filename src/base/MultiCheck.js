@@ -8,12 +8,14 @@ function(proto, superProto, comp, superComp){
 	proto.itemTpl = {tag:'B'};
 
 	proto.construct = function(el, tpl, parent){
-		this.items = [];
+		this.items = {};
 		superProto.construct.call(this, el, tpl, parent);
 
 		if(this.attr('single-value')) this.outFormat = function(value){
 			return value[0];
 		}
+
+		
 
 		this.listen(el,'click');
 	};
@@ -23,6 +25,8 @@ function(proto, superProto, comp, superComp){
 		if(target){
 			if(this.attr('single-value')){
 				this.selectedIs(target.data('id'));
+			}else{
+				target.setSelected(!target.isSelected());
 			}
 		}
 	};
