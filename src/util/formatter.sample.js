@@ -23,4 +23,16 @@
 		return value.toFixed(0);
 	}
 
+	mi2.formatters.split = function(value,propName, data, delim){
+		if(value == null) return [];
+		if(value.split) return value.split(delim === void 0 ? ',':delim);
+		return [];
+	}
+
+	mi2.formatters.join = function(value,propName, data, delim){
+		if(value == null) return '';
+		if(value.join) return value.join(delim === void 0 ? ',':delim);
+		return '';
+	}
+
 }(mi2JS));

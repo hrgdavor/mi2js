@@ -11,11 +11,8 @@ function(proto, superProto, comp, superComp){
 		this.items = {};
 		superProto.construct.call(this, el, tpl, parent);
 
-		if(this.attr('single-value')) this.outFormat = function(value){
-			return value[0];
-		}
-
-		
+		this.inFormat = $.parseFormat(this.attr('in-format'));
+		this.outFormat = $.parseFormat(this.attr('out-format'));		
 
 		this.listen(el,'click');
 	};
@@ -47,13 +44,16 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(value){
-		this.selectedIs(value);
+		this.selectedIs( $.format(value, this.inFormat) );
 	};
 
 	proto.getValue = function(value){
 		var ret = this.forEachGetArray(function(item){
 			if(item.isSelected()) return item.data('id');
 		});
+
+		if(this.attr('single-value')) ret = ret[0];
+
 		return $.format(ret, this.outFormat);
 	};
 
