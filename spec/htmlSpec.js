@@ -35,6 +35,17 @@ describe( 'html.js', function () {
 		expect(div.el.hasAttribute(mi2.hiddenAttribute)).toEqual(true);
 	});
 
+	it('/ setSelected', function () {
+		var tpl = {tag:'DIV', attr:{}, html:''};
+		var div = mi2.add(null, tpl);
+
+		expect(div.isSelected()).toEqual(false);
+
+		div.setSelected(true);
+		expect(div.isSelected()).toEqual(true);
+		expect(div.hasClass("selected")).toEqual(true);
+	});
+
 	it('/ setHtml', function () {
 		var tpl = {tag:'DIV', attr:{}, html:''};
 		var div = mi2.add(null, tpl);

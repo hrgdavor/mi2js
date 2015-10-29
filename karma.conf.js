@@ -24,7 +24,9 @@ module.exports = function(config) {
       'src/util/formatter.sample.js',
       'src/base/Tpl.js',
       'src/base/Button.js',
+      'src/base/Group.js',
       'src/base/Loop.js',
+      'src/base/MultiCheck.js',
       'src/base/Table.js',
 
       'spec/*.js',
@@ -37,7 +39,6 @@ module.exports = function(config) {
 
     // list of files to exclude
     exclude: [
-      'src/assign.js'
     ],
 
 

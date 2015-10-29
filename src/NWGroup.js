@@ -21,8 +21,10 @@
 			for(var i=0; i<arr.length; i++){
 				obj[arr[i]] = val;
 			}			
-		}else{
+		}else if(typeof arr == 'string'){
 			obj[arr] = val;
+		}else{
+			return arr; // already a map
 		}
 		return obj;
 	}
@@ -35,6 +37,13 @@
 	};
 
 	proto.item = function(code){
+		if(code.tagName){
+			var ret;
+			this.forEach(function(item){
+				if(item.el == code) ret = item;
+			});
+			return ret;
+		}
 		return this.items[code];
 	};
 

@@ -127,6 +127,25 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 [as="base/ShowHide"] b {
   font-weight: normal;
 }
+[as="base/MultiCheck"]{
+  padding: 4px;
+}
+[as="base/MultiCheck"] b{
+    display: inline-block;
+    padding: 4px;
+    border: solid 1px #ddd;
+    border-radius: 5px;
+    margin-left: 8px;
+}
+[as="base/MultiCheck"] b:before{
+   content: '[ ]'; 
+   display: inline-block;
+    margin-right: 4px;
+}
+[as="base/MultiCheck"] b.selected:before{
+   content: '[x]';   
+}  
+
 
 .ShowHidePanel {
   border: solid 1px #eeeeee;
@@ -138,6 +157,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="src/html.js"></script>
 <script src="src/html.common.js"></script>
 <script src="src/parse.js"></script>
+<script src="src/formatter.js"></script>
 <script src="src/comp.js"></script>
 <script src="src/Base.js"></script>
 <script src="src/NWGroup.js"></script>
@@ -146,6 +166,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 
 <script src="mi2.ext.js"></script>
 
+<script src="build/en/base/Group.js"></script>
 <script src="build/en/base/Button.js"></script>
 <script src="build/en/base/Input.js"></script>
 <script src="build/en/base/Form.js"></script>
@@ -156,6 +177,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="build/en/base/Tpl.js"></script>
 <script src="build/en/base/Pager.js"></script>
 <script src="build/en/base/RenderTable.js"></script>
+<script src="build/en/base/MultiCheck.js"></script>
 
 <script type="text/javascript">
 mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:',
@@ -240,6 +262,8 @@ function test(){
 		]
 	});
 
+	comp.form1.inp.multi.setConfig({a:'A',b:'B'});
+
 } 
 
 </script>
@@ -261,6 +285,8 @@ function test(){
 			<input p="inp.name" as="base/Input"/>
 			age:
 			<input p="inp.age"/>
+			multi check:
+			<span p="inp.multi" as="base/MultiCheck" single-value="1"></span>
 		</div>
 		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 	</div>
