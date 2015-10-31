@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Form', 'Base', '',
+mi2JS.comp.add('base/Form', 'base/Group', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
@@ -8,8 +8,6 @@ function(proto, superProto, comp, superComp){
 		@param event - name of the event to fire on parent (default: submit)
 	*/
 	proto.construct = function(el, tpl, parent){
-		this.info = {};
-		this.label = {};
 		superProto.construct.call(this, el, tpl, parent);
 		if(this.getCompName() == 'base/Form'){
 			var m = 'base/Form must be extended, rather use mi2JS.InputGroup inside: ' + parent.getCompName();
@@ -17,7 +15,7 @@ function(proto, superProto, comp, superComp){
 			throw new Error(m);			
 		}
 
-		if(!this.inp){
+		if(!this.items){
 			var m = 'This form is empty ' + this.getCompName();
 			console.log(m,this.el, this);
 			throw new Error(m);
@@ -29,7 +27,13 @@ function(proto, superProto, comp, superComp){
 		this.init();
 	};
 
+	!function(){
+		var ext = mi2JS.InputGroup.prototype;
+		for(var p in ext) if(!proto[p])	proto[p] = ext[p];			
+	}();
+
 	proto.init = function(method, params){
+		this.fixItems();
 
 		this.listen(this.el,'submit', function(evt){
 			if(this.stopSubmit) evt.stop();
@@ -48,18 +52,7 @@ function(proto, superProto, comp, superComp){
 
 		var attr = this.attr('required');
 		var required = attr === null || attr  == '1';
-		this.handler = new mi2JS.InputGroup(this.inp, required);
 	};
-
-	proto.focus = function(){ this.handler.focus(); };
-
-	proto.setValue = function(value){ this.handler.setValue(value); };
-
-	proto.validate = function(){ return this.handler.validate(); };
-
-	proto.markValidate = function(data){ this.handler.markValidate(data); };
-
-	proto.getValue = function(){ return this.handler.getValue(); };
 
 });
 

@@ -57,6 +57,7 @@
 	mi2.comp.get = function(name, el){ 
 		var compDef = this.def[name];
 		if(!compDef && this.later[name]){
+			// initialize the parent component by calling the function in this.later
 			compDef = this.later[name]();
 		}
 		if(!compDef) {
@@ -72,11 +73,13 @@
 		this.tags[name.replace('/','-').toUpperCase()] = name;
 		this.tags[name] = name; // cover cases where tag is upercase(HTL), or exact case (XHTML)
 
-		if(this.def[supName]){
-			this.initComp(name, supName, tpl, initializer);
-		}else{
+		// if(this.def[supName]){
+			// this.initComp(name, supName, tpl, initializer);
+		// }else{
+			// collect first, initialize whn needed
+			// so if any mixing is extended changes may apply to the component
 			this.later[name]  = function(){ return mi2.comp.initComp(name, supName, tpl, initializer); };
-		}
+		// }
 
 	};
 
