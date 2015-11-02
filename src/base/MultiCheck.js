@@ -15,6 +15,16 @@ function(proto, superProto, comp, superComp){
 		this.outFormat = $.parseFormat(this.attr('out-format'));		
 
 		this.listen(el,'click');
+		this.mapItems(el.children);
+	};
+
+	proto.mapItems = function(it){
+		var id, nw;
+		for(var i=0; i<it.length; i++){
+			nw = new $(it[i]);
+			id = nw.data('id');
+			if(id !== null) this.items[id] = nw;
+		}
 	};
 
 	proto.on_click = function(evt){
