@@ -7,8 +7,6 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, tpl, parent){
 		superProto.construct.call(this, el, tpl, parent);
 
-		this.action = this.attr("action") || "action";
-		this.event  = this.attr("event")  || "action";
 		this.lastClick = 0;
 		this.listen(el,"click",function(evt){
 			evt.stop();
@@ -20,8 +18,8 @@ function(proto, superProto, comp, superComp){
 			if(this.isEnabled() && this.parent.fireEvent){
 				var now = new Date().getTime();
 				if(now -this.lastClick > 300){ // one click per second
-					this.parent.fireEvent(this.event, {
-						action: this.action, 
+					this.parent.fireEvent(this.getEvent(), {
+						action: this.getAction(), 
 						button:this, 
 						domEvent: evt, 
 						src:this,
@@ -32,6 +30,14 @@ function(proto, superProto, comp, superComp){
 			}
 		});
 
+	};
+
+	proto.getEvent = function(){
+		return this.attr("event") || "action";
+	};
+
+	proto.getAction = function(){
+		return this.attr("action") || "action";
 	};
 
 	proto.setValue = function(value){
