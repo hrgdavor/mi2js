@@ -90,7 +90,7 @@ function(proto, superProto, comp, superComp){
 		return this.items;
 	};
 
-	function defGetValue(){ return this.data;}
+	function defGetValue(){ }
 	function defSetValue(){ }
 
 	proto.makeItem = function(newData,i){
@@ -128,7 +128,6 @@ function(proto, superProto, comp, superComp){
 		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
 		this.items = this.allItems;
 
-		item.data = newData;
 		item.el.index = i;
 		this.setItemValue(item, newData);
 		item.setVisible(true);
