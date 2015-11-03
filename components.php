@@ -132,18 +132,26 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 }
 [as="base/MultiCheck"] b{
     display: inline-block;
+    cursor: pointer;
     padding: 4px;
     border: solid 1px #ddd;
     border-radius: 5px;
     margin-left: 8px;
 }
 [as="base/MultiCheck"] b:before{
+	font-family: monospace;
    content: '[ ]'; 
    display: inline-block;
     margin-right: 4px;
 }
+[as="base/MultiCheck"] b.selected{
+	border-color: white;
+	color: white;
+	background: black;
+}
+
 [as="base/MultiCheck"] b.selected:before{
-   content: '[x]';   
+   content: '[x]';
 }  
 
 
@@ -262,7 +270,7 @@ function test(){
 		]
 	});
 
-	comp.form1.inp.multi.setConfig({a:'A',b:'B'});
+	comp.form1.items.multi.setConfig({a:'A',b:'B'});
 
 } 
 
@@ -282,11 +290,11 @@ function test(){
 	<div class="sample"><b>Form</b>
 		<div as="base/FormTest" p="form1">
 			name:
-			<input p="inp.name" as="base/Input"/>
+			<input p="items.name" as="base/Input"/>
 			age:
-			<input p="inp.age"/>
+			<input p="items.age"/>
 			multi check:
-			<span p="inp.multi" as="base/MultiCheck" single-value="1"></span>
+			<span p="items.multi" as="base/MultiCheck" single-value="1"></span>
 		</div>
 		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 	</div>
