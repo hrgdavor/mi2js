@@ -50,7 +50,9 @@ function(proto, superProto, comp, superComp){
 
 	proto.markSort = function(def){
 		this.columns.forEach(function(item, code){
-			if(item.hasAttr('sort'))
+			// without this condition, columns that were not sortable 
+			// would become sortable by setting the sort attribute
+			if(item.hasAttr('sort')) 
 				item.attr('sort', def[code] || '');
 		});	
 	};
