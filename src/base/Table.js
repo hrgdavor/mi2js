@@ -32,20 +32,35 @@ function(proto, superProto, comp, superComp){
 
 		superProto.construct.call(this, el, tpl, parent);
 
-		var tmp = {};
+		var columns = {};
 		// create Group for columns, by collecting each TH with "column" attribute
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column');
 			if(colName){
 				if(arr[i].hasAttribute('as') || arr[i].hasAttribute('p')){
 					// it is a NodeWrapper/Component, and is inside this.children
-					tmp[colName] = this.findComp(arr[i]);
-				}else // create new NodeWrapper
-					tmp[colName] = new $(arr[i]);
+					columns[colName] = this.findComp(arr[i]);
+				}else { // create new NodeWrapper
+					columns[colName] = new $(arr[i]);
+				}
 			}
 		}
-		this.columns = new $.NWGroup(tmp);
+		this.columns = new $.NWGroup(columns);
 	};
+
+	proto.markSort = function(def){
+		this.columns.forEach(function(item, code){
+			if(item.hasAttr('sort'))
+				item.attr('sort', def[code] || '');
+		});	
+	};
+
+	proto.getSort = function(def){
+		return this.columns.forEachGetObject(function(item, code){
+			return item.attr('sort') || void 0;
+		});	
+	};
+
 
 	function findOrAdd(el,tag){
 		var ch = $.find(tag, el);
