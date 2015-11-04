@@ -86,6 +86,16 @@ $.likeNull = function(obj){
 	return obj === null || obj === 0 || obj === '';
 };
 
+$.isEmpty = function(obj){
+	if(obj === void 0 || obj === null || obj === 0) return true;
+	if(obj instanceof Array || typeof obj == 'string') return obj.length == 0;
+	if(typeof obj == 'object'){
+		for(var p in obj) return false;
+		return true;
+	}
+	return false;
+};
+
 /** Check if any of the the values are null and throw an Error. 
 	Use where fail-fast is needed so invalid parameters don't cause errors later.
 	

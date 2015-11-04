@@ -71,6 +71,10 @@
 		return val;
 	};
 
+	mi2Proto.hasAttr = function(name){
+		return this.el.hasAttribute(name);
+	};
+
 	mi2Proto.attr = function(name, val){
 		if(arguments.length > 1){
 			if(val === null || val === void 0){
