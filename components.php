@@ -165,7 +165,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="src/html.js"></script>
 <script src="src/html.common.js"></script>
 <script src="src/parse.js"></script>
-<script src="src/formatter.js"></script>
+<script src="src/filter.js"></script>
 <script src="src/comp.js"></script>
 <script src="src/Base.js"></script>
 <script src="src/NWGroup.js"></script>
