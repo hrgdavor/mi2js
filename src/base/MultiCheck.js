@@ -11,8 +11,8 @@ function(proto, superProto, comp, superComp){
 		this.items = {};
 		superProto.construct.call(this, el, tpl, parent);
 
-		this.inFormat = $.parseFormat(this.attr('in-format'));
-		this.outFormat = $.parseFormat(this.attr('out-format'));		
+		this.inFilter = $.parseFilter(this.attr('in-filter'));
+		this.outFilter = $.parseFilter(this.attr('out-filter'));		
 
 		this.listen(el,'click');
 		this.mapItems(el.children);
@@ -54,7 +54,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(value){
-		this.selectedIs( $.format(value, this.inFormat) );
+		this.selectedIs( $.filter(value, this.inFilter) );
 	};
 
 	proto.getValue = function(value){
@@ -64,7 +64,7 @@ function(proto, superProto, comp, superComp){
 
 		if(this.attr('single-value')) ret = ret[0];
 
-		return $.format(ret, this.outFormat);
+		return $.filter(ret, this.outFilter);
 	};
 
 });

@@ -80,13 +80,13 @@ var scripts = {
 		"desc": "Html utility function for wrapped object" , 
 		"require":["mi2"]
 	},
-	"formatter":{
-		"desc": "Value formatters" , 
+	"filter":{
+		"desc": "Value filters" , 
 		"require":["mi2"]
 	},
 	"template":{
-		"desc": "String template rendering, values can be transformed by formatters" , 
-		"require":["mi2","formatter"]
+		"desc": "String template rendering, values can be transformed by filters" , 
+		"require":["mi2","filter"]
 	},
 	"parse": {
 		"desc": "Binding DOM nodes to script objects and components if com.js included", 

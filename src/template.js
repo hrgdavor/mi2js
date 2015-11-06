@@ -5,8 +5,8 @@
 		if(!format) return function(data){ return data[prop]; };
 
 		// format extracted value
-		format = mi2.parseFormat(format);
-		return function(data){ return mi2.format(data[prop], format, prop, data); };
+		format = mi2.parseFilter(format);
+		return function(data){ return mi2.filter(data[prop], format, prop, data); };
 	}
 
 	function genPrinter(arr){

@@ -1,6 +1,6 @@
 describe( 'base/Table.js', function () {
 	var mi2 = mi2JS;
-	mi2.addFormatter('ageTest', function(value){ return value+'--'});
+	mi2.addFilter('ageTest', function(value){ return value+'--'});
 
     var data = [
         {first:"John", last:'Doe',   age:44, gender:'M'},

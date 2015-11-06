@@ -120,17 +120,17 @@ function(proto, superProto, comp, superComp){
 			return null;
 		}
 
-		if(this.formats[opts.format]){
-			var predef = this.formats[opts.format];
+		if(this.formats[opts.filter]){
+			var predef = this.formats[opts.filter];
 			if(typeof(predef) == 'function'){
 				return predef(v,opts);
 			}
-			opts.format = predef.format;
+			opts.filter = predef.filter;
 			if(!opts.example) opts.example = predef.example;
 			if(!opts.invalid) opts.invalid = predef.invalid;
 		}
 
-		var reg = new RegExp(opts.format);
+		var reg = new RegExp(opts.filter);
 		if(!reg.test(v)){
 			var msg = t(opts.invalid || 'invalid_value')+' ! ';
 			if(opts.example) msg += t('example_correct_value')+': '+opts.example;

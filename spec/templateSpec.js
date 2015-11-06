@@ -1,6 +1,6 @@
 describe( 'template.js', function () {
 	var mi2 = mi2JS;
-	mi2.addFormatter('specTest', function(value){ return value+'--'});
+	mi2.addFilter('specTest', function(value){ return value+'--'});
 
 	it('/ not found', function (){
 		expect(mi2.parseTemplate('some text without template')).toEqual(null);

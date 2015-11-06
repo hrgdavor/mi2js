@@ -35,8 +35,8 @@ describe( 'template.js', function () {
 
 	});
 
-	it('/ setValue formatted', function (){
-		var mc = mi2.addComp(null, {tag:'DIV', attr:{as:'base/MultiCheck','in-format':'split', 'out-format':'join'} } );
+	it('/ setValue filtered', function (){
+		var mc = mi2.addComp(null, {tag:'DIV', attr:{as:'base/MultiCheck','in-filter':'split', 'out-filter':'join'} } );
 
 		mc.setConfig({a:'A',b:'B',c:'C'});
 
@@ -55,8 +55,8 @@ describe( 'template.js', function () {
 
 	});
 
-	it('/ setValue formatted space', function (){
-		var mc = mi2.addComp(null, {tag:'DIV', attr:{as:'base/MultiCheck','in-format':'split, ', 'out-format':'join, '} } );
+	it('/ setValue filtered space', function (){
+		var mc = mi2.addComp(null, {tag:'DIV', attr:{as:'base/MultiCheck','in-filter':'split, ', 'out-filter':'join, '} } );
 
 		mc.setConfig({a:'A',b:'B',c:'C'});
 

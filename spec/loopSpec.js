@@ -1,6 +1,6 @@
 describe( 'base/Loop.js', function () {
 	var mi2 = mi2JS;
-	mi2.addFormatter('loopTest', function(value){ return value+'--'});
+	mi2.addFilter('loopTest', function(value){ return value+'--'});
 
 	mi2JS.comp.add('test/LoopTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
