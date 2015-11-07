@@ -37,7 +37,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getAction = function(){
-		return this.attr("action") || "action";
+		return this.attr("action") || this.__propName;
 	};
 
 	proto.setValue = function(value){
