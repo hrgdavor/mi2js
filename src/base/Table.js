@@ -37,12 +37,7 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column');
 			if(colName){
-				if(arr[i].hasAttribute('as') || arr[i].hasAttribute('p')){
-					// it is a NodeWrapper/Component, and is inside this.children
-					columns[colName] = this.findComp(arr[i]);
-				}else { // create new NodeWrapper
-					columns[colName] = new $(arr[i]);
-				}
+				columns[colName] = this.wrapNode(arr[i]);
 			}
 		}
 		this.columns = new $.NWGroup(columns);

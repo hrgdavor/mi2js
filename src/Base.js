@@ -155,6 +155,15 @@
 		return comp;
 	}
 
+	proto.wrapNode = function(el){
+		if(el.hasAttribute('as') || el.hasAttribute('p')){
+			// it is a NodeWrapper/Component, and is inside this.children
+			return this.findComp(el);
+		}else { // create new NodeWrapper
+			return new mi2(el);
+		}		
+	};
+
 	/** Use this when the tag on which the component is defined*/
 	proto.replaceTag = function(el,tag){
 		var ret = document.createElement(tag);
