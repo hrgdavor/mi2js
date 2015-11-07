@@ -37,7 +37,7 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column');
 			if(colName){
-				columns[colName] = this.wrapNode(arr[i]);
+				columns[colName] = this.findRef(arr[i]);
 			}
 		}
 		this.columns = new $.NWGroup(columns);
