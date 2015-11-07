@@ -99,7 +99,15 @@
 				console.error(e.message);
 			}
 		}
-		if(typeof(this['on_'+evtName]) == 'function') this['on_'+evtName](ex);
+		if(typeof(this['on_'+evtName]) == 'function'){
+			try{
+				this['on_'+evtName](ex);
+			}catch(e){
+				console.log('Error calling event handler function ','on_'+evtName, ex, 'component', this , 'error', e);
+				console.error(e.message);
+			}
+
+		} 
 
 		var child;
 		if(ex.eventFor == 'children' && this.children){
@@ -111,6 +119,11 @@
 				child.fireEvent(evtName, ex);
 			}
 		}
+	};
+
+	proto.addRef = function(r){
+		if(!this.__refs) this.__refs = [];
+		this.__refs.push(r);
 	};
 
 	proto.addChild = function(c){
@@ -139,30 +152,37 @@
 		if(p  && p.addChild) p.addChild(this);
 	};
 
-	proto.find    = function(search){ return mi2.find   (this.el, search); }
-	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
-
 	/* find component that is holding the DOM node */
-	proto.findComp = function(toFind){
-		var cd = this.children;
-		var comp = null, count = cd.length;
-		for(var i=0; i<count; i++){
-			if(cd[i].el === toFind){
-				comp = cd[i];
-				break;
+	proto.findRef = function(toFind, from){
+		var testFunc = function(comp){
+			return comp.el == toFind;
+		}
+		if(typeof toFind == 'string'){
+			if('+' == toFind)
+				toFind = from.el.nextElementSibling;
+			else if('-' == toFind) 
+				toFind = from.el.previousElementSibling;
+			else{
+				testFunc = function(comp){
+					return comp.attr('p') == toFind;
+				}
 			}
 		}
-		return comp;
+		var i,cd = this.children;
+		if(cd) for(i=0; i<cd.length; i++){
+			if(testFunc(cd[i])) return cd[i];
+		}
+		cd = this.__refs;
+		if(cd) for(i=0; i<cd.length; i++){
+			if(testFunc(cd[i])) return cd[i];
+		}
+		// if it is a domNode and we have no reference to it, just return a NodeWrapper
+		if(toFind.tagName)
+			return new mi2(toFind);
 	}
 
-	proto.wrapNode = function(el){
-		if(el.hasAttribute('as') || el.hasAttribute('p')){
-			// it is a NodeWrapper/Component, and is inside this.children
-			return this.findComp(el);
-		}else { // create new NodeWrapper
-			return new mi2(el);
-		}		
-	};
+	proto.find    = function(search){ return mi2.find   (this.el, search); }
+	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
 
 	/** Use this when the tag on which the component is defined*/
 	proto.replaceTag = function(el,tag){

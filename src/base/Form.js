@@ -4,6 +4,10 @@ mi2JS.comp.add('base/Form', 'base/Group', '',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 
+	var mi2 = mi2JS;
+
+	mi2.mixin(comp,mi2.InputGroup);
+
 	/**
 		@param event - name of the event to fire on parent (default: submit)
 	*/
@@ -27,10 +31,6 @@ function(proto, superProto, comp, superComp){
 		this.init();
 	};
 
-	!function(){
-		var ext = mi2JS.InputGroup.prototype;
-		for(var p in ext) if(!proto[p])	proto[p] = ext[p];			
-	}();
 
 	proto.init = function(method, params){
 		this.fixItems();

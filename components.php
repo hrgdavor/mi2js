@@ -176,6 +176,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 
 <script src="build/en/base/Group.js"></script>
 <script src="build/en/base/Button.js"></script>
+<script src="build/en/base/InputBase.js"></script>
 <script src="build/en/base/Input.js"></script>
 <script src="build/en/base/Form.js"></script>
 <script src="build/en/base/Calendar.js"></script>

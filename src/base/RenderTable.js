@@ -162,9 +162,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto.__update = function(tData){
-		console.log('__update', tData);
 		var empty = tData.data.length == 0;
-		console.log('empty', empty);
 		this.noData.setVisible(empty);
 		this.data.setVisible(!empty);
 

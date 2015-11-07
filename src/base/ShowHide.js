@@ -17,25 +17,15 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_init = function(evt){
+		var code = this.attrDef('target','+');
+		this.panel = this.parent.findRef(code, this);
+		if(!this.panel) throw new Error('Panel not found '+code);
 		this.updateButton();
 	};
-
-	// we can not do this in the constructor, as we need the component next in DOM
-	proto.getPanel = function(){
-		if(!this.panel){
-			var next = this.el.nextElementSibling;
-			if(!next) { console.log("Component to show/hide must be after this ", this.el); return;}
-			var comp = this.parent.findComp(next);
-			if(!comp) comp = new $(next);
-			comp.addClass('ShowHidePanel');
-			this.panel = comp;
-		}
-		return this.panel;
-	};
-
+;
 	proto.updateButton = function(){
 		try{
-			var idx = this.getPanel().isVisible() ? 1:0;
+			var idx = this.panel.isVisible() ? 1:0;
 			this.button.setText(this.texts[idx]);
 		}catch(e){
 			console.error('updateButton error '+e.message);
@@ -43,9 +33,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_showHide = function(sel){
-		var panel = this.getPanel();
-		var next = !panel.isVisible();
-		panel.setVisible(next);
+		var panel = this.panel;
+		panel.setVisible(!panel.isVisible());
 		this.updateButton();
 	};
 

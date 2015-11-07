@@ -27,6 +27,7 @@ module.exports = function(config) {
       'src/base/Button.js',
       'src/base/Group.js',
       'src/base/Loop.js',
+      'src/base/InputBase.js',
       'src/base/MultiCheck.js',
       'src/base/Table.js',
 

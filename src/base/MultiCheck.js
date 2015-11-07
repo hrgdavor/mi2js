@@ -1,9 +1,11 @@
-mi2JS.comp.add('base/MultiCheck', 'base/Group', '',
+mi2JS.comp.add('base/MultiCheck', 'base/InputBase', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 	
-	var $ = mi2JS;
+	var mi2 = mi2JS;
+
+	mi2.mixin(comp,mi2.NWGroup);
 
 	proto.itemTpl = {tag:'B'};
 
@@ -11,12 +13,10 @@ function(proto, superProto, comp, superComp){
 		this.items = {};
 		superProto.construct.call(this, el, tpl, parent);
 
-		this.inFilter = $.parseFilter(this.attr('in-filter'));
-		this.outFilter = $.parseFilter(this.attr('out-filter'));		
-
 		this.listen(el,'click');
 		this.mapItems(el.children);
 	};
+
 
 	proto.mapItems = function(it){
 		var id, nw;
@@ -35,6 +35,7 @@ function(proto, superProto, comp, superComp){
 			}else{
 				target.setSelected(!target.isSelected());
 			}
+			this.fireIfChanged();
 		}
 	};
 
@@ -46,25 +47,25 @@ function(proto, superProto, comp, superComp){
 		var isArray = data instanceof Array;
 		for(var p in data){
 			var id = isArray ? data[p].id : p;
-			var item = $.add(this.el, this.itemTpl);
+			var item = mi2.add(this.el, this.itemTpl);
 			item.data('id', id);
 			item.setText(   isArray ? data[p].text  : data[p]);
 			this.items[id] = item;
 		}
 	};
 
-	proto.setValue = function(value){
-		this.selectedIs( $.filter(value, this.inFilter) );
+	proto.setRawValue = function(value){
+		this.selectedIs( value );
 	};
 
-	proto.getValue = function(value){
+	proto.getRawValue = function(value){
 		var ret = this.forEachGetArray(function(item){
 			if(item.isSelected()) return item.data('id');
 		});
 
 		if(this.attr('single-value')) ret = ret[0];
 
-		return $.filter(ret, this.outFilter);
+		return ret;
 	};
 
 });

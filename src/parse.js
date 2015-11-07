@@ -73,9 +73,9 @@ $.setRef = function(obj, comp, prop){
 	while(el){
 		next = el.nextSibling;
 		if(el.getAttribute){
-			var comp = null, stopRecursion = false;
+			var comp = null, stopRecursion = false, compName;
 			if($.comp){
-				var compName = el.getAttribute('as') || $.comp.tags[el.tagName];
+				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
 				if(compName){
 					comp = $.comp.make(el, compName, obj);
 					stopRecursion = true;
@@ -89,6 +89,8 @@ $.setRef = function(obj, comp, prop){
 				// if property id "group." the part after dot is based on index, 
 				// we put the index into html for easy access for example "group.3" for fourth such element
 				if(prop.charAt(prop.length-1) == '.') el.setAttribute('p',prop+comp.__propName);
+
+				if(!compName && obj.addRef) obj.addRef(comp); // list of referenced nodes
 			}
 
 			// recursion is stopped for components, as the component can decide how to procede

@@ -63,6 +63,11 @@ $.extend = function(destination, source) {
 	return source.prototype;
 };
 
+$.mixin = function(dest, source, overwrite) {
+	var proto = dest.prototype, ext = source.prototype;
+	for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
+};
+
 $.update = function(dest, update){
 	if(dest && update ){
 		for (var prop in update)
