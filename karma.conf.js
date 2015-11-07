@@ -22,6 +22,7 @@ module.exports = function(config) {
       'src/InputGroup.js',
       'src/*.js',
       'src/util/formatter.sample.js',
+
       'src/base/Tpl.js',
       'src/base/Button.js',
       'src/base/Group.js',
@@ -30,6 +31,7 @@ module.exports = function(config) {
       'src/base/Table.js',
 
       'spec/*.js',
+      'spec/base/*.js',
       // 'spec/loopSpec.js',
       // 'spec/tableSpec.js',
 
