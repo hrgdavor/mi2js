@@ -33,11 +33,11 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getEvent = function(){
-		return this.attr("event") || "action";
+		return this.attrDef("event", "action");
 	};
 
 	proto.getAction = function(){
-		return this.attr("action") || this.__propName;
+		return this.attrDef("action", this.__propName);
 	};
 
 	proto.setValue = function(value){
