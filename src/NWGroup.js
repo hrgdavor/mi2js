@@ -37,7 +37,7 @@
 	};
 
 	proto.item = function(code){
-		if(code.tagName){
+		if(code && code.tagName){
 			var ret;
 			this.forEach(function(item){
 				if(item.el == code) ret = item;
