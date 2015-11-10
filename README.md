@@ -40,3 +40,6 @@ Personally, I do not care about any browser without Flexbox support ( Flexbox no
   - `hidden` attribute  - (IE <11) easily fixable with `*[hidden] { display: none; !important}` 
   - Element.firstElementChild - same as nextElementSibling, previousElementSibling 
 
+## License
+
+See the [LICENSE](LICENSE.md) file for license rights and limitations (MIT).
