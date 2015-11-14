@@ -191,7 +191,7 @@ function(proto, superProto, comp, superComp){
 					data = data.slice(0,this.displayLimit);
 				}
 	           this.showResults(data, data.length > 0 ? data[0].id : null);
-	           if(firstIndex != -1 ) this.selectElem(this.list[firstIndex]); 
+	           if(firstIndex != -1 ) this.selectElem(this.list[firstIndex].el); 
 	        }else
 	    		this.showResults(data);
 		}
