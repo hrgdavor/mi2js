@@ -14,7 +14,7 @@
 	};
 
 	mi2.extend(DEF, mi2.NWGroup);
-	// extend must happen before gettign reference to the prototype
+	// extend must happen before getting reference to the prototype
 	var proto = DEF.prototype;
 
 	// TODO do these functions using forEach and other methods inherited from NWGroup
@@ -31,9 +31,11 @@
 	};
 
 	proto.focus = function(){
+		var item;
 		for(var p in this.items){
-			if(this.items[p].attr('firstInput') && this.items[p].focus && !this.items[p].attr('readonly')){
-				this.items[p].focus();
+			item = this.items[p];
+			if(item.hasAttr('firstInput') && item.focus && !(item.isReadOnly && item.isReadOnly()) ){
+				item.focus();
 				return;
 			}
 		}
@@ -53,26 +55,22 @@
 		}
 	};
 
-	proto.validate = function(){
-		var valid = true, data={};
-		for(var p in this.items){
-			var err = null;
-			if(this.items[p].validate)
-				err = this.items[p].validate(this.required);
-			if(err){
-				data[p] = {_error:err};
-				valid = false;
-			}
-		}
-		return valid ? null : data;
-	};
+	proto.getValidator = function(){
+		var rules = forEachGetObject(function(item,code){
+			if(item.getValidator) return item.getValidator(required);
+			return mi2.getValidator(item, required);
+		});
+		return new mi2.GroupValidator(rules, this.required);
+	}
 
 	proto.markValidate = function(data){
-		data = data ||{};
-		for(var p in this.items){
-			if(this.items[p].markValidate)
-				this.items[p].markValidate(data[p],this.info[p], this.label[p]);
-		}
+		data = data || {};
+		this.forEach(function(item,p){
+			if(item.markValidate)
+				item.markValidate(data[p]);
+			else
+				mi2.markValidate(item, data[p]);			
+		});
 	};
 
 	proto.getValue = function(){

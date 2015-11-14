@@ -33,16 +33,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.markValidate = function(data){
-		data = data || {};
-		var info  = this.validationInfo;
-		var label = this.label;
-		this.classIf('validationError', data._error);
-		if(info){
-			info.classIf('validationError', data._error);
-			info.setVisible(data._error && data._error.message);
-			if(data._error) info.setText(data._error.message);			
-		}
-		if(label) label.classIf('validationError', data._error);
+		mi2.markValidate(this,data);
 	};
 
 	proto.fireIfChanged = function(evt){

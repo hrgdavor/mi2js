@@ -1,73 +1,184 @@
 (function(mi2){
 
-	mi2.formats = {
+	mi2.getValidator = function(comp, defReq){
+		return new Validator({
+			required: comp.attrBoolean('required', defReq),
+			invalid: comp.attr('invalid'),
+			min: comp.attr('min'),
+			max: comp.attr('max'),
+			example: comp.attr('example'),
+			pattern: comp.attr('pattern')
+		});		
+	}
+
+	mi2.validationMessage = function(v){
+		if(!v) return '';
+		return v.message;
+	};
+
+	mi2.markValidate = function(comp,data){
+		data = data || new mi2.Validity();
+		comp.classIf('validation-error', !data.isValid());
+		comp.attr('validation-error',data.isValid() ? null : mi2.validationMessage(data));
+	};
+
+	mi2.patterns = {
 		'email': {
-			format: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$',
+			pattern: '^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,4}$',
 			invalid: 'invalid_email_address'
 		},
 		'int':   {
-			format: "^-*\\d+$", example:"123", 
+			pattern: "^-*\\d+$", example:"123", 
 			invalid:'must_be_integer' 
 		},
 		'float': { 
-			format: "^-*((\\d+)|(\\d+\\.\\d+))$", example:"11.45", 
+			pattern: "^-*((\\d+)|(\\d+\\.\\d+))$", example:"11.45", 
 			invalid:'must_be_decimal'
 		}
 	};
 
+	/* **************** Validity   ************************/
+
+	var Validity = mi2.Validity = function(result){
+		if(!result){
+			this.valid = true;
+		}else{
+			this.valid = false;
+			if(typeof result == 'string'){
+				this.message = result;
+				result = {};
+			}else{
+				this.message = result.message;
+			}
+			this.type = result.type || 'custom';
+			this.data = result.data || {};
+		}
+	}
+
+	Validity.required = function(req){
+		return new Validity(req ? {message: 'required', type:'required'}: void 0);
+	}
+
+
+	Validity.prototype.isValid = function(){
+		return this.valid
+	}
+
+
+
+
+	/* **************** Validator   ************************/
+
+	var Validator = mi2.Validator = function(rules){
+		this.rules = rules || {};
+	}
+
+	var RProto = Validator.prototype;
+
 	//texts:
 	// required, invalid_value, example_correct_value, min_allowed_value, max_allowed_value, must_be_between
-	mi2.validate = function(defReq){
-		var attr = this.attr('required');
-		var required = attr === null ? defReq : attr  == '1';
-		var opts ={
-			required: required,
-			format:   this.attr('format'),
-			invalid:  this.attr('invalid'),
-			min:  this.attr('min'),
-			max:  this.attr('max'),
-			example: this.attr('example')
-		};
-		var v = this.getValue();
+	RProto.validate = function(v){
+		var opts = this.rules;
 
-		if(!v){
-			if(opts.required)
-				return {message:t('required'), type:'required'};
-			return null;
+		if(v === null || v === void 0){
+			return Validity.required(opts.required);
 		}
 
-		if(this.formats[opts.filter]){
-			var predef = this.formats[opts.filter];
+		if(mi2.patterns[opts.pattern]){
+			var predef = mi2.patterns[opts.pattern];
 			if(typeof(predef) == 'function'){
-				return predef(v,opts);
+				return predef(v,opts) || new Validity();
 			}
-			opts.filter = predef.filter;
+			opts.pattern = predef.pattern;
 			if(!opts.example) opts.example = predef.example;
 			if(!opts.invalid) opts.invalid = predef.invalid;
 		}
 
-		var reg = new RegExp(opts.filter);
+		var reg = new RegExp(opts.pattern);
 		if(!reg.test(v)){
-			var msg = t(opts.invalid || 'invalid_value')+' ! ';
-			if(opts.example) msg += t('example_correct_value')+': '+opts.example;
-			return {type:'invalid', message:msg};
+			var msg = opts.invalid || 'invalid_value';
+			return new Validity( {type:'pattern', message:msg, data:{example: opts.example} } );
 		}
 
-		var hasMin = typeof(opts.min) != 'undefined';
-		var hasMax = typeof(opts.max) != 'undefined';
+		var hasMin = opts.min !== void 0 && opts.min !== null;
+		var hasMax = opts.max !== void 0 && opts.max !== null;
 		if(hasMin || hasMax){
 			v = mi2.num(v);
 			var min = mi2.num(opts.min);
 			var max = mi2.num(opts.max);
+			var prep = {type:'invalid_range', data:{min:min, max:max}};
 			if(hasMax && hasMin){
-				if(v<min || v>max) return {type:'invalid_range', message: t('must_be_between')+' '+opts.min+' & '+opts.max};
+				if(v<min || v>max) prep.message = 'must_be_between';
 			}else if(hasMax){
-				if(v>max) return {type:'invalid_range', message: t('max_allowed_value')+' '+opts.max};					
+				if(v>max) prep.message = 'max_allowed_value';					
 			}else if(hasMin){
-				if(v<min) return {type:'invalid_range', message: t('min_allowed_value')+' '+opts.min};					
+				if(v<min) prep.message = 'min_allowed_value';					
+			}
+			if(prep.message) return new Validity(prep);
+		}
+		return new Validity();
+	};
+
+
+
+	/* **************** GroupValidator   ************************/
+
+	var GroupValidator = mi2.GroupValidator = function(items, required){
+		this.required = required;
+		var tmp = this.items = items instanceof Array ? []:{};
+		var item;
+		for(var p in items){
+			item = items[p];
+			if(!item || typeof item.validate != 'function'){
+				tmp[p] = new Validator(item);
+			}else{
+				tmp[p] = item;
 			}
 		}
-		return null;
+	}
+	var GProto = GroupValidator.prototype;
+
+	GroupValidator.prototype.validate = function(value){
+		if(value === null || value === void 0) return Validity.required(this.required);
+		var resp = {};
+		for(var p in this.items){
+			resp[p] = this.items.validate(value[p]);
+		}
+		return new GroupValidity(resp);
+	}
+
+
+
+	/* **************** GroupValidity   ************************/
+
+	var GroupValidity = mi2.GroupValidity = function(items){
+		var tmp = this.items = items instanceof Array ? []:{};
+		var item;
+		for(var p in items){
+			item = items[p];
+			if(!item || typeof item.isValid != 'function'){
+				tmp[p] = new Validity(item);
+			}else{
+				tmp[p] = item;
+			}
+		}
+	}
+
+	GroupValidity.prototype.isValid = function(code){
+		var item;
+		if(code !== void 0){
+			 item = this.items[code];
+			return !item || item.isValid();			
+		}else{
+			for(var p in this.items){
+				if(!this.items[p].isValid()) return false;
+			}			
+		}
+		return true;
+	};
+
+	GroupValidity.prototype.setValid = function(code,value){
+		this.items[code] = (value && typeof value.isValid == 'function') ? item : new Validity(value); 
 	};
 
 })(mi2JS);

@@ -50,9 +50,9 @@ function(proto, superProto, comp, superComp){
 			if(this.stopSubmit) return false;
 		});
 
-		var attr = this.attr('required');
-		var required = attr === null || attr  == '1';
+		this.required = this.attrBoolean('required', true);
 	};
+
 
 });
 

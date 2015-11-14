@@ -17,7 +17,6 @@ function(proto, superProto, comp, superComp){
 		this.mapItems(el.children);
 	};
 
-
 	proto.mapItems = function(it){
 		var id, nw;
 		for(var i=0; i<it.length; i++){
