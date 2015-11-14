@@ -39,7 +39,7 @@
 		if(el.addListener){
 			el.addListener( evt, listener, this);
 		}else //dom node
-			mi2.listen( el, evt, listener, this); 
+			mi2.listen( el, evt, listener, this);
 	};
 
 	//setTimeout and setInterval shortcut that by default binds callback function to current object
@@ -70,16 +70,19 @@
 		if(evtName == 'show'){
 			// if not initialized yet, fire init event first
 			if(!this.__initialized){
-				if(this.lazyInit) this.parseChildren();
-				this.fireEvent('init',{ eventFor: 'children' });
+				this.fireEvent('init',{ });
 			} 
 		}
 
 		// allow for init to be fired even when hidden (and then skipped on_show)
 		if(evtName == 'init'){
+			if(this.__initialized !== true){
+				if(this.lazyInit) this.parseChildren();
+			}else
+				console.error('init should be fired only once '+this.__initialized);
 			this.__initialized = true;
 		}
-		
+
 		if(!ex) ex = {};
 		ex.name = evtName;
 		ex.target = this;
@@ -193,10 +196,6 @@
 		}
 		el.parentNode.replaceChild(ret,el);
 		return ret;
-	};
-
-	proto.attrInt = function(name, def){
-		return mi2.num( this.attr(name) || def );
 	};
 
 	proto.isVisibleTruly = function(){

@@ -58,4 +58,28 @@ describe( 'html.js', function () {
 		expect(div.el.firstElementChild.tagName).toEqual('B');
 	});
 
+	it('/ attrBoolean', function () { 
+		var tpl = {tag:'DIV', attr:{as:'Base', 'required':''}, html:'<b p="b1"></b>'};
+		var node = mi2.addTag(null, tpl);
+		var nw = new mi2(node);
+
+		expect(nw.attrBoolean('required')).toBeTruthy();
+
+		node.setAttribute('required','1');
+		expect(nw.attrBoolean('required')).toBeTruthy();
+
+		node.setAttribute('required','0');
+		expect(nw.attrBoolean('required')).toBeFalsy();
+
+		node.setAttribute('required','required');
+		expect(nw.attrBoolean('required')).toBeTruthy();
+
+		node.setAttribute('required','true');
+		expect(nw.attrBoolean('required')).toBeTruthy();
+
+		node.setAttribute('required','false');
+		expect(nw.attrBoolean('required')).toBeFalsy();
+	});
+
+
 });

@@ -65,14 +65,14 @@
 		return tpl;
 	}
 
+	mi2Proto.hasAttr = function(name){
+		return this.el.hasAttribute(name);
+	};
+
 	mi2Proto.attrDef = function(name, def){
 		var val = this.el.getAttribute(name);
 		if(val === null) return def;
 		return val;
-	};
-
-	mi2Proto.hasAttr = function(name){
-		return this.el.hasAttribute(name);
 	};
 
 	mi2Proto.attr = function(name, val){
@@ -86,6 +86,26 @@
 		}else{
 			return this.el.getAttribute(name);
 		}
+	};
+
+	mi2Proto.attrNum = function(name, def){
+		return mi2.num( this.attrDef(name, def) );
+	};
+
+	/** Boolean from attribute
+		just defined - <input required> <input required="">
+		value same as name <input required="required">
+		value 1,true - <input required="1"> <input required="true">
+	*/
+	mi2Proto.attrBoolean = function(name, def){
+
+		if(this.hasAttr(name)){
+			var val = this.attr(name);
+			if(val === null || val == '' || val == 'true' || val == name || val == '1') return true;
+		}else
+			return def;
+
+		return false;
 	};
 
 	mi2Proto.data = function(name, val){
