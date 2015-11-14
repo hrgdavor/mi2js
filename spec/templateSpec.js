@@ -12,6 +12,13 @@ describe( 'template.js', function () {
 		expect(builderFunc({name:'John'})).toEqual('Name:John');
 	});
 
+	it('/ array', function (){
+		var builderFunc = mi2.parseTemplate('Value must be between ${0} and ${1}');
+
+		expect(builderFunc([10,20])).toEqual('Value must be between 10 and 20');
+		expect(builderFunc({'0':10,'1':20})).toEqual('Value must be between 10 and 20');
+	});
+
 	it('/ formatted', function (){
 		var builderFunc = mi2.parseTemplate('Name:${name:specTest}');
 
