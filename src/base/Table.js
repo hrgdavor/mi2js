@@ -29,11 +29,13 @@ function(proto, superProto, comp, superComp){
 
 		// move them to THEAD
 		for(var i=0; i<arr.length; i++) THEAD.appendChild(arr[i]);
+        THEAD.innerHTML = THEAD.innerHTML;// DIRTYFIX : CSS targeting of th elements in thead fails without this step 
 
-		superProto.construct.call(this, el, tpl, parent);
+        superProto.construct.call(this, el, tpl, parent);
 
-		var columns = {};
-		// create Group for columns, by collecting each TH with "column" attribute
+        var columns = {};
+        arr = THEAD.children;
+        // create Group for columns, by collecting each TH with "column" attribute
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column');
 			if(colName){
