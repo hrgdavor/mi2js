@@ -18,6 +18,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.construct = function(el, tpl, parent){
 		var THEAD = this.THEAD = findOrAdd(el, 'THEAD');
+		var TR    = findOrAdd(THEAD, 'TR');
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
 
 		// extract header cell if defined together in body
@@ -28,13 +29,12 @@ function(proto, superProto, comp, superComp){
 		}
 
 		// move them to THEAD
-		for(var i=0; i<arr.length; i++) THEAD.appendChild(arr[i]);
-        THEAD.innerHTML = THEAD.innerHTML;// DIRTYFIX : CSS targeting of th elements in thead fails without this step 
+		for(var i=0; i<arr.length; i++) TR.appendChild(arr[i]);
 
         superProto.construct.call(this, el, tpl, parent);
 
         var columns = {};
-        arr = THEAD.children;
+        arr = TR.children;
         // create Group for columns, by collecting each TH with "column" attribute
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column');
@@ -67,10 +67,5 @@ function(proto, superProto, comp, superComp){
 	}
 
 	proto.findItemsArea = function(el){ return this.TBODY; };	
-
-	proto.makeTh = function(col){
-		var node = mi2.addTag(this.THEAD, 'TH', '');
-		var comp = mi2.comp.make(node, null, this);
-	};
 
 });

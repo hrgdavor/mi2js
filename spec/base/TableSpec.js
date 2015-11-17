@@ -30,11 +30,11 @@ describe( 'base/Table.js', function () {
         expect(comp.el.innerHTML).toEqual(
 '<tbody>'+
 '</tbody>'+
-'<thead>'+
+'<thead><tr>'+
     '<th column="first" sort=""></th>'+
     '<th column="last" sort=""></th>'+
     '<th column="age" as="Base"></th>'+
-'</thead>'
+'</tr></thead>'
         );
 
         expect(comp.itemTpl.html).toEqual('<td gender="${gender}">${first}</td><td>${last}</td><td>${age}</td>');
@@ -55,11 +55,11 @@ describe( 'base/Table.js', function () {
         '<td>33</td>'+
     '</tr>'+
 '</tbody>'+
-'<thead>'+
+'<thead><tr>'+
     '<th column="first" sort=""></th>'+
     '<th column="last" sort=""></th>'+
     '<th column="age" as="Base"></th>'+
-'</thead>'
+'</tr></thead>'
         );
 
         expect(comp.columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
