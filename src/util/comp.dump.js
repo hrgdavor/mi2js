@@ -21,11 +21,18 @@ mi2JS.listen(window,'load',function(evt){
 					// simple binding is allowed only once and only as top level
 					if(!comp && ! hasComp) path = '';
 					
-					if(path) path = '.'+path;
-
 					idx = prop.indexOf('.');// conver aa.1 to aa[1]
-					if(idx != -1 && mi2JS.num(prop.substring(idx+1))) 
-						prop = prop.substring(0,idx)+'['+prop.substring(idx+1)+']';
+
+					if(path) path = '.'+path;
+					if(idx != -1){
+						var left = prop.substring(0,idx);
+						var right = prop.substring(idx+1);
+						prop = left +'.items';
+						if(mi2JS.num(right)) 
+							prop +='['+right+']';
+						else
+							prop += '.'+right;
+					} 
 					path = prop+path;
 					hasComp = hasComp || comp;
 				}

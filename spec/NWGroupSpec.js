@@ -23,7 +23,6 @@ describe( 'Group.js', function () {
 		expect( v2 instanceof mi2.NWGroup ).toBeTruthy();
 	});
 
-
 	it('/ setValue getValue Object based', function (){
 		var root = mi2.addComp(null, {tag: 'B', attr:{as:'Base'}});
 		var data = { first: 'John', last:'Doe'};

@@ -44,14 +44,14 @@ $.setRef = function(obj, comp, prop){
 			comp.__propGroup = group;
 			if(prop){
 				//example: p="bt.edit"
-				if(!obj[group]) obj[group] = {};
+				if(!obj[group]) obj[group] = new $.NWGroup({});
 				comp.__propName  = prop;
-				obj[group][prop] = comp;
+				obj[group].items[prop] = comp;
 			}else{
 				//example: p="bt."
-				if(!obj[group]) obj[group] = [];
-				comp.__propName = obj[group].length;
-				obj[group].push(comp);
+				if(!obj[group]) obj[group] = $.NWGroup([]);
+				comp.__propName = obj[group].items.length;
+				obj[group].items.push(comp);
 			}
 		}else{
 			//example p="edit"

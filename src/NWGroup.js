@@ -7,10 +7,7 @@
 		// better we fix the case when called without "new" operator than confusing developer with err later
 		if(!(this instanceof DEF)) return new DEF(group);
 
-		this.items = group;
-
-		this.forEachGet = group instanceof Array ? 
-			this.forEachGetArray : this.forEachGetObject;
+		this.items = group || this;
 	}
 
 	var proto = DEF.prototype;

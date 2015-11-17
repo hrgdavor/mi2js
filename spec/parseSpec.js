@@ -17,8 +17,8 @@ describe( 'parse.js', function () {
 		var comp = mi2.parse(node);
 
 		expect(comp.bt).toBeDefined();
-		expect(comp.bt.length).toEqual(2);
-		expect(comp.bt[0] instanceof mi2).toBeTruthy();
+		expect(comp.bt.items.length).toEqual(2);
+		expect(comp.bt.items[0] instanceof mi2).toBeTruthy();
 	});
 
 	it('/ parse list', function () { 
@@ -26,10 +26,10 @@ describe( 'parse.js', function () {
 		var comp = mi2.parse(node);
 
 		expect(comp.bt).toBeDefined();
-		expect(comp.bt.x).toBeDefined();
-		expect(comp.bt.y).toBeDefined();
-		expect(comp.bt.x instanceof mi2).toBeTruthy();
-		expect(comp.bt.y instanceof mi2.comp.get('Base')).toBeTruthy();
+		expect(comp.bt.item('x')).toBeDefined();
+		expect(comp.bt.items.y).toBeDefined();
+		expect(comp.bt.item('x') instanceof mi2).toBeTruthy();
+		expect(comp.bt.items.y instanceof mi2.comp.get('Base')).toBeTruthy();
 	});
 
 });

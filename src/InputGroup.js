@@ -21,7 +21,7 @@
 	proto.fixItems = function(){
 		for(var p in this.items){
 			var comp = this.items[p];
-			var compName = comp.el.getAttribute('as'); 
+			var compName = comp.attr('as'); 
 			if(!compName){
 				this.items[p] = mi2.comp.make(comp.el,'base/Input',this);
 			}else if(!comp.getValue || ! comp.setValue){
