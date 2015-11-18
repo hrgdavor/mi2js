@@ -70,8 +70,12 @@
 
 	/* **************** Validator   ************************/
 
-	var Validator = mi2.Validator = function(rules){
-		this.rules = rules || {};
+	var Validator = mi2.Validator = function(rules, req){
+		if(!rules) 
+			rules = {required: req};
+		else if(rules instanceof Function) 
+			rules = {pattern:rules, required:req};
+		this.rules = rules;
 	}
 
 	var RProto = Validator.prototype;
@@ -81,8 +85,12 @@
 	RProto.validate = function(v){
 		var opts = this.rules;
 
-		if(v === null || v === void 0){
+		if(v === null || v === void 0 || v === ''){
 			return Validity.required(opts.required);
+		}
+
+		if(opts.pattern && typeof(opts.pattern) == 'function'){
+			return opts.pattern(v,opts) || new Validity();
 		}
 
 		if(mi2.patterns[opts.pattern]){
