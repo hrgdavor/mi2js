@@ -1,6 +1,7 @@
 (function(mi2){
 
 	mi2.getValidator = function(comp, defReq){
+		if(comp.getValidator) return comp.getValidator();
 		return new Validator({
 			required: comp.attrBoolean('required', defReq),
 			invalid: comp.attr('invalid'),

@@ -121,7 +121,7 @@ function(proto, superProto, comp, superComp){
 		for(var i=year-5; i<year+5; i++){
 			years.push(''+i);
 		}
-		this.year.setData(years);
+		this.year.setConfig(years);
 		this.year.setValue(year);
 		this.month.setValue(date.getMonth());
 

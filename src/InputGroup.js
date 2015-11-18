@@ -57,7 +57,6 @@
 
 	proto.getValidator = function(){
 		var rules = forEachGetObject(function(item,code){
-			if(item.getValidator) return item.getValidator(required);
 			return mi2.getValidator(item, required);
 		});
 		return new mi2.GroupValidator(rules, this.required);

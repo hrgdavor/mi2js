@@ -37,7 +37,7 @@ function(proto, superProto, comp, superComp){
 		this.def     = this.attrDef('default','');
 	};
 
-	proto.setData = function(data){
+	proto.setConfig = function(data){
 		var el = this.inp;
 		if(el.tagName != 'SELECT') throw new Error('setData supported only for SELECT element');
 		while(el.options.length) el.options.remove(0);

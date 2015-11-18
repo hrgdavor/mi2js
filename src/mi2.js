@@ -76,9 +76,21 @@ $.update = function(dest, update){
 	return dest;
 };
 
+$.isArray = Array.idArray ||  function (xs) {
+    return {}.toString.call(xs) === '[object Array]';
+};
+
 /** Make shallow copy */
-$.clone = function(data){
-	return $.update({},data);
+$.copy = function(obj){
+    if ($.isArray(obj)) {
+        var len = obj.length;
+        copy = Array(len);
+        for (var i = 0; i < len; i++) {
+            copy[i] = obj[i];
+        }
+        return copy;
+    }
+	return $.update({},obj);
 };
 
 $.num = function(str){
