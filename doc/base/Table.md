@@ -24,9 +24,11 @@ when configuring the Table cmponent.
 ```html
 <table as="base/Table">
     <thead>
-        <th column="first" sort="">First</th>
-        <th column="last" sort="">Last</th>
-        <th column="age" sort="">Age</th>
+        <tr>
+            <th column="first" sort="">First</th>
+            <th column="last" sort="">Last</th>
+            <th column="age" sort="">Age</th>
+        </tr>
     </thead>
     <tbody>
         <tr as="base/Tpl">
@@ -58,9 +60,11 @@ results in this HTML
 ```html
 <table as="base/Table">
     <thead>
-        <th column="first" sort="">First</th>
-        <th column="last" sort="">Last</th>
-        <th column="age" sort="">Age</th>
+        <tr>
+            <th column="first" sort="">First</th>
+            <th column="last" sort="">Last</th>
+            <th column="age" sort="">Age</th>
+        </tr>
     </thead>
     <tbody>
         <tr as="base/Tpl">
