@@ -1,12 +1,14 @@
 (function(mi2){
 	
-	function genPart(prop, format){
+	function genPart(prop, filter){
 		// simple value extract
-		if(!format) return function(data){ return data[prop]; };
+		if(!filter) return function(data){ return data[prop]; };
 
-		// format extracted value
-		format = mi2.parseFilter(format);
-		return function(data){ return mi2.filter(data[prop], format, prop, data); };
+		// filter extracted value
+		filter = mi2.parseFilter(filter);
+		return function(data){
+			return mi2.filter( prop === '' ? data:data[prop], filter, prop, data); 
+		};
 	}
 
 	function genPrinter(arr){
@@ -26,9 +28,9 @@
 		var arr = [];
 		var offset = 0;
 
-		str.replace(tplReg, function(match, prop, format, idx){
+		str.replace(tplReg, function(match, prop, filter, idx){
 			if(offset < idx) arr.push(str.substring(offset,idx));
-			arr.push(genPart(prop, format));
+			arr.push(genPart(prop, filter));
 			offset = idx+match.length
 			return match;
 		});
