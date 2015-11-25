@@ -21,7 +21,10 @@
 		var filter = str.split(',');
 
 		// resolve the filter immediatelly (early error)
-		if(resolve && filter.length ) filter[0] = mi2.getFilter(filter[0]);
+		if(resolve && filter.length ){
+			filter[0] = mi2.getFilter(filter[0]);
+			if(filter.length == 1) return filter[0];
+		} 
 
 		return filter;
 	};
@@ -34,6 +37,9 @@
 	mi2.filter = function(value, fName, propName, data){
 		if(!fName) return value;
 
+		if(fName instanceof Function){
+			return fname.apply(null,[value, propName, data]);
+		}
 		if(fName instanceof Array){
 			if(!fName.length) return value;
 
