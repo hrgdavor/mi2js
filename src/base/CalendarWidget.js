@@ -145,6 +145,7 @@ function(proto, superProto, comp, superComp){
 	proto.on_today = function(evt){
 		var d = new Date();
 		this.setDate( d.getFullYear(), d.getMonth(), d.getDate() );
+		this.on_done();
 	};
 
 });
