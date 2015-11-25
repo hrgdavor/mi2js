@@ -38,7 +38,7 @@
 		if(!fName) return value;
 
 		if(fName instanceof Function){
-			return fname.apply(null,[value, propName, data]);
+			return fName.apply(null,[value, propName, data]);
 		}
 		if(fName instanceof Array){
 			if(!fName.length) return value;
