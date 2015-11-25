@@ -100,7 +100,7 @@ $.num = function(str){
 };
 
 $.likeNull = function(obj){
-	return obj === null || obj === 0 || obj === '';
+	return !obj;
 };
 
 $.isEmpty = function(obj){
