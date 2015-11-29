@@ -46,20 +46,26 @@ $.setRef = function(obj, comp, prop){
 				//example: p="bt.edit"
 				if(!obj[group]) obj[group] = new $.NWGroup({});
 				comp.__propName  = prop;
-				obj[group].items[prop] = comp;
-			}else{
-				//example: p="bt."
-				if(!obj[group]) obj[group] = $.NWGroup([]);
-				comp.__propName = obj[group].items.length;
+                if(obj[group].items[prop]) logPropTaken(group+'.'+prop, obj, obj[group].items[prop]);
+                obj[group].items[prop] = comp;
+            }else{
+                //example: p="bt."
+                if(!obj[group]) obj[group] = $.NWGroup([]);
+                comp.__propName = obj[group].items.length;
 				obj[group].items.push(comp);
 			}
 		}else{
 			//example p="edit"
+            if(obj[prop]) logPropTaken(prop, obj, obj[prop]);
 			comp.__propName = prop;
 			obj[prop] = comp;
 		}
 	}
 };
+
+function logPropTaken(prop, obj, by){
+    console.log('WARNING! property: '+prop+' is already filled on ', obj, ' by ', by);
+}
 
 /** 
 
