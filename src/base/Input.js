@@ -35,6 +35,14 @@ function(proto, superProto, comp, superComp){
 
 		this.notNull = this.attrDef('not-null',false);
 		this.def     = this.attrDef('default','');
+
+        this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
+		this.listen(this.input.el,'blur',  'on_blur');
+	};
+
+	proto.on_blur = function(evt){
+        if(this.typingFilter)
+            this.inp.value = mi2.filter(this.inp.value, this.typingFilter);
 	};
 
 	proto.setConfig = function(data){

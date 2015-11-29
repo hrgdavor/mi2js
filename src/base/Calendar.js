@@ -62,6 +62,9 @@ function(proto, superProto, comp, superComp){
 	};
 	proto.on_blur = function(evt){
 		if(this.isReadOnly()) return;
+        var inp = this.input.el, typingFilter = this.attr('typing-filter');
+        if(typingFilter)
+            inp.value = mi2.filter(inp.value, typingFilter);
 		this.hideTimer =this.setTimeout(function(){
 			this.showWidget(false);
 		},100);
