@@ -17,6 +17,8 @@
 		if(typeof arr == 'string'){
             obj[arr] = val;
         }else if(arr instanceof Array || arr.length){
+        	// if came from single argument array parameter like: visibleIs(['a','b']);
+        	if(arr.length == 1 && arr[0] instanceof Array ) arr = arr[0]; 
             for(var i=0; i<arr.length; i++){
                 obj[arr[i]] = val;
             }          
@@ -86,13 +88,13 @@
 	/* Toggle functionalities EXPERIMENTAL */
 
 	/* this is usefull to add a group of elements, so they can be changed together */
-	proto.visibleIs  = function(arr){ this.toggleParams('setVisible',  arr, [true], [false]); };
-	proto.selectedIs = function(arr){ this.toggleParams('setSelected', arr, [true], [false]); };
-	proto.enabledIs  = function(arr){ this.toggleParams('setEnabled',  arr, [true], [false]); };
+	proto.visibleIs  = function(){ this.toggleParams('setVisible',  arguments, [true], [false]); };
+	proto.selectedIs = function(){ this.toggleParams('setSelected', arguments, [true], [false]); };
+	proto.enabledIs  = function(){ this.toggleParams('setEnabled',  arguments, [true], [false]); };
 
-	proto.visibleNot  = function(arr){ this.toggleParams('setVisible',  arr, [false], [true]); };
-	proto.selectedNot = function(arr){ this.toggleParams('setSelected', arr, [false], [true]); };
-	proto.enabledNot  = function(arr){ this.toggleParams('setEnabled',  arr, [false], [true]); };
+	proto.visibleNot  = function(){ this.toggleParams('setVisible',  arguments, [false], [true]); };
+	proto.selectedNot = function(){ this.toggleParams('setSelected', arguments, [false], [true]); };
+	proto.enabledNot  = function(){ this.toggleParams('setEnabled',  arguments, [false], [true]); };
 
 	proto.toggleClass = function(className){
 		this.toggleCall(
@@ -120,13 +122,20 @@
 
 	proto.toggleParams = function(funcName, arr, on, off){
 		var what = makeMap(arr, true), items = this.items, params, item;
-
 		for(var p in items){
 			params = what.hasOwnProperty(p) ? on : off;
 			item = items[p];
 			item[funcName].apply( item, params );
 		}
 	};
+
+    proto.callForSome = function(arr, func, args){
+        var what = makeMap(arr, true), items = this.items;
+        for(var p in items){
+            if(what.hasOwnProperty(p)) 
+                items[p][func].apply(items[p], args);
+        }
+    };
 
 	proto.toggleCall = function(arr, onFunc, offFunc){
 		var what = makeMap(arr, true), func, items = this.items;
@@ -136,6 +145,7 @@
 			func(items[p],p,items);
 		}
 	};
+
 
     proto.forSome = function(arr, func){
         var what = makeMap(arr, true), items = this.items;
