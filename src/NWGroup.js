@@ -14,12 +14,12 @@
 
 	function makeMap(arr, val){
 		var obj = {};
-		if(arr instanceof Array){
-			for(var i=0; i<arr.length; i++){
-				obj[arr[i]] = val;
-			}			
-		}else if(typeof arr == 'string'){
-			obj[arr] = val;
+		if(typeof arr == 'string'){
+            obj[arr] = val;
+        }else if(arr instanceof Array || arr.length){
+            for(var i=0; i<arr.length; i++){
+                obj[arr[i]] = val;
+            }          
 		}else{
 			return arr; // already a map
 		}
@@ -136,6 +136,14 @@
 			func(items[p],p,items);
 		}
 	};
+
+    proto.forSome = function(arr, func){
+        var what = makeMap(arr, true), items = this.items;
+        for(var p in items){
+            if(what.hasOwnProperty(p)) 
+                func(items[p],p,items);
+        }
+    };
 
 
 }());
