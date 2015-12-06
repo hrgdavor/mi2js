@@ -14,6 +14,8 @@ function(proto, superProto, comp, superComp){
 		this.editTime = t == 'time' || t =='datetime';
 		this.editDate = t == 'date' || t =='datetime';
 
+        this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
+
 		this.addClass('Calendar');
 
 		this.widget = mi2.addComp(this,{tag:'DIV', attr:{as:'base/CalendarWidget'}});
@@ -53,6 +55,7 @@ function(proto, superProto, comp, superComp){
 		if(val == '' ) val = new Date();
 		else val = this.parseValue();
 		this.widget.update(val);
+		this.input.el.select();
 		this.showWidget(true);
 	};
 	
@@ -62,9 +65,9 @@ function(proto, superProto, comp, superComp){
 	};
 	proto.on_blur = function(evt){
 		if(this.isReadOnly()) return;
-        var inp = this.input.el, typingFilter = this.attr('typing-filter');
-        if(typingFilter)
-            inp.value = mi2.filter(inp.value, typingFilter);
+        var inp = this.input.el;
+        if(this.typingFilter)
+            inp.value = mi2.filter(inp.value, this.typingFilter);
 		this.hideTimer =this.setTimeout(function(){
 			this.showWidget(false);
 		},100);
