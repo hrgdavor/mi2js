@@ -22,7 +22,7 @@
 		}
 	}
 
-	var tplReg = /\$\{([a-zA-z_0-9]+):?([^\}]+)?\}/g;
+	var tplReg = /\$\{([a-zA-z_0-9]+)\|?([^\}]+)?\}/g;
 
 	mi2.parseTemplate = function(str){
 		var arr = [];

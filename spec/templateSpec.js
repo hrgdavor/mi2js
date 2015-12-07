@@ -20,7 +20,7 @@ describe( 'template.js', function () {
 	});
 
 	it('/ formatted', function (){
-		var builderFunc = mi2.parseTemplate('Name:${name:specTest}');
+		var builderFunc = mi2.parseTemplate('Name:${name|specTest}');
 
 		expect(builderFunc({name:'John'})).toEqual('Name:John--');
 	});
@@ -34,7 +34,7 @@ describe( 'template.js', function () {
 	});
 
 	it('/ template component complex', function (){
-		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last:specTest}:X'} );
+		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last|specTest}:X'} );
 		var comp = mi2.comp.make(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
