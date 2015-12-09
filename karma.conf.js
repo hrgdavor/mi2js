@@ -21,7 +21,7 @@ module.exports = function(config) {
       'src/NWGroup.js',
       'src/InputGroup.js',
       'src/*.js',
-      'src/util/formatter.sample.js',
+      'src/util/filter.sample.js',
 
       'src/base/Tpl.js',
       'src/base/Button.js',

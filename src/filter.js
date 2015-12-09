@@ -18,6 +18,11 @@
 
 	mi2.parseFilter = function(str, resolve){
 		if(str === null || str === '') return null;
+		var filters = str.split('|');
+
+		if(filters.length > 1){
+			return mi2.multiFilter(filters);
+		}
 		var filter = str.split(',');
 
 		// resolve the filter immediatelly (early error)
@@ -32,6 +37,18 @@
 	mi2.filterNext = function(value, args, skip){
 		return mi2.filter(value, Array.prototype.slice.call(args,skip+2), args[1], args[2]);
 	};
+
+	mi2.multiFilter = function(filters){
+		for(var i=0; i<filters.length; i++){
+			filters[i] = mi2.parseFilter(filters[i]);
+		}
+		return function(value, propName, data){
+			for(var i=0; i<filters.length; i++){
+				value = mi2.filter(value, filters[i], propName, data);
+			}
+			return value;
+		}
+	}
 
 	/** filters: null, undefined, '', []  will return the original value without filtering */
 	mi2.filter = function(value, fName, propName, data){

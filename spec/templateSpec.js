@@ -1,6 +1,7 @@
 describe( 'template.js', function () {
 	var mi2 = mi2JS;
 	mi2.addFilter('specTest', function(value){ return value+'--'});
+	mi2.addFilter('specTest2', function(value){ return '('+value+')'});
 
 	it('/ not found', function (){
 		expect(mi2.parseTemplate('some text without template')).toEqual(null);
@@ -42,5 +43,19 @@ describe( 'template.js', function () {
 		expect(comp.el.innerHTML).toEqual('X:Jones--:X');
 	});
 
+	it('/ template component complex', function (){
+		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest|specTest2}:X'} );
+		var comp = mi2.comp.make(node);
+		comp.setValue({name:'Adam', last:'Jones'});
 
+		expect(comp.el.innerHTML).toEqual('X:(Jones--):X');
+	});
+
+	it('/ template component complex', function (){
+		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest2|specTest}:X'} );
+		var comp = mi2.comp.make(node);
+		comp.setValue({name:'Adam', last:'Jones'});
+
+		expect(comp.el.innerHTML).toEqual('X:(Jones)--:X');
+	});
 });
