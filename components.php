@@ -325,7 +325,7 @@ function test(){
 	<div class="sample"><b>Show/Hide</b>
 		<div p="sh1" as="base/ShowHide">first</div>
 		<div>Bla Bla 1</div>
-		<div p="sh1" as="base/ShowHide">second</div>
+		<div p="sh2" as="base/ShowHide">second</div>
 		<div hidden>Bla Bla 2</div>
 	</div>
 

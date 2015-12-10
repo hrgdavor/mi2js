@@ -12,6 +12,8 @@ function(proto, superProto, comp, superComp){
    showall - show all options when filtering, just select first match
 */
 
+	proto.loadDelay = 100;
+
 	proto.construct = function(el, tpl, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
 		superProto.construct.call(this, el, tpl, parent);
@@ -135,7 +137,7 @@ function(proto, superProto, comp, superComp){
 		clearTimeout(this.loadTimer);
 		this.loadTimer = this.setTimeout(function(){
 			this.loadResults(this.textInput.el.value.toLowerCase(),this);
-		}, force ? 5:100);
+		}, force ? 5:this.loadDelay);
 	};
 
 	proto.updateText = function(){

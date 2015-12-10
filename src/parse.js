@@ -44,15 +44,21 @@ $.setRef = function(obj, comp, prop){
 			comp.__propGroup = group;
 			if(prop){
 				//example: p="bt.edit"
-				if(!obj[group]) obj[group] = new $.NWGroup({});
+				if(!obj[group]){
+					obj[group] = {};
+					obj['$'+group] = new $.NWGroup(obj[group]);
+				} 
 				comp.__propName  = prop;
-                if(obj[group].items[prop]) logPropTaken(group+'.'+prop, obj, obj[group].items[prop]);
-                obj[group].items[prop] = comp;
+                if(obj[group][prop]) logPropTaken(group+'.'+prop, obj, obj[group][prop]);
+                obj[group][prop] = comp;
             }else{
                 //example: p="bt."
-                if(!obj[group]) obj[group] = $.NWGroup([]);
-                comp.__propName = obj[group].items.length;
-				obj[group].items.push(comp);
+				if(!obj[group]){
+					obj[group] = [];
+					obj['$'+group] = new $.NWGroup(obj[group]);
+				} 
+                comp.__propName = obj[group].length;
+				obj[group].push(comp);
 			}
 		}else{
 			//example p="edit"

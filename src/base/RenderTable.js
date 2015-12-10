@@ -164,7 +164,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	proto.__update = function(tData){
 		var empty = tData.data.length == 0;
 		this.noData.setVisible(empty);
-		this.data.setVisible(!empty);
+		this.dataArea.setVisible(!empty);
 
 		this.pager1.update(tData);
 		this.pager2.update(tData);
