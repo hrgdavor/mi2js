@@ -13,16 +13,16 @@
 
 	function genPrinter(arr){
 		return function(data){
-			if(!data) return '';
-			var val, str = void 0;
-			for( var i=0; i<arr.length; i++){
-				val = arr[i] instanceof Function ? arr[i](data) : arr[i];
-                if(val !== null && val !== void 0){
-                    if(str === void 0) str = '';
-                    str += val;
-                }
+			data = data || {};
+			if(arr.length == 1){
+				return arr[0] instanceof Function ? arr[0](data) : arr[0];
+			}else{
+				var val, str = '';
+				for( var i=0; i<arr.length; i++){
+					str += arr[i] instanceof Function ? arr[i](data) : arr[i];
+				}
+				return str;				
 			}
-			return str;
 		}
 	}
 
