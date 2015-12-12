@@ -45,6 +45,36 @@
 		return genPrinter(arr);
 	};
 
+	mi2.parseExpander = function(exp){
+		var tpl;
+		for(var p in exp){
+			if(typeof exp[p] == 'string'){
+				tpl = mi2.parseTemplate(exp[p]);
+				if(tpl) exp[p] = tpl;
+			}
+		}
+		return exp;
+	};
+
+	mi2.expandData = function(data, exp, copy){
+		var ret = copy ? mi2.update({},data) : {};
+
+		for(var p in exp){
+			ret[p] = exp[p] instanceof Function ? exp[p](data) : exp[p];
+		}
+		
+		return ret;
+	};
+
+	mi2.expandArray = function(arr, exp, copy){
+		var ret = [];
+		
+		for(var i=0; i<arr.length; i++){
+			ret.push(mi2.expandData(arr[i], exp, copy));
+		}
+
+		return ret;
+	};
 
 	function forAttr(el, attr, func){
 		el.attr(attr, null);

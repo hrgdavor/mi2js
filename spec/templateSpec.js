@@ -93,4 +93,19 @@ describe( 'template.js', function () {
 
 		expect(comp.el.innerHTML).toEqual('X:(Jones)--:X');
 	});
+
+
+	it('/ data expansion', function (){
+		var data = {firstname:'John', lastname: 'Doe'};
+		var exp = mi2.parseExpander({
+			name: '${firstname} ${lastname}'
+		});
+
+		expect(mi2.expandData(data,exp, true)).toEqual({firstname:'John', lastname: 'Doe', name:'John Doe'});
+		expect(mi2.expandData(data,exp, false)).toEqual({name:'John Doe'});
+
+		expect(mi2.expandArray([data],exp, false)).toEqual([{name:'John Doe'}]);
+	});
+
+
 });
