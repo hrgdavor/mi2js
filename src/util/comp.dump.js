@@ -27,7 +27,7 @@ mi2JS.listen(window,'load',function(evt){
 					if(idx != -1){
 						var left = prop.substring(0,idx);
 						var right = prop.substring(idx+1);
-						prop = left +'.items';
+						prop = left;
 						if(mi2JS.num(right)) 
 							prop +='['+right+']';
 						else
