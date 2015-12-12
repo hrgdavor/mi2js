@@ -108,16 +108,13 @@
 		return false;
 	};
 
+	/* no strong need to use dataset, and attributes work on more browsers */
 	mi2Proto.data = function(name, val){
+		name = 'data-'+name;
 		if(arguments.length > 1){
-			if(val === null || val === void 0){
-				if(this.el.dataset[name] !== void 0) delete this.el.dataset[name];
-			}else{
-				if(val !== this.el.dataset[name]) 
-					this.el.dataset[name] = val;
-			}
+			this.attr(name,val);
 		}else{
-			return this.el.dataset[name];
+			return this.attr(name);
 		}
 	};
 
@@ -159,6 +156,10 @@
 
 	mi2Proto.setText = function(text){
 		if(this.el.textContent !== text) this.el.textContent = text;	
+	};
+
+	mi2Proto.getText = function(){
+		return this.el.textContent;	
 	};
 
 })(mi2JS);
