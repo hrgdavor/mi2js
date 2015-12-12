@@ -14,9 +14,13 @@
 	function genPrinter(arr){
 		return function(data){
 			if(!data) return '';
-			var str = '';
+			var val, str = void 0;
 			for( var i=0; i<arr.length; i++){
-				str += arr[i] instanceof Function ? arr[i](data) : arr[i];
+				val = arr[i] instanceof Function ? arr[i](data) : arr[i];
+                if(val !== null && val !== void 0){
+                    if(str === void 0) str = '';
+                    str += val;
+                }
 			}
 			return str;
 		}
