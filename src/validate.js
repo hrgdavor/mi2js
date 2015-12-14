@@ -41,16 +41,14 @@
 	/* **************** Validity   ************************/
 
 	var Validity = mi2.Validity = function(result){
-		if(!result){
+		if(arguments.length == 0 || result === true || result === null || result === void 0){
 			this.valid = true;
 		}else{
 			this.valid = false;
 			if(typeof result == 'string'){
-				this.message = result;
-				result = {};
-			}else{
-				this.message = result.message;
+				result = {message: result};
 			}
+			this.message = result.message || 'invalid_value';
 			this.type = result.type || 'custom';
 			this.data = result.data || {};
 		}
