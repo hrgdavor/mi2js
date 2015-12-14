@@ -93,6 +93,8 @@
 			return opts.pattern(v,opts) || new Validity();
 		}
 
+        if(!opts.pattern) return new Validity();
+
 		if(mi2.patterns[opts.pattern]){
 			var predef = mi2.patterns[opts.pattern];
 			if(typeof(predef) == 'function'){
@@ -151,7 +153,7 @@
 		if(value === null || value === void 0) return Validity.required(this.required);
 		var resp = {};
 		for(var p in this.items){
-			resp[p] = this.items.validate(value[p]);
+			resp[p] = this.items[p].validate(value[p]);
 		}
 		return new GroupValidity(resp);
 	}
@@ -173,6 +175,10 @@
 		}
 	}
 
+    GroupValidity.prototype.item = function(code){
+        return this.items[code];
+    };
+    
 	GroupValidity.prototype.isValid = function(code){
 		var item;
 		if(code !== void 0){

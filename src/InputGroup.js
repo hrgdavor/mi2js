@@ -58,20 +58,28 @@
 		}
 	};
 
+    proto.validate = function(){
+        var validator = this.getValidator();
+        var result = validator.validate(this.getValue());
+        this.markValidate(result);
+        return result;
+    };
+
 	proto.getValidator = function(){
-		var rules = forEachGetObject(function(item,code){
-			return mi2.getValidator(item, required);
+		var defReq = this.required;
+		var rules = this.forEachGetObject(function(item,code){
+			return mi2.getValidator(item, defReq);
 		});
-		return new mi2.GroupValidator(rules, this.required);
+		return new mi2.GroupValidator(rules, defReq);
 	}
 
 	proto.markValidate = function(data){
-		data = data || {};
+		data = data || new mi2.GroupValidity({});
 		this.forEach(function(item,p){
 			if(item.markValidate)
-				item.markValidate(data[p]);
+				item.markValidate(data.item(p));
 			else
-				mi2.markValidate(item, data[p]);			
+				mi2.markValidate(item, data.item(p));			
 		});
 	};
 
