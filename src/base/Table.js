@@ -50,13 +50,40 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column') || 'column'+i;
             var column = this.findRef(arr[i]);
-            column.index = i;
+            column.__index = i;
             column.cellTpl = cellTpl[i] || '';
             columns[colName] = column;
             this.columns.push(column);
 		}
 		this.columnsGroup = new $.NWGroup(columns);
 	};
+
+    proto.columnIndex = function(colName){
+        var column = this.columnsGroup.item(colName);
+        return column ? column.__index : -1;
+    };
+
+    proto.columnIndexMap = function(cols){
+        var ret = {};
+        for (var i = cols.length - 1; i >= 0; i--) {
+            ret[ this.columnIndex(cols[i])] = true;
+        };
+        return ret;
+    };
+
+    proto.extractText = function(row, colMap){
+        var ret = [];
+        if(row instanceof $) row = row.el;
+        var i=0, el=row.firstElementChild;
+
+        while(el){
+            if(colMap[i]) ret.push(el.textContent);
+            i++;
+            el = el.nextElementSibling;
+        }
+
+        return ret;
+    }
 
     proto.hideColumns = function(){
         this.columnsGroup.forSome(arguments, function(item, code){
@@ -67,8 +94,15 @@ function(proto, superProto, comp, superComp){
 
     proto.rebuild = function(){
         var html = '', columns = this.columns;
+        var j=0;
         for(var i=0; i<columns.length; i++){
-            if(columns[i].isVisible()) html += columns[i].cellTpl;
+            if(columns[i].isVisible()){
+                html += columns[i].cellTpl;
+                columns[i].__index = j;
+                j++;
+            }else{
+                columns[i].__index = -1;
+            }
         }
         this.itemTpl.html = html;
     };

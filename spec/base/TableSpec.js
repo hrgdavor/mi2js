@@ -64,6 +64,11 @@ describe( 'base/Table.js', function () {
 
         expect(comp.columnsGroup.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
 
+        var map = comp.columnIndexMap(['first','age']);
+        expect(map).toEqual({'2':true, '0':true});
+
+        expect(comp.extractText(comp.item(0), map)).toEqual(['John','44']);
+        expect(comp.extractText(comp.item(0), map).join(' ').toLowerCase()).toEqual('john 44');
     });
 
 
@@ -96,6 +101,23 @@ describe( 'base/Table.js', function () {
         comp.markSort({'first':'ASC'}); // age is not sortable, and gets ignored
         expect(comp.columnsGroup.item('first').attr('sort')).toEqual('ASC');
 
+    });
+
+    it('/ column index ', function (){
+        var comp = mi2.comp.make(node);
+        
+        expect(comp.columnIndex('first')).toEqual(0);
+        expect(comp.columnIndex('last')).toEqual(1);
+        expect(comp.columnIndex('age')).toEqual(2);
+
+        comp.hideColumns('last');
+
+        expect(comp.columnIndex('first')).toEqual(0);
+        expect(comp.columnIndex('last')).toEqual(-1);
+        expect(comp.columnIndex('age')).toEqual(1);
+
+        expect(comp.columnIndexMap(['age'])).toEqual({'1':true});
+        expect(comp.columnIndexMap(['first','age'])).toEqual({'1':true, '0':true});
     });
 
 });

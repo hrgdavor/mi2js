@@ -83,6 +83,7 @@ function(proto, superProto, comp, superComp){
 		for(var i=arr.length; i<this.allItems.length; i++){
 			this.allItems[i].setVisible(false);
 		}
+		this.fireEvent('afterSetValue');
 	};
 
 	/** returns only active items (do not access .times property directly as it contains also disabled ones) */
@@ -140,14 +141,10 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.add = function(data){
-		this.setItem(data,this.count);
+		var index = this.count;
+		this.setItem(data,index);
 		this.count++;
-	};
-
-	proto.callFunc = function(funcName, args){
-		for(var i=0; i<this.count; i++){
-			this.allItems[i][funcName].apply(this.allItems[i],args);
-		}
+		this.fireEvent('afterAdd', {index:index, data:data, item:this.item(index)});
 	};
 
 });
