@@ -31,16 +31,19 @@
 	};
 
 	proto.focus = function(){
-		var item;
+		var item, toFocus;
 		for(var p in this.items){
 			item = this.items[p];
-			if(item.hasAttr('firstInput') && item.focus && !(item.isReadOnly && item.isReadOnly()) ){
-				item.focus();
-				return;
+			if( ( !toFocus || item.hasAttr('firstInput') )
+					&& item.focus 
+					&& !(item.isReadOnly && item.isReadOnly()) ){
+
+				toFocus = item;
 			}
 		}
+		if(toFocus) toFocus.focus();
 	};
-
+	
 	proto.setReadOnly = function(readOnly){
 		for(var p in this.items){
 			if(this.items[p].setReadOnly){
