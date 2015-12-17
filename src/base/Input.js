@@ -27,6 +27,7 @@ function(proto, superProto, comp, superComp){
 			var n = el.nextElementSibling;
 			if(n && n.className && n.className.indexOf('checkboxLabel') != -1){
 				this.listen(n, 'click', function(){
+					if(this.isReadOnly() || !this.isEnabled()) return;
 					this.inp.checked = !this.inp.checked;
 					this.fireIfChanged();
 				});
@@ -60,6 +61,7 @@ function(proto, superProto, comp, superComp){
 	proto.setReadOnly = function(readOnly){
 		superProto.setReadOnly.call(this,readOnly);
 		this.inp.readOnly = readOnly;
+		if(this.inp.type == 'checkbox') this.inp.disabled = readOnly;
 	};
 
 	proto.setRawValue = function(value){
@@ -91,19 +93,6 @@ function(proto, superProto, comp, superComp){
 	proto.focus = function(){
 		if(this.inp.focus) this.inp.focus();
 		if(this.inp.select) this.inp.select();
-	};
-
-	proto.fireIfChanged = function(evt){
-		if(this.timer) clearTimeout(this.timer);// avoid event bursts
-
-		this.timer = this.setTimeout(function(){
-			var old = this.oldValue;
-			var value = this.getValue();
-			if(value != old){
-				this.oldValue = value;
-				this.fireEvent('change',{oldValue:old, value: value});
-			}
-		},50);
 	};
 
 	proto.addListener = function(evtName,callback,thisObj){
