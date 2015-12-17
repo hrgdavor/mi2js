@@ -15,6 +15,7 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(el,'click');
 		this.mapItems(el.children);
+		if(this.isReadOnly()) this.setReadOnly(true);
 	};
 
 	proto.mapItems = function(it){
@@ -26,7 +27,14 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
+	proto.setReadOnly = function(v){
+		superProto.setReadOnly.call(this,v);
+		this.callFunc('attr',['readonly',v ? '':null]);
+	};
+
 	proto.on_click = function(evt){
+		if(this.isReadOnly() || !this.isEnabled()) return;
+
 		var target = this.item(evt.target);
 		if(target){
 			if(this.attr('single-value')){
