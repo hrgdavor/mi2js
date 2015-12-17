@@ -255,6 +255,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(val){
+        if(val === null || val === void 0) val = '';
 		this.idInput.el.value = val;
 		this.updateText();
 	};
