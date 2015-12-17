@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Calendar', 'Base', '<input p="input" as="base/Input">',
+mi2JS.comp.add('base/Calendar', 'base/InputBase', '<input p="input" as="base/Input">',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
@@ -66,8 +66,11 @@ function(proto, superProto, comp, superComp){
 	proto.on_blur = function(evt){
 		if(this.isReadOnly()) return;
         var inp = this.input.el;
-        if(this.typingFilter)
+        
+        if(this.typingFilter){
             inp.value = mi2.filter(inp.value, this.typingFilter);
+        }
+        this.fireIfChanged();
 		this.hideTimer =this.setTimeout(function(){
 			this.showWidget(false);
 		},100);
