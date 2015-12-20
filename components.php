@@ -130,7 +130,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 [as="base/MultiCheck"]{
   padding: 4px;
 }
-[as="base/MultiCheck"] b{
+[as="base/MultiCheck"] b,[as="base/CheckBox"]{
     display: inline-block;
     cursor: pointer;
     padding: 4px;
@@ -138,19 +138,19 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
     border-radius: 5px;
     margin-left: 8px;
 }
-[as="base/MultiCheck"] b:before{
+[as="base/MultiCheck"] b:before, [as="base/CheckBox"]:before{
 	font-family: monospace;
    content: '[ ]'; 
    display: inline-block;
     margin-right: 4px;
 }
-[as="base/MultiCheck"] b.selected{
+[as="base/MultiCheck"] b.selected, [as="base/CheckBox"].selected{
 	border-color: white;
 	color: white;
 	background: black;
 }
 
-[as="base/MultiCheck"] b.selected:before{
+[as="base/MultiCheck"] b.selected:before, [as="base/CheckBox"].selected:before{
    content: '[x]';
 }  
 
@@ -187,6 +187,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 <script src="build/en/base/Pager.js"></script>
 <script src="build/en/base/RenderTable.js"></script>
 <script src="build/en/base/MultiCheck.js"></script>
+<script src="build/en/base/CheckBox.js"></script>
 
 <script type="text/javascript">
 mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:',
@@ -296,6 +297,8 @@ function test(){
 			<input p="items.age"/>
 			multi check:
 			<span p="items.multi" as="base/MultiCheck" single-value="1"></span>
+			checkbox:
+			<span p="items.checkb" as="base/CheckBox" value="+" unchecked="-">plus.minus</span>
 		</div>
 		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 	</div>
