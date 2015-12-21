@@ -48,7 +48,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.setConfig = function(data){
 		// NodeWrapper is cheap, so we discard the old ones
-		this.innerHTML = '';
+		this.el.innerHTML = '';
 		this.items = {};
 		// allow key:value object or array of {id:'',text:''} objects
 		var isArray = data instanceof Array;
