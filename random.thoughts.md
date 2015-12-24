@@ -15,8 +15,7 @@
    - filter for getting validation error from server
    - for easier adding validation errors
    - ? validation object with some utiliy metohds
- - refactor FormGroup to extend Group
-
+ - refactor Table, remove onclick handler and move it to base/ClickableRow maybe
 
 # event (and direction for fire)
  - Button - fire to parent (dir:down, hops:1) or (call on parent, hops:0)
