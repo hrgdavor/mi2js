@@ -21,91 +21,123 @@ function(proto, superProto, comp, superComp){
 		var TR    = findOrAdd(THEAD, 'TR');
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
 
+		this.listen(TBODY,'click',this.on_clickTbody);
+
 		// extract header cell if defined together in body
 		var it = TBODY.getElementsByTagName('TH');
-        var arr = [];
-        for(var i=0; i<it.length;i++){
-            arr.push(it[i]);
-        }
+		var arr = [];
+		for(var i=0; i<it.length;i++){
+			arr.push(it[i]);
+		}
 
-        // move them to THEAD
-        for(var i=0; i<arr.length; i++) TR.appendChild(arr[i]);
+		// move them to THEAD
+		for(var i=0; i<arr.length; i++) TR.appendChild(arr[i]);
 
-        var cells = TBODY.getElementsByTagName('TD');
-        if(!cells.length){
-            console.error('Table has no columns defined ');
-            console.log('table', this);
-        } 
-        var cellTpl = [];
-        for(var i=0; i<cells.length; i++){
-            cellTpl[i] = cells[i].outerHTML;
-        }
+		var cells = TBODY.getElementsByTagName('TD');
+		if(!cells.length){
+			console.error('Table has no columns defined ');
+			console.log('table', this);
+		} 
+		var cellTpl = [];
+		for(var i=0; i<cells.length; i++){
+			cellTpl[i] = cells[i].outerHTML;
+		}
 
-        superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, tpl, parent);
 
-        var columns = {}, column;
-        this.columns = [];
-        arr = TR.children;
-        // create Group for columns, by collecting each TH with "column" attribute
+		var columns = {}, column;
+		this.columns = [];
+		arr = TR.children;
+		// create Group for columns, by collecting each TH with "column" attribute
 		for(var i=0; i<arr.length; i++){
 			var colName = arr[i].getAttribute('column') || 'column'+i;
-            var column = this.findRef(arr[i]);
-            column.__index = i;
-            column.cellTpl = cellTpl[i] || '';
-            columns[colName] = column;
-            this.columns.push(column);
+			var column = this.findRef(arr[i]);
+			column.__index = i;
+			column.cellTpl = cellTpl[i] || '';
+			columns[colName] = column;
+			this.columns.push(column);
 		}
 		this.columnsGroup = new $.NWGroup(columns);
 	};
 
-    proto.columnIndex = function(colName){
-        var column = this.columnsGroup.item(colName);
-        return column ? column.__index : -1;
-    };
+	proto.on_clickTbody = function(evt){
+		var evtName, action, TR, TD, comp;
+		var el = evt.target;
+		while(el.tagName != 'TBODY'){
+			comp = el.getAttribute('as');
+			if(comp && !(comp == 'base/Tpl' || comp =='Base' )) return; // do not mess with other components
 
-    proto.columnIndexMap = function(cols){
-        var ret = {};
-        for (var i = cols.length - 1; i >= 0; i--) {
-            ret[ this.columnIndex(cols[i])] = true;
-        };
-        return ret;
-    };
+			if(el.tagName == 'TD' || el.tagName == 'TR'){
+				evtName = evtName || el.getAttribute('event');
+				action  = action  || el.getAttribute('action');
+			}
+			if(el.tagName == 'TD') TD = el;
+			if(el.tagName == 'TR') { TR = el; break;};
+			el = el.parentNode;
+		}
 
-    proto.extractText = function(row, colMap){
-        var ret = [];
-        if(row instanceof $) row = row.el;
-        var i=0, el=row.firstElementChild;
+		if(TR && this.parent.fireEvent){
+			this.parent.fireEvent(evtName || 'rowClick',{
+				action:action,
+				domEvent: evt, 
+				src:this,
+				eventFor: 'parent',
+				tr:TR,
+				td:TD
+			});
+		}
+		evt.stop();
+		return false;
+	};
 
-        while(el){
-            if(colMap[i]) ret.push(el.textContent);
-            i++;
-            el = el.nextElementSibling;
-        }
+	proto.columnIndex = function(colName){
+		var column = this.columnsGroup.item(colName);
+		return column ? column.__index : -1;
+	};
 
-        return ret;
-    }
+	proto.columnIndexMap = function(cols){
+		var ret = {};
+		for (var i = cols.length - 1; i >= 0; i--) {
+			ret[ this.columnIndex(cols[i])] = true;
+		};
+		return ret;
+	};
 
-    proto.hideColumns = function(){
-        this.columnsGroup.forSome(arguments, function(item, code){
-            item.setVisible(false); 
-        });
-        this.rebuild();
-    };
+	proto.extractText = function(row, colMap){
+		var ret = [];
+		if(row instanceof $) row = row.el;
+		var i=0, el=row.firstElementChild;
 
-    proto.rebuild = function(){
-        var html = '', columns = this.columns;
-        var j=0;
-        for(var i=0; i<columns.length; i++){
-            if(columns[i].isVisible()){
-                html += columns[i].cellTpl;
-                columns[i].__index = j;
-                j++;
-            }else{
-                columns[i].__index = -1;
-            }
-        }
-        this.itemTpl.html = html;
-    };
+		while(el){
+			if(colMap[i]) ret.push(el.textContent);
+			i++;
+			el = el.nextElementSibling;
+		}
+
+		return ret;
+	}
+
+	proto.hideColumns = function(){
+		this.columnsGroup.forSome(arguments, function(item, code){
+			item.setVisible(false); 
+		});
+		this.rebuild();
+	};
+
+	proto.rebuild = function(){
+		var html = '', columns = this.columns;
+		var j=0;
+		for(var i=0; i<columns.length; i++){
+			if(columns[i].isVisible()){
+				html += columns[i].cellTpl;
+				columns[i].__index = j;
+				j++;
+			}else{
+				columns[i].__index = -1;
+			}
+		}
+		this.itemTpl.html = html;
+	};
 
 	proto.markSort = function(def){
 		this.columnsGroup.forEach(function(item, code){
@@ -113,13 +145,13 @@ function(proto, superProto, comp, superComp){
 			// would become sortable by setting the sort attribute
 			if(item.hasAttr('sort')) 
 				item.attr('sort', def[code] || '');
-		});	
+		}); 
 	};
 
 	proto.getSort = function(def){
 		return this.columnsGroup.forEachGetObject(function(item, code){
 			return item.attr('sort') || void 0;
-		});	
+		}); 
 	};
 
 
@@ -128,6 +160,6 @@ function(proto, superProto, comp, superComp){
 		return ch ? ch : $.addTag(el, tag);
 	}
 
-	proto.findItemsArea = function(el){ return this.TBODY; };	
+	proto.findItemsArea = function(el){ return this.TBODY; };   
 
 });
