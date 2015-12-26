@@ -87,7 +87,7 @@
 		ex.name = evtName;
 		ex.target = this;
 
-		if(ex.eventFor == 'parent' && this.isTransitive()){
+		if(ex.eventFor == 'parent' && this.isTransitive && this.isTransitive()){
 			if(this.parent) this.parent.fireEvent(evtName, ex);
 			return;
 		}
