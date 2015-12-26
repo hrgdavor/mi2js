@@ -6,7 +6,7 @@ function(proto, superProto, comp, superComp){
 
     var mi2 = mi2JS;
 
-    proto.isTransitive = function(){ this.getCompName() == 'base/Tpl' };
+    proto.isTransitive = function(){ return this.getCompName() == 'base/Tpl' };
 
     proto.construct = function(el, tpl, parent){
         superProto.construct.call(this, el, tpl, parent);
