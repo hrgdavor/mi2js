@@ -54,8 +54,11 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(this.textInput.el, "keydown", function(evt){
 			if(this.isReadOnly()) return;
-			if(evt.keyCode == 13){
+            if(evt.keyCode == 9){
 				this.applySelection();
+            }
+            if(evt.keyCode == 13){
+                this.applySelection();
 				evt.stop();
 				this.next();
 				return false;
@@ -86,7 +89,8 @@ function(proto, superProto, comp, superComp){
 				this.selectElem(this.list[i].el);
 			}else{
 				this.firstKey = false;
-			}		 
+			}
+            this.selectFirst = true;	 
 			this.callLoad();
 		});
 	};
@@ -102,6 +106,7 @@ function(proto, superProto, comp, superComp){
 	proto.next = function(){
 		if(this.nextInput) this.nextInput.focus();
 		else this.textInput.el.blur();
+        if(this.parent) this.parent.fireEvent('nextInput',{src:this});
 	};
 
 	proto.focus = function(){
@@ -111,6 +116,7 @@ function(proto, superProto, comp, superComp){
 		clearTimeout(this.hideTimer);
 		this.hideTimer = this.setTimeout(function(){	
 			this.div.setVisible(false);
+            this.selectFirst = false;
 		},200);
 	};
 
@@ -199,7 +205,7 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
-	proto.showResults = function(data, proposal){
+	proto.showResults = function(data){
 		if(this.emptyText && this.showall){
 			var tmp = data;
 			data = [{id:'',text:this.emptyText}];
@@ -207,7 +213,7 @@ function(proto, superProto, comp, superComp){
 		} 
 	
 		var num = this.count = data.length;
-		var selectedId = proposal || this.idInput.el.value;
+		var selectedId = this.idInput.el.value;
 		for(var i=0; i<num; i++){
 			var d = this.list[i];
 			if(i>= this.list.length){
@@ -217,6 +223,7 @@ function(proto, superProto, comp, superComp){
 			d.el.innerHTML = data[i].html || data[i].text;
 			d.el.data = data[i];
 			d.setVisible(true);
+            if(this.selectFirst && i==0) selectedId = data[i].id;
 			d.classIf("selected", selectedId == data[i].id);
 			if(selectedId == data[i].id) this.selected = d.el;
 		}
