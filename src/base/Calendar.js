@@ -86,6 +86,7 @@ function(proto, superProto, comp, superComp){
 		this.setValue(evt.date);
 		this.on_blur({});
 		this.input.el.blur();
+        if(this.parent) this.parent.fireEvent('nextInput',{src:this});		
 	};
 
 	proto.validate = function(defReq){
@@ -156,6 +157,10 @@ function(proto, superProto, comp, superComp){
 		}else{
 			return mi2.parseTime(str);
 		}
+	};
+
+	proto.focus = function(){
+		this.input.focus();
 	};
 
 });
