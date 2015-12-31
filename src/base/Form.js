@@ -53,7 +53,29 @@ function(proto, superProto, comp, superComp){
 		this.required = this.attrBoolean('required', true);
 	};
 
+    proto.on_nextInput = function(evt){
+    	this.setTimeout(function(){
+	    	this.changeFocus(evt.src,true);		
+    	},50);
+    };
 
+    proto.changeFocus = function(from,toNext){
+        var first,prev,found,next,last, items= this.focusItems || this;
+        items.forEach(function(item){
+            if(!first) first = item;
+            if(found && !next) next = item;
+            
+            if(from == item) 
+            	found = item;
+            else if(!found)
+            	prev = item;
+
+            last = item;
+        });
+        var elem = toNext ? next:prev;
+        if(!elem) elem = toNext ? first:last;
+        if(elem && elem.focus) elem.focus();
+    };
 });
 
 
