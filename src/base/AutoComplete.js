@@ -245,6 +245,7 @@ function(proto, superProto, comp, superComp){
 		this.selectedData = sel;
 		this.idInput.el.value = sel.id || '';
 		this.setText(sel.text);
+		this.fireEvent("change",{src:this, selected:sel});
 		this.parent.fireEvent("afterSelect",{src:this, selected:sel});
 	};
 
