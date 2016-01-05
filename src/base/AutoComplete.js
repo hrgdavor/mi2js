@@ -286,16 +286,6 @@ function(proto, superProto, comp, superComp){
 		if(required && !this.getValue()) return {message:t('required'), type:'required'}
 	};
 
-	proto.markValidate = function(data, info){
-		data = data || {};
-		this.textInput.classIf('validationError', data._error);
-		if(info){
-			info.classIf('validationError', data._error);
-			info.setVisible(data._error && data._error.message);
-			if(data._error) info.setText(data._error.message);			
-		}
-	};
-
 });
 
 
