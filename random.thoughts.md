@@ -113,8 +113,16 @@ parameters inside template
     - 1.000,01 -> 1000.01
     - 100,1 -> 100.1
     - 1,2,3,4 -> 123.4 (unlikely user will type this, but)
-  - onchange refilter (parse+filter) to display what was understood
-  - validation options (min,max,required)
+  - [x] onchange refilter (parse+filter) to display what was understood
+  - [x] validation options (min,max,required)
 
 
-
+# validation
+ - define fields to skip  
+    - if needed for dsiabling validation fo fields that are not currently used due to some reason
+    - example: checkbox for advanced options (if disabled, do not validate theose options)
+ - validate input text (out filter can interfere, need to use getRawValue)
+ - required validation can be done also via value, if input returns null for empty value
+ - validate input values
+ - custom validation for values
+ - async validation for values
