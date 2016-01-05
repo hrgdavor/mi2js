@@ -58,12 +58,12 @@
 		}
 	};
 
-	proto.validate = function(){
-		var validator = this.getValidator();
-		var result = validator.validate(this.getValue());
-		this.markValidate(result);
-		return result;
-	};
+    proto.validate = function(){
+        var validator = this.getValidator();
+        var result = validator.validate(this.getRawValue());
+        this.markValidate(result);
+        return result;
+    };
 
 	proto.getValidator = function(){
 		var defReq = this.required;
@@ -76,16 +76,16 @@
 	proto.markValidate = function(data){
 		data = data || new mi2.GroupValidity({});
 		if(data.item && data.item instanceof Function){
-			this.forEach(function(item,p){
-				if(item.markValidate)
-					item.markValidate(data.item(p));
-				else
-					mi2.markValidate(item, data.item(p));			
-			});
-		}else{
-			console.error('GroupValidity expected');
-			console.log('Validity provided', data, 'for',this);
-		}
+            this.forEach(function(item,p){
+    			if(item.markValidate)
+    				item.markValidate(data.item(p));
+    			else
+    				mi2.markValidate(item, data.item(p));			
+    		});            
+        }else{
+            console.error('GroupValidity expected');
+            console.log('Validity provided', data, 'for',this);
+        }
 	};
 
 	proto.getValue = function(){
@@ -95,5 +95,14 @@
 		}
 		return value;
 	};
+
+    proto.getRawValue = function(){
+        var value = {}, item;
+        for(var p in this.items){
+            item = this.items[p];
+            value[p] = item.getRawValue ? item.getRawValue() : item.getValue();
+        }
+        return value;
+    };
 
 })();
