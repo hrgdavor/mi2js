@@ -17,6 +17,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_init = function(evt){
+		superProto.on_init.call(this,evt);
 		var code = this.attrDef('target','+');
 		this.panel = this.parent.findRef(code, this);
 		if(!this.panel) throw new Error('Panel not found '+code);

@@ -19,20 +19,18 @@ function(proto, superProto, comp, superComp){
 			throw new Error(m);			
 		}
 
+		this.stopSubmit = (this.attr('stop-submit') || '1') == '1';
+		this.event = this.attr('event') || 'submit';
+
+	};
+
+	proto.on_init = function(evt){
+        superProto.on_init.call(this,evt);
 		if(!this.items){
 			var m = 'This form is empty ' + this.getCompName();
 			console.log(m,this.el, this);
 			throw new Error(m);
 		} 
-
-		this.stopSubmit = (this.attr('stop-submit') || '1') == '1';
-		this.event = this.attr('event') || 'submit';
-
-		this.init();
-	};
-
-
-	proto.init = function(method, params){
 		this.fixItems();
 
 		this.listen(this.el,'submit', function(evt){

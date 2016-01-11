@@ -20,6 +20,10 @@
 		if(!this.lazyInit) this.parseChildren();
 	};
 
+	proto.on_init = function(evt){
+		if(this.lazyInit) this.parseChildren();
+	};
+
 	proto.parseChildren = function(){
 		mi2.parseChildren(this.el,this);
 	};
@@ -77,7 +81,7 @@
 		// allow for init to be fired even when hidden (and then skipped on_show)
 		if(evtName == 'init'){
 			if(this.__initialized !== true){
-				if(this.lazyInit) this.parseChildren();
+				// if(this.lazyInit) this.parseChildren();
 			}else
 				console.error('init should be fired only once '+this.__initialized);
 			this.__initialized = true;
@@ -92,6 +96,16 @@
 			return;
 		}
 
+		if(typeof(this['on_'+evtName]) == 'function'){
+			try{
+				this['on_'+evtName](ex);
+			}catch(e){
+				console.log('Error calling event handler function ','on_'+evtName, ex, 'component', this , 'error', e);
+				console.error(e.message);
+			}
+
+		}
+
 		var l;
 		if(this.__listeners) l=this.__listeners[evtName];
 		if(l) for(var i=0; i<l.length; i++){
@@ -102,15 +116,6 @@
 				console.error(e.message);
 			}
 		}
-		if(typeof(this['on_'+evtName]) == 'function'){
-			try{
-				this['on_'+evtName](ex);
-			}catch(e){
-				console.log('Error calling event handler function ','on_'+evtName, ex, 'component', this , 'error', e);
-				console.error(e.message);
-			}
-
-		} 
 
 		var child;
 		if(ex.eventFor == 'children' && this.children){
