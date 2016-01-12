@@ -54,6 +54,14 @@
 		}
 	}
 
+    proto.firstResult = function(func, params){
+        var items = this.items;
+        for(var p in items){
+            var ret = func(items[p], p, items, params);
+            if(ret !== void 0) return ret;
+        }
+    }
+
 	proto.forEachGet = function(func, params){
 		return this.items instanceof Array ? 
 			this.forEachGetArray(func, params) : this.forEachGetObject(func, params);
