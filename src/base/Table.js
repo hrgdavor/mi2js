@@ -22,6 +22,7 @@ function(proto, superProto, comp, superComp){
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
 
 		this.listen(TBODY,'click',this.on_clickTbody);
+		this.listen(THEAD,'click',this.on_clickThead);
 
 		// extract header cell if defined together in body
 		var it = TBODY.getElementsByTagName('TH');
@@ -57,7 +58,10 @@ function(proto, superProto, comp, superComp){
 			columns[colName] = column;
 			this.columns.push(column);
 		}
-		this.columnsGroup = new $.NWGroup(columns);
+		this.$columns = new $.NWGroup(columns);
+	};
+
+	proto.on_clickThead = function(evt){
 	};
 
 	proto.on_clickTbody = function(evt){
@@ -91,7 +95,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.columnIndex = function(colName){
-		var column = this.columnsGroup.item(colName);
+		var column = this.$columns.item(colName);
 		return column ? column.__index : -1;
 	};
 
@@ -117,8 +121,21 @@ function(proto, superProto, comp, superComp){
 		return ret;
 	}
 
+	proto.getCol = function(row, index){
+		if(typeof index == 'string') index = this.columnIndex(index);
+
+		if(row instanceof $) row = row.el;
+		var i=0, el=row.firstElementChild;
+
+		while(el){
+			if(i == index) return el;
+			i++;
+			el = el.nextElementSibling;
+		}
+	}
+
 	proto.hideColumns = function(){
-		this.columnsGroup.forSome(arguments, function(item, code){
+		this.$columns.forSome(arguments, function(item, code){
 			item.setVisible(false); 
 		});
 		this.rebuild();
@@ -140,7 +157,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.markSort = function(def){
-		this.columnsGroup.forEach(function(item, code){
+		this.$columns.forEach(function(item, code){
 			// without this condition, columns that were not sortable 
 			// would become sortable by setting the sort attribute
 			if(item.hasAttr('sort')) 
@@ -149,7 +166,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getSort = function(def){
-		return this.columnsGroup.forEachGetObject(function(item, code){
+		return this.$columns.forEachGetObject(function(item, code){
 			return item.attr('sort') || void 0;
 		}); 
 	};
