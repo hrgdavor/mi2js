@@ -62,7 +62,7 @@ describe( 'base/Table.js', function () {
 '</tr></thead>'
         );
 
-        expect(comp.columnsGroup.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
+        expect(comp.$columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
 
         var map = comp.columnIndexMap(['first','age']);
         expect(map).toEqual({'2':true, '0':true});
@@ -82,7 +82,7 @@ describe( 'base/Table.js', function () {
         expect(comp.getSort()).toEqual({'first':'ASC'});
         expect(mi2.isEmpty(comp.getSort())).toEqual(false);
 
-        expect(comp.columnsGroup.item('first').attr('sort')).toEqual('ASC');
+        expect(comp.$columns.item('first').attr('sort')).toEqual('ASC');
 
         comp.markSort({}); // clear sort
         expect(mi2.isEmpty(comp.getSort())).toEqual(true);
@@ -99,7 +99,7 @@ describe( 'base/Table.js', function () {
         expect(mi2.isEmpty(comp.getSort())).toEqual(true);
 
         comp.markSort({'first':'ASC'}); // age is not sortable, and gets ignored
-        expect(comp.columnsGroup.item('first').attr('sort')).toEqual('ASC');
+        expect(comp.$columns.item('first').attr('sort')).toEqual('ASC');
 
     });
 

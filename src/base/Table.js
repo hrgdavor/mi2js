@@ -107,13 +107,16 @@ function(proto, superProto, comp, superComp){
 		return ret;
 	};
 
-	proto.extractText = function(row, colMap){
+	proto.extractText = function(row, colMap, skipMap){
 		var ret = [];
+		skipMap = skipMap || {};
 		if(row instanceof $) row = row.el;
 		var i=0, el=row.firstElementChild;
 
 		while(el){
-			if(colMap[i]) ret.push(el.textContent);
+			if((!colMap || colMap[i]) && !skipMap[i]){
+				ret.push( el.textContent );
+			}
 			i++;
 			el = el.nextElementSibling;
 		}
