@@ -6,11 +6,15 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS;
 
-	proto.construct = function(el, tpl, parent){
-		superProto.construct.call(this, el, tpl, parent);
+	proto.construct = function(el, parent){
+		superProto.construct.call(this, el, parent);
 
 		this.pages = [];
-		this.opts = {pagesAbout: 5};
+		this.opts = {pagesAbout: 5};		
+	};
+
+	proto.initTemplate = function(){
+		superProto.initTemplate.call(this);
 		this.setup({});
 	};
 

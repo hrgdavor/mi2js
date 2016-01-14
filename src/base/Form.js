@@ -11,8 +11,8 @@ function(proto, superProto, comp, superComp){
 	/**
 		@param event - name of the event to fire on parent (default: submit)
 	*/
-	proto.construct = function(el, tpl, parent){
-		superProto.construct.call(this, el, tpl, parent);
+	proto.construct = function(el, parent){
+		superProto.construct.call(this, el, parent);
 		if(this.getCompName() == 'base/Form'){
 			var m = 'base/Form must be extended, rather use mi2JS.InputGroup inside: ' + parent.getCompName();
 			console.log(m,this.el, this);

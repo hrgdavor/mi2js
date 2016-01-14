@@ -6,9 +6,9 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly 
 
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, parent);
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
@@ -17,6 +17,10 @@ function(proto, superProto, comp, superComp){
         this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
 
 		this.addClass('Calendar');
+	};
+
+	proto.initTemplate = function(){
+		superProto.initTemplate.call(this);
 
 		this.widget = mi2.addComp(this,{tag:'DIV', attr:{as:'base/CalendarWidget'}});
 		this.widget.setVisible(false);

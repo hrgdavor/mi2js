@@ -6,12 +6,17 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly 
 	
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		// template is not pased because it will be used only if no inline template is defined
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, parent);
 		this.dayOffset = 1;
 
 		this.addClass('CalendarWidget');
+	};
+
+	proto.initTemplate = function(){
+		superProto.initTemplate.call(this);
+
 		this.listen(this.dayGrid.el,'mousedown','on_dayClick');
 
 		this.year.trackChanges();

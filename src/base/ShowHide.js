@@ -6,24 +6,23 @@ function(proto, superProto, comp, superComp){
 
 	var $ = mi2JS;
 
-	proto.construct = function(el, tpl, parent){
+	proto.initTemplate = function(){
+		var el = this.el;
 		var html = el.innerHTML;
 		el.innerHTML = '';
-		// template is not pased because it will be used only if no inline template is defined
-		superProto.construct.call(this, el, tpl, parent);
+
+		superProto.initTemplate.call(this);
+
 		this.texts = this.button.attr('texts').split(',');
 
 		this.title.setHtml(html);
-	};
 
-	proto.on_init = function(evt){
-		superProto.on_init.call(this,evt);
 		var code = this.attrDef('target','+');
 		this.panel = this.parent.findRef(code, this);
 		if(!this.panel) throw new Error('Panel not found '+code);
 		this.updateButton();
 	};
-;
+
 	proto.updateButton = function(){
 		try{
 			var idx = this.panel.isVisible() ? 1:0;

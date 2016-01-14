@@ -25,9 +25,10 @@ function(proto, superProto, comp, superComp){
 
 	proto.isTransitive = function(){ return true; };
 
-	proto.construct = function(el, tpl, parent){
-		if(tpl) el.innerHTML = tpl;
-
+	proto.initTemplate = function(){
+		if(this.__template) el.innerHTML = this.__template;
+		delete this.__template;
+		var el = this.el;
 
 		// support for components with inline template, and skip noData node
 		this.itemsArea = this.findItemsArea(el) || el;
@@ -37,7 +38,7 @@ function(proto, superProto, comp, superComp){
 		// this was done before calling parent constructor to avoid stack overflow in case
 		// of component recursion using Loop component (example: tree-like structures)
 
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.initTemplate.call(this);
 
 		this.allItems = [];
 		this.items = [];

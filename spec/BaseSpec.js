@@ -14,8 +14,8 @@ describe( 'comp.js Component utilities', function () {
 
 	mi2JS.comp.add('test/ShowHideInitTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
-		proto.construct = function(el,tpl,parent){
-			superProto.construct.call(this,el,tpl,parent);
+		proto.construct = function(el,parent){
+			superProto.construct.call(this,el,parent);
 			this.on_show_count = 0;
 			this.on_hide_count = 0;
 			this.on_init_count = 0;
@@ -30,7 +30,7 @@ describe( 'comp.js Component utilities', function () {
 		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/LazyTest',hidden:''}, html:''});
 
 		expect(comp.el.inside).toEqual(undefined);
-		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"></div>');
+		expect(comp.el.innerHTML).toEqual('');
 		comp.setVisible(true);
 		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"><b p="bt1" as="base/Button">ok</b></div>');
 		expect(comp.inside instanceof mi2.comp.get('test/LazyTestIn')).toBeTruthy();	

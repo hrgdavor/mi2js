@@ -13,19 +13,18 @@
 
 	var proto = Base.prototype; //
 
-	proto.construct = function(el,tpl, parent){
+	proto.construct = function(el, parent){
 		this.el = el;
+	};
 
-		if(tpl) el.innerHTML = tpl;
-		if(!this.lazyInit) this.parseChildren();
+	proto.initTemplate = function(){
+		if(this.__template) this.el.innerHTML = this.__template;
+		mi2.parseChildren(this.el,this);
+		delete this.__template;
 	};
 
 	proto.on_init = function(evt){
-		if(this.lazyInit) this.parseChildren();
-	};
-
-	proto.parseChildren = function(){
-		mi2.parseChildren(this.el,this);
+		if(this.lazyInit) this.initTemplate();
 	};
 
 	proto.getCompName = function(){

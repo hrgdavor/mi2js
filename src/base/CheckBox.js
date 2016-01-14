@@ -9,9 +9,9 @@ function(proto, superProto, comp, superComp){
 
 	proto.itemTpl = {tag:'B'};
 
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		this.items = {};
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, parent);
 
 		this.useValue = this.attrDef('value',true);
 		this.unchecked = this.attrDef('unchecked',false);

@@ -24,9 +24,10 @@
 
 			var compDef = this.get(compName, el);
 			var c = new compDef();
-			c.construct(el, this.getTpl(compName), parent);
-
+			c.__template = this.getTpl(compName);
+			c.construct(el, parent);
 			c.setParent(parent);
+			if(!c.lazyInit) c.initTemplate();
 
 			if(parent === null && c.isVisible()){
 				// if ROOT component is not hidden, fire show event 

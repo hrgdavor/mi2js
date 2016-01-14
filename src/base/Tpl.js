@@ -8,15 +8,14 @@ function(proto, superProto, comp, superComp){
 
     proto.isTransitive = function(){ return this.getCompName() == 'base/Tpl' };
 
-    proto.construct = function(el, tpl, parent){
-        superProto.construct.call(this, el, tpl, parent);
-        this.initTemplate();
-    };
-
     proto.initTemplate = function(){
+        superProto.initTemplate.call(this);
+
         this.template = mi2.loadTemplate(this.el);
         this.templateFwd = [];
+
         if(!this.children) return;
+        
         var count = this.children.length;
         for(var i=0; i<count; i++){
             if(this.children[i].hasAttr('fwd-tpl-data')){

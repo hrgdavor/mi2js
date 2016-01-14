@@ -6,11 +6,8 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly
 
-	proto.construct = function(el, tpl, parent){
-		superProto.construct.call(this, el, tpl, parent);
-		if(!this.input) this.input = this;
-		// input html node
-		this.inp=this.input.el;
+	proto.construct = function(el, parent){
+		superProto.construct.call(this, el, parent);
 
 		var tag = el.tagName;
 		if(tag != 'INPUT' && tag != 'SELECT' && tag != 'TEXTAREA'){
@@ -23,6 +20,19 @@ function(proto, superProto, comp, superComp){
 		this.useValue = this.attrDef('value',true);
 		this.unchecked = this.attrDef('unchecked',false);
 
+		this.notNull = this.attrDef('not-null',false);
+		this.def     = this.attrDef('default','');
+
+        this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
+	};
+
+	proto.initTemplate = function(){
+		superProto.initTemplate.call(this);
+		var el = this.el;
+		// input html node
+		if(!this.input) this.input = this;
+		this.inp=this.input.el;
+
 		if(el.type == 'checkbox'){
 			var n = el.nextElementSibling;
 			if(n && n.className && n.className.indexOf('checkboxLabel') != -1){
@@ -34,10 +44,7 @@ function(proto, superProto, comp, superComp){
 			}
 		}
 
-		this.notNull = this.attrDef('not-null',false);
-		this.def     = this.attrDef('default','');
 
-        this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
 		this.listen(this.input.el,'blur',  'on_blur');
 	};
 

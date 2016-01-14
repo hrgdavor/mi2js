@@ -6,9 +6,14 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly
 
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		// template is not pased because it will be used only if no inline template is defined
-		superProto.construct.call(this, el, '', parent);
+		superProto.construct.call(this, el, parent);
+	};
+
+	proto.initTemplate = function(){
+		var el = this.el;
+		mi2.parseChildren(el,this);
 
 		if(!this.buttonsArea){// no inline template, so we use default one
 			var arr = [];
@@ -16,7 +21,7 @@ function(proto, superProto, comp, superComp){
 				arr.push(this.el.removeChild(this.el.firstChild));
 			}
 			// use defaulet template
-			el.innerHTML = tpl;
+			el.innerHTML = this.__template;
 			mi2.parseChildren(el,this);
 
 			for(var i=0; i<arr.length; i++){

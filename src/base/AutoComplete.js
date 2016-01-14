@@ -14,11 +14,16 @@ function(proto, superProto, comp, superComp){
 
 	proto.loadDelay = 100;
 
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, parent);
 
 		this.addClass("AutoComplete");
+
+	};
+
+	proto.initTemplate = function(){
+		superProto.initTemplate.call(this);
 
 		this.idInput.attr("name", this.attr("name"));
 

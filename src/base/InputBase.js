@@ -6,8 +6,8 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS; // minimizer friendly
 
-	proto.construct = function(el, tpl, parent){
-		superProto.construct.call(this, el, tpl, parent);
+	proto.construct = function(el, parent){
+		superProto.construct.call(this, el, parent);
 		
 		if(this.hasAttr('in-filter'))
 			this.inFilter = mi2.parseFilter(this.attr('in-filter'));

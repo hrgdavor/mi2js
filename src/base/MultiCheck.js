@@ -7,11 +7,11 @@ function(proto, superProto, comp, superComp){
 
 	mi2.mixin(comp,mi2.NWGroup);
 
-	proto.itemTpl = {tag:'B'};
+	proto.itemTpl = {tag:'BUTTON'};
 
-	proto.construct = function(el, tpl, parent){
+	proto.construct = function(el, parent){
 		this.items = {};
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.construct.call(this, el, parent);
 
 		this.listen(el,'click');
 		this.mapItems(el.children);

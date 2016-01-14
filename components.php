@@ -130,7 +130,7 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 [as="base/MultiCheck"]{
   padding: 4px;
 }
-[as="base/MultiCheck"] b,[as="base/CheckBox"]{
+[as="base/MultiCheck"] button,[as="base/CheckBox"]{
     display: inline-block;
     cursor: pointer;
     padding: 4px;
@@ -138,19 +138,19 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
     border-radius: 5px;
     margin-left: 8px;
 }
-[as="base/MultiCheck"] b:before, [as="base/CheckBox"]:before{
+[as="base/MultiCheck"] button:before, [as="base/CheckBox"]:before{
 	font-family: monospace;
    content: '[ ]'; 
    display: inline-block;
     margin-right: 4px;
 }
-[as="base/MultiCheck"] b.selected, [as="base/CheckBox"].selected{
+[as="base/MultiCheck"] button.selected, [as="base/CheckBox"].selected{
 	border-color: white;
 	color: white;
 	background: black;
 }
 
-[as="base/MultiCheck"] b.selected:before, [as="base/CheckBox"].selected:before{
+[as="base/MultiCheck"] button.selected:before, [as="base/CheckBox"].selected:before{
    content: '[x]';
 }  
 

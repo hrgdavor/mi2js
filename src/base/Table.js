@@ -16,7 +16,9 @@ function(proto, superProto, comp, superComp){
 	};
 
 
-	proto.construct = function(el, tpl, parent){
+	proto.initTemplate = function(){
+
+		var el = this.el;
 		var THEAD = this.THEAD = findOrAdd(el, 'THEAD');
 		var TR    = findOrAdd(THEAD, 'TR');
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
@@ -44,7 +46,7 @@ function(proto, superProto, comp, superComp){
 			cellTpl[i] = cells[i].outerHTML;
 		}
 
-		superProto.construct.call(this, el, tpl, parent);
+		superProto.initTemplate.call(this);
 
 		var columns = {}, column;
 		this.columns = [];
@@ -107,20 +109,19 @@ function(proto, superProto, comp, superComp){
 		return ret;
 	};
 
-	proto.extractText = function(row, colMap, skipMap){
+	proto.extractText = function(row, useMap, skipMap){
 		var ret = [];
 		skipMap = skipMap || {};
 		if(row instanceof $) row = row.el;
 		var i=0, el=row.firstElementChild;
 
 		while(el){
-			if((!colMap || colMap[i]) && !skipMap[i]){
+			if((!useMap || useMap[i]) && !skipMap[i]){
 				ret.push( el.textContent );
 			}
 			i++;
 			el = el.nextElementSibling;
 		}
-
 		return ret;
 	}
 
