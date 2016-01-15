@@ -193,8 +193,8 @@ bt { border: solid 1px gray; cursor: pointer; padding: 2px 6px 2px 6px;}
 mi2JS.comp.add('base/TestExtendUnordered', 'base/AutoComplete', 'extend:',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
-	proto.construct = function(el, tpl, parent){
-		superProto.construct.call(this, el, tpl, parent);
+	proto.construct = function(el, parent){
+		superProto.construct.call(this, el, parent);
 		function it(id,text) {return { id:id, text:text}; }
 		this.data = [it(1,'John'), it(2,'Doe'), it(3, 'Monkey')];
 	};
@@ -298,7 +298,7 @@ function test(){
 			multi check:
 			<span p="items.multi" as="base/MultiCheck" single-value="1"></span>
 			checkbox:
-			<span p="items.checkb" as="base/CheckBox" value="+" unchecked="-">plus.minus</span>
+			<button p="items.checkb" as="base/CheckBox" value="+" unchecked="-">plus.minus</button>
 		</div>
 		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
 	</div>

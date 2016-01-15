@@ -18,6 +18,8 @@ function(proto, superProto, comp, superComp){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
 		superProto.construct.call(this, el, parent);
 
+		this.data = [];
+
 		this.addClass("AutoComplete");
 
 	};
@@ -37,7 +39,6 @@ function(proto, superProto, comp, superComp){
 		this.displayLimit = mi2JS.num(this.attr('limit') || 999999);
 		this.showall = this.attr('showall');
 		// sample data: [{id:1,text:"default"},{id:2, text:'other'}, {id:3, text:'other 2'}]
-		this.data = [];
 
 		this.listen(this.textInput.el, "focus", function(evt){
 			if(this.isReadOnly()) return;
