@@ -282,7 +282,7 @@ function test(){
 <div id="test" as="Base" h-idden>
 	<div p="plain">plain element</div>
 	<div class="sample"><b>Button</b>
-		<bt as="base/Button" event="bt1" p="bt1">button1</bt>
+		<button as="base/Button" event="bt1" p="bt1">button1</button>
 	</div>
 	<div class="sample"><b>Input</b>
 		<input p="inp1" as="base/Input"/>
@@ -300,7 +300,7 @@ function test(){
 			checkbox:
 			<button p="items.checkb" as="base/CheckBox" value="+" unchecked="-">plus.minus</button>
 		</div>
-		<bt as="base/Button" event="form1" p="bt.form1">form test</bt>
+		<button as="base/Button" event="form1" p="bt.form1">form test</button>
 	</div>
 
 	<div class="sample"><b>Calendar</b>

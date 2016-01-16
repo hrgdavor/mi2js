@@ -147,7 +147,7 @@
 	}
 	var GProto = GroupValidator.prototype;
 
-	GroupValidator.prototype.validate = function(value){
+	GProto.validate = function(value){
 		if(value === null || value === void 0) return Validity.required(this.required);
 		var resp = {};
 		for(var p in this.items){

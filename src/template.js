@@ -17,7 +17,7 @@
 			if(arr.length == 1){
 				return arr[0] instanceof Function ? arr[0](data) : arr[0];
 			}else{
-				var val, str = '';
+				var str = '';
 				for( var i=0; i<arr.length; i++){
 					str += arr[i] instanceof Function ? arr[i](data) : arr[i];
 				}
@@ -110,7 +110,7 @@
 		list = list || [];
 		var attribs = el.attributes;
 		var count = attribs.length;
-		var idx, updater, wrapped;
+		var updater, wrapped;
 
 		// We go in reverse because templated attributes are removed right away.
 		// This way we do not go out of bounds ot the collection as it shortens

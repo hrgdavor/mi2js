@@ -10,10 +10,6 @@ function(proto, superProto, comp, superComp){
 
 		this.lastClick = 0;
 		this.listen(el,"click",function(evt){
-			evt.stop();
-		});
-
-		this.listen(el,"mousedown",function(evt){
 			if(evt.which != 1) return; // only left click
 			evt.stop();
 			if(this.isEnabled() && this.parent.fireEvent){

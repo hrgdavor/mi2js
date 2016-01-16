@@ -24,8 +24,9 @@ function(proto, superProto, comp, superComp){
 
 	};
 
-	proto.on_init = function(evt){
-        superProto.on_init.call(this,evt);
+	proto.initTemplate = function(){
+        superProto.initTemplate.call(this);
+
 		if(!this.items){
 			var m = 'This form is empty ' + this.getCompName();
 			console.log(m,this.el, this);
