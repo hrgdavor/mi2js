@@ -60,11 +60,11 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(this.textInput.el, "keydown", function(evt){
 			if(this.isReadOnly()) return;
-            if(evt.keyCode == 9){
+			if(evt.keyCode == 9){
 				this.applySelection();
-            }
-            if(evt.keyCode == 13){
-                this.applySelection();
+			}
+			if(evt.keyCode == 13){
+				this.applySelection();
 				evt.stop();
 				this.next();
 				return false;
@@ -96,7 +96,7 @@ function(proto, superProto, comp, superComp){
 			}else{
 				this.firstKey = false;
 			}
-            this.selectFirst = true;	 
+			this.selectFirst = true;	 
 			this.callLoad();
 		});
 	};
@@ -112,7 +112,7 @@ function(proto, superProto, comp, superComp){
 	proto.next = function(){
 		if(this.nextInput) this.nextInput.focus();
 		else this.textInput.el.blur();
-        if(this.parent) this.parent.fireEvent('nextInput',{src:this});
+		if(this.parent) this.parent.fireEvent('nextInput',{src:this});
 	};
 
 	proto.focus = function(){
@@ -122,7 +122,7 @@ function(proto, superProto, comp, superComp){
 		clearTimeout(this.hideTimer);
 		this.hideTimer = this.setTimeout(function(){	
 			this.div.setVisible(false);
-            this.selectFirst = false;
+			this.selectFirst = false;
 		},200);
 	};
 
@@ -168,16 +168,16 @@ function(proto, superProto, comp, superComp){
 	proto.updateTextFromData = function(){
 		this.textInput.disabled = false;
 		if(this.data.length <= 1 && this.noEmpty){
-        	this.textInput.disabled = true;
-        	this.clearBt.setEnabled(false);
+			this.textInput.disabled = true;
+			this.clearBt.setEnabled(false);
 		}
 		this.selectedData = this.getDataFor(this.getValue());
 		this.setText(this.selectedData ? this.selectedData.text:this.emptyText);
 		var val = this.getValue();
 		if(this.noEmpty && this.data.length >0 && !this.getText() ){
 			this.selectedData = this.data[0];
-        	this.setValue(this.data[0].id);
-        }
+			this.setValue(this.data[0].id);
+		}
 	};
 
 	//load results from database (if already filtered jump to showResults)
@@ -198,16 +198,18 @@ function(proto, superProto, comp, superComp){
 			if(data.length >= this.displayLimit) break;
 		}
 		var showall = this.showall || this.firstKey;
-        if(data.length > 1 || !this.noEmpty || showall){
-	        if(showall) {
-	        	data = this.data;
+		if(data.length > 1 || !this.noEmpty || showall){
+			if(showall) {
+				data = this.data;
 				if(data.length > this.displayLimit){
 					data = data.slice(0,this.displayLimit);
 				}
-	           this.showResults(data, data.length > 0 ? data[0].id : null);
-	           if(firstIndex != -1 ) this.selectElem(this.list[firstIndex].el); 
-	        }else
-	    		this.showResults(data);
+			   this.showResults(data, data.length > 0 ? data[0].id : null);
+			}else{
+				this.showResults(data);
+				firstIndex = 0;
+			}
+		   if(firstIndex != -1 ) this.selectElem(this.list[firstIndex].el); 
 		}
 	};
 
@@ -229,7 +231,7 @@ function(proto, superProto, comp, superComp){
 			d.el.innerHTML = data[i].html || data[i].text;
 			d.el.data = data[i];
 			d.setVisible(true);
-            if(this.selectFirst && i==0) selectedId = data[i].id;
+			if(this.selectFirst && i==0) selectedId = data[i].id;
 			d.classIf("selected", selectedId == data[i].id);
 			if(selectedId == data[i].id) this.selected = d.el;
 		}
@@ -260,7 +262,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setReadOnly = function(readOnly){
-		this.clearBt.setVisible(!readOnly);
+		this.clearBt.setVisible(!readOnly && !this.attr("disable_clear_button"));
 		this.textInput.el.readOnly = readOnly;
 	};
 
@@ -269,7 +271,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(val){
-        if(val === null || val === void 0) val = '';
+		if(val === null || val === void 0) val = '';
 		this.idInput.el.value = val;
 		this.updateText();
 	};
