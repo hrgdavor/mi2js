@@ -37,7 +37,7 @@ function(proto, superProto, comp, superComp){
 
 		var target = this.item(evt.target);
 		if(target){
-			if(this.attr('single-value')){
+			if(this.attrBoolean('single-value')){
 				this.selectedIs(target.data('id'));
 			}else{
 				target.setSelected(!target.isSelected());
@@ -70,7 +70,7 @@ function(proto, superProto, comp, superComp){
 			if(item.isSelected()) return item.data('id');
 		});
 
-		if(this.attr('single-value')) ret = ret[0];
+		if(this.attrBoolean('single-value')) ret = ret[0];
 
 		return ret;
 	};
