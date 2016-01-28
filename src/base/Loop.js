@@ -141,11 +141,20 @@ function(proto, superProto, comp, superComp){
 		});
 	};
 
-	proto.add = function(data){
+	proto.push = function(data){
 		var index = this.count;
 		this.setItem(data,index);
 		this.count++;
 		this.fireEvent('afterAdd', {index:index, data:data, item:this.item(index)});
+	};
+
+	proto.pop = function(data){
+		if(this.count == 0) return;
+		this.count--;
+		var item = this.items.pop();
+		item.setVisible(false);
+		this.fireEvent('afterPop', {item:item});
+		return item;
 	};
 
 });
