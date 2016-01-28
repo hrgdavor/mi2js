@@ -26,6 +26,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.setValue = function(value){
 		this.setRawValue( mi2.filter(value, this.inFilter) );
+        this.oldValue = this.getValue();
 	};
 
 	proto.getValue = function(){
@@ -36,17 +37,20 @@ function(proto, superProto, comp, superComp){
 		mi2.markValidate(this,data);
 	};
 
+	proto.checkChanged = function(old, value){
+		return value !== old;
+	};
 	proto.fireIfChanged = function(evt){
 		if(this.timer) clearTimeout(this.timer);// avoid event bursts
-
-		this.timer = this.setTimeout(function(){
-			var old = this.oldValue;
-			var value = this.getValue();
-			if(value !== old){
-				this.oldValue = value;
-				this.fireEvent('change',{oldValue:old, value: value});
-			}
-		},50);
+		this.timer = this.setTimeout(this.fireIfChangedNow,50);
+	};
+	proto.fireIfChangedNow = function(evt){
+		var old = this.oldValue;
+		var value = this.getValue();
+		if(this.checkChanged(old, value)){
+			this.oldValue = value;
+			this.fireEvent('change',{oldValue:old, value: value});
+		}
 	};
 
 });
