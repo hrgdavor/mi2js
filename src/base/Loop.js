@@ -45,10 +45,14 @@ function(proto, superProto, comp, superComp){
 		this.count = 0;
 	};
 
-	proto.loadItemTpl = function(el){
+	proto.findItemTpl = function(el){
 		var ch = this.itemsArea.firstChild;
 		while(ch && !ch.tagName) ch=ch.nextSibling;
+		return ch;
+	};
 
+	proto.loadItemTpl = function(el){
+		var ch = this.findItemTpl(el);
 		if(ch && ch.tagName){
 			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
 			this.itemNextSibling = ch.nextElementSibling;
