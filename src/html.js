@@ -9,37 +9,30 @@
 				attr:{'class':'freaky-line'}
 			}
 		);
-		Example: mi2.addTag(document.body, 'DIV', 'freaky-line', '<b>Title:</b>Sunshine');
 
 		@param {HTMLElement} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
-		@param {string} tag - tag name, must be uppercase
-		@param {string} [cls] - css class name for the new node
-		@param {string} [html] - innerHTML for the new node
-		@param {object} {attribs} - list of attributes to set
+		@param {Object} tag - tag name, must be uppercase
 
 		@returns {HTMLElement} new node
 	*/
-	mi2.addTag = function(parent, tag, cls, html, attribs){
+	mi2.addTag = function(parent, tpl, nextSibling){
 
-		// transitional version, until all code switches to object parameter
-		if(typeof tag != 'string'){
-			html = tag.html;
-			attribs = tag.attr;
-			tag = tag.tag;
-		}
+		if(typeof tpl == 'string') tpl = {tag:tpl};
 
-		var e = document.createElement(tag);
+		var e = document.createElement(tpl.tag);
 
-		if(cls)    e.className = cls;
 		if(parent){
 			if(parent instanceof mi2) parent = parent.el;
-			parent.appendChild(e);
+			parent.insertBefore(e, nextSibling || null);
 		}
-		if(html)   e.innerHTML=html;
-		
-		if(attribs)
-			for(var attrName in attribs)
+		if(tpl.html)   e.innerHTML=tpl.html;
+
+		var attribs = tpl.attr;
+		if(attribs){
+			for(var attrName in attribs){
 				e.setAttribute(attrName, attribs[attrName]);
+			}
+		}
 		
 		return e;
 	};
