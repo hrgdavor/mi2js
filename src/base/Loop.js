@@ -51,6 +51,7 @@ function(proto, superProto, comp, superComp){
 
 		if(ch && ch.tagName){
 			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
+			this.itemNextSibling = ch.nextElementSibling;
 			ch.parentNode.removeChild(ch);
 		}
 		// else if not found, we inherit the value from the prototype
@@ -96,7 +97,7 @@ function(proto, superProto, comp, superComp){
 	function defSetValue(){ }
 
 	proto.makeItem = function(newData,i){
-		var node = $.addTag(this.itemsArea, this.itemTpl);
+		var node = $.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
 
 		var comp = $.comp.make(node, null, this);
 

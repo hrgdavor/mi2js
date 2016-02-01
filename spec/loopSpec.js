@@ -37,6 +37,30 @@ describe( 'base/Loop.js', function () {
 		);
 	});
 
+	it('/ not the only child ', function (){
+		var node = mi2.addTag(null, {tag:'DIV', 
+				attr: {as:'base/Loop'},
+				html: '<div as="base/Tpl">Name: ${name}, Last: ${last}</div><b>xx</b>' 
+			});
+
+		var comp = mi2.comp.make(node);
+
+		var data = [
+			{name:"John", last:'Doe', age:44},
+			{name:"Mary", last:'Blast', age:33}
+		];
+
+		comp.setValue(data);
+
+		expect(comp.getItems().length).toEqual(2);
+		expect(comp.el.innerHTML).toEqual(
+'<div as="base/Tpl">Name: John, Last: Doe</div>'+
+'<div as="base/Tpl">Name: Mary, Last: Blast</div>'+
+'<b>xx</b>'
+		);
+	});
+
+
 	it('/ setValue getValue Array based', function (){
 		var loop = mi2.addComp(null, {tag: 'B', attr:{as:'base/Loop'}, html:'<b as="test/LoopTest"></b>'});
 		var data = [ 'John', 'Doe' ];
