@@ -225,7 +225,7 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<num; i++){
 			var d = this.list[i];
 			if(i>= this.list.length){
-				d = this.list[i] = $(mi2JS.addTag(this.div,'DIV','acItem'));
+				d = this.list[i] = $(mi2JS.addTag(this.div,{tag:'DIV',attr:{'class':'acItem'}}));
 				d.el.index = i;
 			}
 			d.el.innerHTML = data[i].html || data[i].text;

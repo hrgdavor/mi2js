@@ -83,7 +83,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			opts.td = opts.td || defRender;
 			opts.th(tr,th,code,this);
 			if(opts.group){
-				var thGroup = $.addTag(tr,"TH","group");
+				var thGroup = $.addTag(tr,{tag:"TH",attr:{'class':"group"}});
 				thGroup.innerHTML = opts.group.title;
 				span = opts.group.span || 2;
 				thGroup.setAttribute("colspan",span);
@@ -180,10 +180,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.tbody.setHtml('');
 		for(var i=0; i<tData.data.length; i++){
 			var row = tData.data[i];
-			var tr = $.addTag(this.tbody.el,"TR","high");
+			var tr = $.addTag(this.tbody.el,{tag:"TR",attr:{'class':"high"}});
 			tr.data = tData.data[i];
 			for(var code in this.cols){
-				var td = $.addTag(tr,"TD",'cell_'+code);
+				var td = $.addTag(tr,{tag:"TD",attr:{'class':'cell_'+code}});
 				td.code = code;
 				var opts = this.cols[code];
 				opts.td(tr,td,code,tr.data,this);
