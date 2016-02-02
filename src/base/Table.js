@@ -37,10 +37,6 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<arr.length; i++) TR.appendChild(arr[i]);
 
 		var cells = TBODY.getElementsByTagName('TD');
-		if(!cells.length){
-			console.error('Table has no columns defined ');
-			console.log('table', this);
-		} 
 		var cellTpl = [];
 		for(var i=0; i<cells.length; i++){
 			cellTpl[i] = cells[i].outerHTML;
