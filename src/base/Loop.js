@@ -84,7 +84,7 @@ function(proto, superProto, comp, superComp){
 		if(this.noData) this.noData.setVisible(!this.count);
 
 		// update items array to match visible elements
-		this.items = this.allItems.slice(0,this.count);
+        this.items = this.allItems.slice(0,this.count);
 
 		for(var i=arr.length; i<this.allItems.length; i++){
 			this.allItems[i].setVisible(false);
@@ -133,7 +133,6 @@ function(proto, superProto, comp, superComp){
 		var item = this.allItems[i];
 
 		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
-		this.items = this.allItems;
 
 		item.el.index = i;
 		this.setItemValue(item, newData);
@@ -150,6 +149,7 @@ function(proto, superProto, comp, superComp){
 		var index = this.count;
 		this.setItem(data,index);
 		this.count++;
+        this.items = this.allItems.slice(0,this.count);
 		this.fireEvent('afterAdd', {index:index, data:data, item:this.item(index)});
 	};
 
@@ -158,6 +158,9 @@ function(proto, superProto, comp, superComp){
 		this.count--;
 		var item = this.items.pop();
 		item.setVisible(false);
+
+        this.items = this.allItems.slice(0,this.count);
+
 		this.fireEvent('afterPop', {item:item});
 		return item;
 	};
