@@ -69,10 +69,9 @@ function(proto, superProto, comp, superComp){
 			comp = el.getAttribute('as');
 			if(comp && !(comp == 'base/Tpl' || comp =='Base' )) return; // do not mess with other components
 
-			if(el.tagName == 'TD' || el.tagName == 'TR'){
-				evtName = evtName || el.getAttribute('event');
-				action  = action  || el.getAttribute('action');
-			}
+			evtName = evtName || el.getAttribute('event');
+			action  = action  || el.getAttribute('action');
+
 			if(el.tagName == 'TD') TD = el;
 			if(el.tagName == 'TR') { TR = el; break;};
 			el = el.parentNode;
