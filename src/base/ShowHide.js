@@ -13,13 +13,14 @@ function(proto, superProto, comp, superComp){
 
 		superProto.initTemplate.call(this);
 
-		this.texts = this.button.attr('texts').split(',');
+		this.texts = this.attrDef('texts','+,-').split(',');
 
 		this.title.setHtml(html);
 
 		var code = this.attrDef('target','+');
 		this.panel = this.parent.findRef(code, this);
 		if(!this.panel) throw new Error('Panel not found '+code);
+		this.panel.addClass('ShowHidePanel');
 		this.updateButton();
 	};
 
