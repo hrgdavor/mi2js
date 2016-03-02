@@ -94,7 +94,13 @@ parameters inside template
 <cell-template col="age"></cell-template>
 ```
 
-# template fornmat and transformation
+# template for components
+ - make parser inspect and use all dom elements even inside a component, unless `template` attribute is present
+ - this means child component parsing is deferred until all current nodes are checked to avoid the component changing the DOM
+ - this will allow a component to access all that is defined in it's own template even if placed inside another
+ - components that will allow the parent to have things placed inside them (tab component or alike) will have to account for it. There is already a way to get references to already instantiated components from the parent
+
+# template format and transformation
 ```html
 - ${propname:filter} -
   <tpl-text p="text.propname" filter="filter"></tpl-text>
