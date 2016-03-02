@@ -2,7 +2,7 @@
 	
 	function genPart(prop, filter){
 		// simple value extract
-		if(!filter) return function(data){ return data[prop]; };
+		if(!filter) return function(data){ return prop === '' ? data:data[prop]; };
 
 		// filter extracted value
 		filter = mi2.parseFilter(filter);
@@ -26,7 +26,7 @@
 		}
 	}
 
-	var tplReg = /\$\{([a-zA-z_0-9]+)\|?([^\}]+)?\}/g;
+	var tplReg = /\$\{([a-zA-z_0-9]*)\|?([^\}]+)?\}/g;
 
 	mi2.parseTemplate = function(str){
 		var arr = [];
@@ -41,7 +41,6 @@
 
 		if(offset == 0) return null;
 		if(offset < str.length) arr.push(str.substring(offset,str.length));
-
 		return genPrinter(arr);
 	};
 
