@@ -1,7 +1,7 @@
 # AutoComplete
 
  - Used to help choose values from existing options, or id/text pairs.
- - 
+ - getValue and setValue use the
 
 ## general
 
@@ -17,9 +17,6 @@
  - attribute: `empty-text="..."` - by default empty string `''` is displayed as option text for the unselect option. This can be customized to give contextual meaning to not selecting anything
  - 
 
-### restrict options
- - use `getOptions` method internally to allow an override to temporarily restrict some of the options from the selection
-
 ### allow new value
 Allow this AutoComplete to provide means of entering new value that is not in the provided options.
 
@@ -28,4 +25,11 @@ Allow this AutoComplete to provide means of entering new value that is not in th
  - if text is entered that does not exist in the options
 
 ## Edge cases
- - 
+
+
+## Internals
+
+### restrict options
+ - use `getOptions` method internally to allow an override to temporarily restrict some of the options from the selection
+
+
