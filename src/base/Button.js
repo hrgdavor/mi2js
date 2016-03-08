@@ -18,10 +18,24 @@ function(proto, superProto, comp, superComp){
 	proto.on_click = function(evt){
 		if(evt.which != 1) return; // only left click
 
-		var evtNames = [], actions = [], comp, enabled = true;
-		var el = evt.target;
+		var eventData = this.eventData(evt.target, evt);
+		if(eventData.cancelClick) return;
+
+		if(eventData.events.length && this.parent.fireEvent){
+			var now = Date.now();
+			if(this._lastClick && now - this._lastClick < this.minClickDelay) return;	
+			this._lastClick = now;
+
+			this.parent.fireEvent(eventData.events[0],eventData);
+			evt.stop();
+			return false;
+		}
+	};
+
+	proto.eventData = function(el,evt){
+		var evtNames = [], actions = [], comp, cancelClick = false;
 		while(true){
-			if(this.cancelClick(el)) return;
+			if(this.cancelClick(el)) cancelClick = true;
 
 			if(el.hasAttribute('event')) evtNames.push(el.getAttribute('event'));
 			if(el.hasAttribute('action')) actions.push(el.getAttribute('action'));
@@ -31,24 +45,17 @@ function(proto, superProto, comp, superComp){
 		}
 
 		if(this.__propName) actions.push(this.__propName);
-
-		if(evtNames.length && this.parent.fireEvent){
-			var now = Date.now();
-			if(this._lastClick && now - this._lastClick < this.minClickDelay) return;	
-			this._lastClick = now;
-
-			this.parent.fireEvent(evtNames[0],{
+		
+		return {
 				action:actions[0],
 				actions:actions,
 				events:evtNames,
 				domEvent: evt,
-				target: evt.target,
+				cancelClick: cancelClick,
+				target: el,
 				src:this,
 				eventFor: 'parent'
-			});
-			evt.stop();
-			return false;
-		}
+			};
 	};
 
 	proto.cancelClick = function(el){
