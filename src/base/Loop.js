@@ -61,6 +61,18 @@ function(proto, superProto, comp, superComp){
 		// else if not found, we inherit the value from the prototype
 	};
 
+	proto.findItem = function(el){
+		while(el){
+			if(el.parentNode == this.itemsArea){
+				for(var i=0; i<this.items.length; i++){
+					if(this.items[i].el == el) return this.items[i];
+				}
+				break;
+			} 
+			el = el.parentNode;
+		}
+	};
+
 	proto.findItemsArea = function(el){
 		var ch = el.firstChild;
 		while(ch){
