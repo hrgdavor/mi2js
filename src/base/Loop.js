@@ -30,9 +30,6 @@ function(proto, superProto, comp, superComp){
 		delete this.__template;
 		var el = this.el;
 
-		// support for components with inline template, and skip noData node
-		this.itemsArea = this.findItemsArea(el) || el;
-
 		this.loadItemTpl(el);
 
 		// this was done before calling parent constructor to avoid stack overflow in case
@@ -46,19 +43,27 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.findItemTpl = function(el){
-		var ch = this.itemsArea.firstChild;
-		while(ch && !ch.tagName) ch=ch.nextSibling;
-		return ch;
+		var ch = el.firstElementChild;
+		while(ch){
+			if(ch.hasAttribute('template')) return ch;
+			if(!ch.hasAttribute('as')){
+				var ret = this.findItemTpl(ch);
+				if(ret) return ret;
+			}
+			ch=ch.nextSibling;
+		}
 	};
 
 	proto.loadItemTpl = function(el){
-		var ch = this.findItemTpl(el);
+		var ch = this.findItemTpl(el) || el.firstElementChild;
+
 		if(ch && ch.tagName){
+			this.itemsArea = ch.parentNode;
 			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
 			this.itemNextSibling = ch.nextElementSibling;
 			ch.parentNode.removeChild(ch);
-		}
-		// else if not found, we inherit the value from the prototype
+		}else
+			this.itemsArea = el;
 	};
 
 	proto.findItem = function(el){

@@ -176,6 +176,6 @@ function(proto, superProto, comp, superComp){
 		return ch ? ch : $.addTag(el, tag);
 	}
 
-	proto.findItemsArea = function(el){ return this.TBODY; };   
+	proto.findItemTpl = function(el){ return this.TBODY.firstElementChild; };   
 
 });
