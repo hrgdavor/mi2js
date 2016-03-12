@@ -84,14 +84,14 @@ function logPropTaken(prop, obj, by){
 	var el = elem.firstChild,next;
 	while(el){
 		next = el.nextSibling;
-		if(el.getAttribute){
-			var comp = null, stopRecursion = false, compName;
+		if(el.getAttribute && el.tagName != 'TEMPLATE' && !el.hasAttribute('template') ){
+			var comp = null, compName;
 			if($.comp){
 				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
 				if(compName){
 					comp = $.comp.contruct(el, compName, obj);
-					stopRecursion = true;
-				}				
+					// stopRecursion = true;
+				}
 			}
 
 			var prop = el.getAttribute('p');
@@ -106,8 +106,9 @@ function logPropTaken(prop, obj, by){
 			}
 
 			// recursion is stopped for components, as the component can decide how to procede
-			if(!stopRecursion) $.parseChildren(el, obj);
+			$.parseChildren(el, obj);
 		}
+
 
 		el = next;
 	}

@@ -28,11 +28,19 @@
 	};
 
 	proto.initTemplate = function(){
-		if(this.__template) this.el.innerHTML = this.__template;
-		mi2.parseChildren(this.el,this);
+		if(this.__template){
+			this.el.innerHTML = this.__template;
+			this.parseChildren();
+			this.initChildren();
+		}
 		delete this.__template;
-//		if(window.__DEBUG) console.log('xxxxx',this.el);
-		// if(window.__DEBUG && this.el.tagName == 'DIV') window.ddd();
+	};
+
+	proto.parseChildren = function(){
+		mi2.parseChildren(this.el,this);
+	};
+
+	proto.initChildren = function(){
 		var c;
 		for(var i=0; i<this.children.length; i++){
 			c = this.children[i];

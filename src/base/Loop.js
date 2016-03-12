@@ -19,7 +19,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.itemTpl = {
 		tag:'DIV',
-		attr: { as: 'Base' },
+		attr: { as: 'base/Tpl' },
 		html: ''
 	};
 
