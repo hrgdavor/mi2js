@@ -1,6 +1,17 @@
 # general
  - avoid programming inside templates (no code evaluation or property expansion)
 
+# component initialization
+  - component is contructed ( `construct` )
+    - define
+  - if lazyInit nothing else happens until visible or initialized
+    - if component does not have a parent and is visible already initialize it anyway so root component is started properly as expected by the user
+  - `__init` - do initialization if not done already
+  - `afterParentInit` ( in this pahse all children are created but their tempalte is not applied yet )
+  - `initTemplate` ( apply template and construct children, at this stage it is like all children are lazy-initialized )
+  - `afterInitTemplate`
+  - `initChildren` ( initTemplate for each child that is "not lazyInit and hidden" )
+
 
 # cleanup
  - remove leftovers of previous approach to inputs 

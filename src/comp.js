@@ -9,7 +9,18 @@
 		return mi2.comp.make(node, null, parent, parNode);
 	}
 
+	/* Construct and initialize component, as most code would ecpect the componet
+	 to be live after created */
 	mi2.comp.make = function(el, compName, parent, parNode){
+		var c = mi2.comp.contruct(el, compName, parent, parNode);
+		c.__init();		
+		return c;
+	};
+
+	/* Just construct the component without initialization. This is mostly used during 
+	automatic component template parsing (parseChildren) and initialization is done
+	 in the second run on all previously created components */
+	mi2.comp.contruct = function(el, compName, parent, parNode){
 		try{
 
 			// sanitize, to allow === null check to work later
@@ -27,14 +38,6 @@
 			c.__template = this.getTpl(compName);
 			c.construct(el, parent);
 			c.setParent(parent);
-			if(!c.lazyInit) c.initTemplate();
-
-			if(parent === null && c.isVisible()){
-				// if ROOT component is not hidden, fire show event 
-				// this will cause init event to be fired
-				// component depending on this can be properly initialized 
-				c.fireEvent('show',{eventFor:'children'});
-			}
 
 			return c;
 

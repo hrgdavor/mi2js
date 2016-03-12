@@ -53,7 +53,10 @@
 		var tpl = { tag: node.tagName, html: node.innerHTML};
 		var attr = defAttr ? mi2.copy(defAttr) : {};
 		var it = node.attributes;
-   		if(it) for(var i=0; i<it.length; i++) attr[it[i].name] = it[i].value;
+   		if(it) for(var i=0; i<it.length; i++){
+   			if(it[i].name == 'template') continue;
+   			attr[it[i].name] = it[i].value;
+   		}
 		tpl.attr = attr;
 		return tpl;
 	}

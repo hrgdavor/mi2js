@@ -13,19 +13,34 @@
 
 	var proto = Base.prototype; //
 
+	/* called when the component is initially constructed */
 	proto.construct = function(el, parent){
+		this.children = [];
 		this.el = el;
+	};
+
+	proto.__init = function(){
+		if(!this.__initialized){
+			this.initTemplate();
+			this.fireEvent('init',{ });
+		}
+		this.__initialized = true;
 	};
 
 	proto.initTemplate = function(){
 		if(this.__template) this.el.innerHTML = this.__template;
 		mi2.parseChildren(this.el,this);
 		delete this.__template;
+//		if(window.__DEBUG) console.log('xxxxx',this.el);
+		// if(window.__DEBUG && this.el.tagName == 'DIV') window.ddd();
+		var c;
+		for(var i=0; i<this.children.length; i++){
+			c = this.children[i];
+			if(!c.lazyInit) c.__init();
+		}
 	};
 
-	proto.on_init = function(evt){
-		if(this.lazyInit) this.initTemplate();
-	};
+	proto.on_init = function(evt){ };
 
 	proto.getCompName = function(){
 		if(this.el && this.el.getAttribute){
@@ -72,18 +87,7 @@
 
 		if(evtName == 'show'){
 			// if not initialized yet, fire init event first
-			if(!this.__initialized){
-				this.fireEvent('init',{ });
-			} 
-		}
-
-		// allow for init to be fired even when hidden (and then skipped on_show)
-		if(evtName == 'init'){
-			if(this.__initialized !== true){
-				// if(this.lazyInit) this.parseChildren();
-			}else
-				console.error('init should be fired only once '+this.__initialized);
-			this.__initialized = true;
+			this.__init();
 		}
 
 		if(!ex) ex = {};
@@ -139,7 +143,6 @@
 			console.log(msg, this, this.el);
 			throw new Error(msg);
 		}
-		if(!this.children) this.children = [];
 		var cnt = this.children.length >>> 0;
 		for(var i =0; i<cnt; i++) if(c == this.children[i]) return; 
 		this.children.push(c);

@@ -3,12 +3,11 @@ describe( 'comp.js Component utilities', function () {
 
 	mi2JS.comp.add('test/LazyTestIn', 'Base', '<b p="bt1" as="base/Button">ok</b>',
 	function(proto, superProto, comp, superComp){
-
+		proto.lazyInit = true;
 	});
 
 	mi2JS.comp.add('test/LazyTest', 'Base', '<div p="inside" as="test/LazyTestIn"></div>',
 	function(proto, superProto, comp, superComp){
-		proto.lazyInit = true;
 	});
 
 
@@ -27,10 +26,12 @@ describe( 'comp.js Component utilities', function () {
 
 
 	it(' / lazyInit', function () {
+		window.__DEBUG = true;
 		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/LazyTest',hidden:''}, html:''});
+		window.__DEBUG = false;
 
 		expect(comp.el.inside).toEqual(undefined);
-		expect(comp.el.innerHTML).toEqual('');
+		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"></div>');
 		comp.setVisible(true);
 		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"><b p="bt1" as="base/Button">ok</b></div>');
 		expect(comp.inside instanceof mi2.comp.get('test/LazyTestIn')).toBeTruthy();	

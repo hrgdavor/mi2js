@@ -1,5 +1,5 @@
 (function(){
-	
+
 var $ = mi2JS;
 
 /* */
@@ -89,7 +89,7 @@ function logPropTaken(prop, obj, by){
 			if($.comp){
 				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
 				if(compName){
-					comp = $.comp.make(el, compName, obj);
+					comp = $.comp.contruct(el, compName, obj);
 					stopRecursion = true;
 				}				
 			}
