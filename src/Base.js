@@ -15,7 +15,6 @@
 
 	/* called when the component is initially constructed */
 	proto.construct = function(el, parent){
-		this.children = [];
 		this.el = el;
 	};
 
@@ -37,6 +36,7 @@
 	};
 
 	proto.parseChildren = function(){
+		this.children = [];
 		mi2.parseChildren(this.el,this);
 	};
 

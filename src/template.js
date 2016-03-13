@@ -126,7 +126,7 @@
 		var ch = el.firstChild;
 		while(ch){
 			if(ch.tagName){
-				if(!ch.getAttribute('as')) // each component handles own template
+				if(!ch.hasAttribute('template'))
 					mi2.loadTemplateRec(ch,list);
 			}else{
 				// TextNode

@@ -89,7 +89,7 @@ function logPropTaken(prop, obj, by){
 			if($.comp){
 				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
 				if(compName){
-					comp = $.comp.contruct(el, compName, obj);
+					comp = $.comp.construct(el, compName, obj);
 					// stopRecursion = true;
 				}
 			}

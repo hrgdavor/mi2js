@@ -12,7 +12,7 @@
 	/* Construct and initialize component, as most code would ecpect the componet
 	 to be live after created */
 	mi2.comp.make = function(el, compName, parent, parNode){
-		var c = mi2.comp.contruct(el, compName, parent, parNode);
+		var c = mi2.comp.construct(el, compName, parent, parNode);
 		if(!c.__template){
 			c.parseChildren();
 			c.initChildren();			
@@ -24,7 +24,7 @@
 	/* Just construct the component without initialization. This is mostly used during 
 	automatic component template parsing (parseChildren) and initialization is done
 	 in the second run on all previously created components */
-	mi2.comp.contruct = function(el, compName, parent, parNode){
+	mi2.comp.construct = function(el, compName, parent, parNode){
 		try{
 
 			// sanitize, to allow === null check to work later

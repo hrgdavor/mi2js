@@ -8,8 +8,8 @@ function(proto, superProto, comp, superComp){
 
     proto.isTransitive = function(){ return this.getCompName() == 'base/Tpl' };
 
-    proto.initTemplate = function(){
-        superProto.initTemplate.call(this);
+    proto.parseChildren = function(){
+        superProto.parseChildren.call(this);
 
         this.template = mi2.loadTemplate(this.el);
         this.templateFwd = [];
