@@ -50,7 +50,7 @@ function(proto, superProto, comp, superComp){
 				var ret = this.findItemTpl(ch);
 				if(ret) return ret;
 			}
-			ch=ch.nextSibling;
+			ch=ch.nextElementSibling;
 		}
 	};
 
