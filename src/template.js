@@ -1,40 +1,67 @@
 (function(mi2){
+	mi2.templateExpand = {};
 	
-	function genPart(prop, filter){
+	mi2.templateExpand.filter = function(prop){
+		var idx = prop.indexOf('|');
+
 		// simple value extract
-		if(!filter) return function(data){ return prop === '' ? data:data[prop]; };
+		if(idx == -1) return function(data){ return prop === '' ? data:data[prop]; };
 
 		// filter extracted value
-		filter = mi2.parseFilter(filter);
+		var filter = mi2.parseFilter(prop.substring(idx+1));
+		prop = prop.substring(0,idx);
 		return function(data){
 			return mi2.filter( prop === '' ? data:data[prop], filter, prop, data); 
 		};
+	}
+
+	mi2.templateExpand['const'] = function(prop){
+		var val = mi2.filters['const'](prop);
+		return function(){ return val; };
+	};
+
+	function genPart(prop){
+		var idx = prop.indexOf(':'), prefix = 'filter';
+		if(idx != -1){
+			prefix = prop.substring(0,idx);
+			prop = prop.substring(idx+1);
+		}
+		if(!mi2.templateExpand[prefix]) consol.error('prefix not supported '+prefix+' in expression '+prefix+':'+prop);
+		return mi2.templateExpand[prefix](prop);
 	}
 
 	function genPrinter(arr){
 		return function(data){
 			data = data || {};
 			if(arr.length == 1){
+				// return exact value for single 
 				return arr[0] instanceof Function ? arr[0](data) : arr[0];
 			}else{
+				// sanitize null and undefined for concatenated strings
 				var str = '';
 				for( var i=0; i<arr.length; i++){
-					str += arr[i] instanceof Function ? arr[i](data) : arr[i];
+					str += arr[i] instanceof Function ? toEmpty(arr[i](data)) : toEmpty(arr[i]);
 				}
 				return str;				
 			}
 		}
 	}
 
-	var tplReg = /\$\{([a-zA-z_0-9]*)\|?([^\}]+)?\}/g;
+	/** Fix value for string concatenation.
+	    @returns empty string instead of null or undefined */
+	function toEmpty(val){
+		return val === null || val === void 0 ? '':val;
+	}
+
+	/** regexp that checks if expression is a template expression. */
+	var tplReg = /\$\{([^}]*)\}/g;
 
 	mi2.parseTemplate = function(str){
 		var arr = [];
 		var offset = 0;
-
-		str.replace(tplReg, function(match, prop, filter, idx){
+		str.replace(tplReg, function(match, prop, idx){
 			if(offset < idx) arr.push(str.substring(offset,idx));
-			arr.push(genPart(prop, filter));
+			arr.push(genPart(prop));
 			offset = idx+match.length
 			return match;
 		});
@@ -97,15 +124,15 @@
 		}
 	}
 
-	mi2.loadTemplate = function(el){
+	mi2.loadTemplate = function(el, comp){
 		if(el instanceof mi2) el = el.el;
 		var list = [];
-		mi2.loadTemplateRec(el,list)
+		mi2.loadTemplateRec(el,list,comp)
 		list.setValue = setValue;
 		return list;
 	};
 
-	mi2.loadTemplateRec = function(el, list){
+	mi2.loadTemplateRec = function(el, list, comp){
 		list = list || [];
 		var attribs = el.attributes;
 		var count = attribs.length;
@@ -116,7 +143,7 @@
 		for(var i=count-1; i>=0; i--){
 			if(!attribs[i].value) continue;
 
-			updater = mi2.parseTemplate(attribs[i].value);
+			updater = mi2.parseTemplate(attribs[i].value, attribs[i], comp);
 			if(updater){
 				if(wrapped == null) wrapped = new mi2(el); // create wrapper only if needed
 				list.push(forAttr(wrapped, attribs[i].name, updater));
@@ -127,10 +154,10 @@
 		while(ch){
 			if(ch.tagName){
 				if(!ch.hasAttribute('template'))
-					mi2.loadTemplateRec(ch,list);
+					mi2.loadTemplateRec(ch,list, comp);
 			}else{
 				// TextNode
-				updater = mi2.parseTemplate(ch.nodeValue);
+				updater = mi2.parseTemplate(ch.nodeValue, ch, comp);
 				if(updater) list.push(forTextNode(ch,updater));
 			}
 			ch = ch.nextSibling;
