@@ -72,5 +72,10 @@
 		return mi2.getFilter(fName).apply(null,[value, propName, data]);
 	};
 
+	mi2.filterConst = {'UNDEFINED': void 0, 'NULL':null, 'TRUE':true, 'FALSE':false};
+    mi2.filters['const'] = function(value){
+        return mi2.filterConst.hasOwnProperty(value) ? mi2.filterConst[value]: value;
+    }
+
 
 }(mi2JS));
