@@ -1,6 +1,6 @@
 (function(mi2){
 
-	if(!mi2.comp) mi2.comp = {def:{}, tpl:{}, later:{}, tags:{}};
+	if(!mi2.comp) mi2.comp = {def:{}, tpl:{}, later:{}, tags:{}, counterSeq:0};
 
 	var mi2Proto = mi2.prototype;
 
@@ -36,6 +36,7 @@
 			}
 
 			el.setAttribute('as', compName);
+			el.compRefId = mi2.comp.counterSeq++;
 
 			var compDef = this.get(compName, el);
 			var c = new compDef();
