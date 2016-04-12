@@ -28,6 +28,7 @@ function(proto, superProto, comp, superComp){
 		try{
 			var idx = this.panel.isVisible() ? 1:0;
 			this.button.setText(this.texts[idx]);
+			this.classIf('collapsed', !idx);
 		}catch(e){
 			console.error('updateButton error '+e.message);
 		}
