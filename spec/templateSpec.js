@@ -14,6 +14,11 @@ describe( 'template.js', function () {
 		expect(builderFunc({name:'John'})).toEqual('Name:John');
 	});
 
+	it('/ simple', function (){
+		var builderFunc = mi2.parseTemplate('const ${const:TRUE}');
+		expect(builderFunc({})).toEqual('const true');
+	});
+
 	it('/ array', function (){
 		var builderFunc = mi2.parseTemplate('Value must be between ${0} and ${1}');
 
