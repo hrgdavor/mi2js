@@ -73,24 +73,23 @@ function logPropTaken(prop, obj, by){
     console.log('WARNING! property: '+prop+' is already filled on ', obj, ' by ', by);
 }
 
-/** 
-
+/**
  if as=".." attribute is present, component will be instantiated with that node as root 
   - reference wil now point to component object
     (for components made correctly html element ref will be moved to .node property under that object)
   - assign will not go into recursion here, so component can choose the initialization itself
 */
  $.parseChildren = function(elem, obj){
-	var el = elem.firstChild,next;
+	var el = elem.firstElementChild,next,templateAttr;
 	while(el){
-		next = el.nextSibling;
-		if(el.getAttribute && el.tagName != 'TEMPLATE' && !el.hasAttribute('template') ){
+		next = el.nextElementSibling;
+		templateAttr = el.getAttribute('template');
+		if(el.getAttribute && el.tagName != 'TEMPLATE' && (templateAttr === null || templateAttr === 'inline') ){
 			var comp = null, compName;
 			if($.comp){
 				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
-				if(compName){
+				if(compName && templateAttr !== ''){
 					comp = $.comp.construct(el, compName, obj);
-					// stopRecursion = true;
 				}
 			}
 
@@ -99,14 +98,16 @@ function logPropTaken(prop, obj, by){
 				if(!comp) comp = new $(el);
 				$.setRef(obj, comp, prop);
 				// if property id "group." the part after dot is based on index, 
-				// we put the index into html for easy access for example "group.3" for fourth such element
+				// we put the index into html for consistency.
+				// for example "group.3" for fourth time such element is found
 				if(prop.charAt(prop.length-1) == '.') el.setAttribute('p',prop+comp.__propName);
 
 				if(!compName && obj.addRef) obj.addRef(comp); // list of referenced nodes
 			}
 
-			// recursion is stopped for components, as the component can decide how to procede
-			$.parseChildren(el, obj);
+			// recursion is stopped for components with inline template, as the component will decide how to initialize
+			if(templateAttr === null)
+				$.parseChildren(el, obj);
 		}
 
 

@@ -290,7 +290,7 @@ function test(){
 	</div>
 
 	<div class="sample"><b>Form</b>
-		<div as="base/FormTest" p="form1">
+		<div as="base/FormTest" p="form1" template="inline">
 			name:
 			<input p="items.name" as="base/Input"/>
 			age:

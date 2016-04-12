@@ -30,6 +30,8 @@
 	proto.initTemplate = function(){
 		if(this.__template){
 			this.el.innerHTML = this.__template;
+		}
+		if(this.__template || this.el.getAttribute('template') == 'inline'){
 			this.parseChildren();
 			this.initChildren();
 		}
