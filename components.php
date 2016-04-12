@@ -247,7 +247,7 @@ function test(){
 	comp.list1.setValue([1,2,3]);
 	comp.on_list1 = function(evt){
 		console.log( "list1", this.list1.getValue() );
-		this.list1.add(5);
+		this.list1.push(5);
 	};
 
 	comp.tpl1.setValue({name:'John', age:24});
@@ -320,7 +320,7 @@ function test(){
 
 	<div class="sample"><b>List</b>
 		<span p="list1" as="base/Loop">
-			<input as="base/Input" style="width:20px">
+			<input as="base/Input" style="width:20px" template>
 		</span>
 		<bt as="base/Button" event="list1" p="bt.list1">List test</bt>
 	</div>
