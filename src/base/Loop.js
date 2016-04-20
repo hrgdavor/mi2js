@@ -153,6 +153,7 @@ function(proto, superProto, comp, superComp){
 
 		item.el.index = i;
 		this.setItemValue(item, newData);
+		this.fireEvent('afterSetItemValue', {index:i, data:newData, item:item});
 		item.setVisible(true);
 	};
 
