@@ -54,7 +54,7 @@ function rebuild_comp_file($in_dir, $out_dir, $name, $langMt){ global $TRANS;
 	if(file_exists($in_tpl)){
 		// remove newlines
 		$tpl = preg_replace('/^\s+|\n|\r|\s+$/m', '', file_get_contents($in_tpl));
-		$tpl = preg_replace_callback('/\$\(([a-zA-z_0-9]+)\)/', 'rebuild_comp_trans', $tpl );
+		$tpl = preg_replace_callback('/\[\[([a-zA-z_0-9]+)\]\]/', 'rebuild_comp_trans', $tpl );
 	}
 
 	$fp = fopen($output,'w');
