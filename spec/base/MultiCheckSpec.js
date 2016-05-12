@@ -1,4 +1,4 @@
-describe( 'template.js', function () {
+describe( 'base/MultiCheck.js', function () {
 	var mi2 = mi2JS;
 
 	it('/ create', function (){
