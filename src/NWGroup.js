@@ -30,8 +30,10 @@
 
 	/** Call func on all items */
 	proto.callFunc = function(funcName, params){
+		var func;
 		for(var p in this.items){
-			this.items[p][funcName].apply(this.items[p],params);
+			func = this.items[p][funcName];
+			if(func) func.apply(this.items[p],params);
 		}
 	};
 
@@ -89,6 +91,80 @@
 		return ret;
 	}
 
+
+
+/* ************************************************************************************************** */
+
+	proto.focus = function(){
+		var item, toFocus;
+		for(var p in this.items){
+			item = this.items[p];
+			if( ( !toFocus || item.hasAttr('firstInput') )
+					&& item.focus 
+					&& !(item.isReadOnly && item.isReadOnly()) ){
+
+				toFocus = item;
+			}
+		}
+		if(toFocus) toFocus.focus();
+	};
+	
+	proto.setReadOnly = function(readOnly){
+		this.callFunc('setReadOnly',[readOnly]);
+	};
+
+	proto.setValue = function(value){
+		for(var p in this.items){
+			this.items[p].setValue(value[p]);
+		}
+	};
+
+    proto.validate = function(){
+        var validator = this.getValidator();
+        var result = validator.validate(this.getRawValue());
+        this.markValidate(result);
+        return result;
+    };
+
+	proto.getValidator = function(){
+		var defReq = this.required;
+		var rules = this.forEachGetObject(function(item,code){
+			return mi2.getValidator(item, defReq);
+		});
+		return new mi2.GroupValidator(rules, defReq);
+	}
+
+	proto.markValidate = function(data){
+		data = data || new mi2.GroupValidity({});
+		if(data.item && data.item instanceof Function){
+            this.forEach(function(item,p){
+    			if(item.markValidate)
+    				item.markValidate(data.item(p));
+    			else
+    				mi2.markValidate(item, data.item(p));			
+    		});            
+        }else{
+            console.error('GroupValidity expected');
+            console.log('Validity provided', data, 'for',this);
+        }
+	};
+
+	proto.getValue = function(){
+		var value = {};
+		for(var p in this.items){
+			value[p] = this.items[p].getValue();
+		}
+		return value;
+	};
+
+    proto.getRawValue = function(){
+        var value = {}, item;
+        for(var p in this.items){
+            item = this.items[p];
+            value[p] = item.getRawValue ? item.getRawValue() : item.getValue();
+        }
+        return value;
+    };
 
 
 /* ************************************************************************************************** */
