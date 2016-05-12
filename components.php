@@ -2,6 +2,9 @@
 $SCRIPTS= "mi/mi";
 include "header.php";
 
+include "rebuild_comp.php";
+rebuild_comp("en");
+
 ?>
 <style>
 a {}

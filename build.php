@@ -1,7 +1,6 @@
 <script>var util = {};</script>
 <?
 
-$SCRIPTS= "mi/mi;find;assign;comp;checkform;form;calendar;microajax;anim;drag;reorder";
 include "header.php";
 
 include "rebuild_comp.php";
