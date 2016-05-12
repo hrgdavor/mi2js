@@ -40,10 +40,12 @@ function(proto, superProto, comp, superComp){
 	proto.checkChanged = function(old, value){
 		return value !== old;
 	};
+	
 	proto.fireIfChanged = function(evt){
 		if(this.timer) clearTimeout(this.timer);// avoid event bursts
 		this.timer = this.setTimeout(this.fireIfChangedNow,50);
 	};
+
 	proto.fireIfChangedNow = function(evt){
 		var old = this.oldValue;
 		var value = this.getValue();

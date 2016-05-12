@@ -26,9 +26,10 @@ function(proto, superProto, comp, superComp){
 	proto.isTransitive = function(){ return true; };
 
 	proto.initTemplate = function(){
+		var el = this.el;
+		
 		if(this.__template) el.innerHTML = this.__template;
 		delete this.__template;
-		var el = this.el;
 
 		this.loadItemTpl(el);
 
