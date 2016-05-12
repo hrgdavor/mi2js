@@ -28,13 +28,15 @@ module.exports = function(config) {
       'src/base/Group.js',
       'src/base/Loop.js',
       'src/base/InputBase.js',
+      'src/base/Input.js',
       'src/base/MultiCheck.js',
       'src/base/Table.js',
+      'src/base/MultiInput.js',
 
       'spec/*.js',
       'spec/base/*.js',
-      // 'spec/loopSpec.js',
-      // 'spec/tableSpec.js',
+      // 'spec/base/MultiInputSpec.js',
+      // 'spec/base/TableSpec.js',
 
        {pattern: 'spec/test.json', included: false}
     ],
