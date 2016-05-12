@@ -51,7 +51,7 @@ mi2JS.comp.add('base/MultiInput', 'base/Loop', '',
             if (this.attrBoolean('remove-empty')) {
                 var tmp = [];
                 for (var i=0; i<ret.length ; i++) {
-                    if ( !this.isEmpty(ret[i]) ) tmp.push(ret[i]);
+                    if ( !this.isEmptyValue(ret[i]) ) tmp.push(ret[i]);
                 }
 
                 ret = tmp;

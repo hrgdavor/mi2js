@@ -16,43 +16,43 @@ describe( 'base/MultiInput.js', function () {
 			html:'<input as="base/Input">' 
 		});
 	};
-	// it('/ create', function (){
-	// 	var m = makeSample();
-	// 	expect(m.getItems().length).toEqual(1);
-	// });
+	it('/ create', function (){
+		var m = makeSample();
+		expect(m.getItems().length).toEqual(1);
+	});
 
-	// it('/ setValue', function (){
-	// 	var m = makeSample();
-	// 	m.setValue(['a']);
+	it('/ setValue', function (){
+		var m = makeSample();
+		m.setValue(['a']);
 
-	// 	expect(m.getItems().length).toEqual(2);
-	// 	expect(m.getItems()[0].getValue()).toEqual('a');
-	// 	expect(m.getValue()).toEqual(['a']);
-	// });
+		expect(m.getItems().length).toEqual(2);
+		expect(m.getItems()[0].getValue()).toEqual('a');
+		expect(m.getValue()).toEqual(['a']);
+	});
 
-	// it('/ change push', function (){
-	// 	var m = makeSample();
-	// 	m.getItems()[0].inp.value = 'a';
-	// 	m.getItems()[0].fireIfChangedNow();
+	it('/ change push', function (){
+		var m = makeSample();
+		m.getItems()[0].inp.value = 'a';
+		m.getItems()[0].fireIfChangedNow();
 
-	// 	expect(m.getItems().length).toEqual(2);
-	// 	expect(m.getItems()[0].getValue()).toEqual('a');
-	// 	expect(m.getValue()).toEqual(['a']);
-	// });
+		expect(m.getItems().length).toEqual(2);
+		expect(m.getItems()[0].getValue()).toEqual('a');
+		expect(m.getValue()).toEqual(['a']);
+	});
 
-	// it('/ change remove', function (){
-	// 	var m = makeSample();
-	// 	m.setValue(['a','b']);
-	// 	expect(m.getItems().length).toEqual(3);
-	// 	expect(m.getValue()).toEqual(['a','b']);
+	it('/ change remove', function (){
+		var m = makeSample();
+		m.setValue(['a','b']);
+		expect(m.getItems().length).toEqual(3);
+		expect(m.getValue()).toEqual(['a','b']);
 
-	// 	// if last 2 are empty, last one is removed
-	// 	m.getItems()[1].inp.value = '';
-	// 	m.getItems()[1].fireIfChangedNow();
+		// if last 2 are empty, last one is removed
+		m.getItems()[1].inp.value = '';
+		m.getItems()[1].fireIfChangedNow();
 
-	// 	expect(m.getItems().length).toEqual(2);
-	// 	expect(m.getValue()).toEqual(['a']);
-	// });
+		expect(m.getItems().length).toEqual(2);
+		expect(m.getValue()).toEqual(['a']);
+	});
 
 	it('/ filtering', function (){
 		var m = makeSampleWithFilters();
@@ -68,6 +68,18 @@ describe( 'base/MultiInput.js', function () {
 
 		m.getItems()[2].fireIfChangedNow();
 		expect(m.getItems().length).toEqual(4);
+	});
+
+	it('/ remove-empty', function (){
+		var m = mi2.addComp(null, {
+			tag:'DIV', 
+			attr:{as:'base/MultiInput', 'remove-empty':'true'}, 
+			html:'<input as="base/Input">' 
+		});
+
+		m.setValue(['a','b','','c']);
+
+		expect(m.getValue()).toEqual(['a','b','c']);
 	});
 
 });
