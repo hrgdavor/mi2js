@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/AutoComplete', 'Base', '<-TEMPLATE->',
+mi2JS.comp.add('base/AutoComplete', 'base/InputBase', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
@@ -53,16 +53,20 @@ function(proto, superProto, comp, superComp){
 			if(this.isReadOnly()) return;
 			this.hasFocus = false;
 			if(this.freeText){
-				this.idInput.value = this.textInput.value;
+                this.idInput.el.value = this.textInput.el.value;
+                this.fireIfChanged();
             }else
-				this.applySelection();
-			this.hide();
-		});
+                this.applySelection();
+            this.hide();
+        });
 
-		this.listen(this.textInput.el, "keydown", function(evt){
-			if(this.isReadOnly()) return;
-			if(evt.keyCode == 9){ // TAB
-                if(!this.freeText)
+        this.listen(this.textInput.el, "keydown", function(evt){
+            if(this.isReadOnly()) return;
+            if(evt.keyCode == 9){ // TAB
+                if(this.freeText){
+                    this.idInput.el.value = this.textInput.el.value;
+                    this.fireIfChanged();
+                }else
 				    this.applySelection();
 			}
 			if(evt.keyCode == 13){ // ENTER
@@ -107,7 +111,7 @@ function(proto, superProto, comp, superComp){
 	proto.on_clear = function(){
 		if(this.isReadOnly()) return;
 		this.setText(this.emptyText);
-		this.setValue('');
+		this.setValue('', true);
 		this.textInput.disabled = false;
 	};
 
@@ -263,7 +267,7 @@ function(proto, superProto, comp, superComp){
 		this.selectedData = sel;
         this.idInput.el.value = sel.id || '';
         this.setText(sel.text);
-		this.fireEvent("change",{src:this, selected:sel});
+		this.fireIfChanged();
 		this.parent.fireEvent("afterSelect",{src:this, selected:sel});
 	};
 
@@ -280,10 +284,14 @@ function(proto, superProto, comp, superComp){
 		return this.textInput.el.readOnly;
 	};
 
-	proto.setValue = function(val){
+	proto.setValue = function(val, fireChange){
 		if(val === null || val === void 0) val = '';
 		this.idInput.el.value = val;
 		this.updateText();
+        if(fireChange)
+            this.fireIfChanged();
+        else
+            this.oldValue = this.getValue();
 	};
 
 	proto.getValue = function(){
@@ -305,5 +313,6 @@ function(proto, superProto, comp, superComp){
 	};
 
 });
+
 
 
