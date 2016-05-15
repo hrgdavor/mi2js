@@ -52,17 +52,18 @@ function(proto, superProto, comp, superComp){
 		this.listen(this.textInput.el, "blur", function(evt){
 			if(this.isReadOnly()) return;
 			this.hasFocus = false;
-			if(this.freeText)
-				this.setValue(this.textInput);
-			else
-				this.setValue(this.getValue());
+			if(this.freeText){
+				this.idInput.value = this.textInput.value;
+            }else
+				this.applySelection();
 			this.hide();
 		});
 
 		this.listen(this.textInput.el, "keydown", function(evt){
 			if(this.isReadOnly()) return;
 			if(evt.keyCode == 9){ // TAB
-				this.applySelection();
+                if(!this.freeText)
+				    this.applySelection();
 			}
 			if(evt.keyCode == 13){ // ENTER
 				this.applySelection();
@@ -215,7 +216,7 @@ function(proto, superProto, comp, superComp){
 			   this.showResults(data, data.length > 0 ? data[0].id : null);
 			}else{
 				this.showResults(data);
-				if(this.selectFirst) firstIndex = 0;
+				if(this.selectFirst && this.list.length) firstIndex = 0;
 			}
         }
 	   if(firstIndex != -1 ) this.selectElem(this.list[firstIndex].el); 
@@ -260,8 +261,8 @@ function(proto, superProto, comp, superComp){
 		var sel = {};
 		if(this.selected) sel = this.selected.data || sel;
 		this.selectedData = sel;
-		this.idInput.el.value = sel.id || '';
-		this.setText(sel.text);
+        this.idInput.el.value = sel.id || '';
+        this.setText(sel.text);
 		this.fireEvent("change",{src:this, selected:sel});
 		this.parent.fireEvent("afterSelect",{src:this, selected:sel});
 	};

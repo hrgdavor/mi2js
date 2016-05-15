@@ -143,3 +143,15 @@ parameters inside template
  - validate input values
  - custom validation for values
  - async validation for values
+
+
+# AutoComplete
+
+## Free text with proposals
+non existing value + ENTER
+ - apply selection
+
+non existing value + TAB
+ - set value same as the text
+
+## Classic selection
