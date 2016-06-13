@@ -1,7 +1,7 @@
 (function(mi2){
 	mi2.templateExpand = {};
-	
-	mi2.templateExpand.filter = function(prop){
+
+	mi2.templateExpand.filter = function(prop, el, part, comp){
 		var idx = prop.indexOf('|');
 
 		// simple value extract
@@ -15,19 +15,19 @@
 		};
 	}
 
-	mi2.templateExpand['const'] = function(prop){
+	mi2.templateExpand['const'] = function(prop, el, part, comp){
 		var val = mi2.filters['const'](prop);
 		return function(){ return val; };
 	};
 
-	function genPart(prop){
+	function genPart(prop, el, part, comp){
 		var idx = prop.indexOf(':'), prefix = 'filter';
 		if(idx != -1){
 			prefix = prop.substring(0,idx);
 			prop = prop.substring(idx+1);
 		}
 		if(!mi2.templateExpand[prefix]) consol.error('prefix not supported '+prefix+' in expression '+prefix+':'+prop);
-		return mi2.templateExpand[prefix](prop);
+		return mi2.templateExpand[prefix](prop, el, part, comp);
 	}
 
 	function genPrinter(arr){
@@ -56,19 +56,24 @@
 	/** regexp that checks if expression is a template expression. */
 	var tplReg = /\$\{([^}]*)\}/g;
 
-	mi2.parseTemplate = function(str){
+	/* @parameter str - template string that defines the functionality
+	   @parameter el - element where template value will be inserted
+	   @parameter part - part of element(text node or attribute)
+	   @parameter comp - component instance
+	*/
+	mi2.parseTemplate = function(str, el, part, comp){
 		var arr = [];
 		var offset = 0;
 		str.replace(tplReg, function(match, prop, idx){
 			if(offset < idx) arr.push(str.substring(offset,idx));
-			arr.push(genPart(prop));
+			arr.push(genPart(prop, el, part, comp));
 			offset = idx+match.length
 			return match;
 		});
 
 		if(offset == 0) return null;
 		if(offset < str.length) arr.push(str.substring(offset,str.length));
-		return genPrinter(arr);
+		return genPrinter(arr, el, part, comp);
 	};
 
 	mi2.parseExpander = function(exp){
@@ -143,7 +148,7 @@
 		for(var i=count-1; i>=0; i--){
 			if(!attribs[i].value) continue;
 
-			updater = mi2.parseTemplate(attribs[i].value, attribs[i], comp);
+			updater = mi2.parseTemplate(attribs[i].value, el, attribs[i], comp);
 			if(updater){
 				if(wrapped == null) wrapped = new mi2(el); // create wrapper only if needed
 				list.push(forAttr(wrapped, attribs[i].name, updater));
@@ -157,7 +162,7 @@
 					mi2.loadTemplateRec(ch,list, comp);
 			}else{
 				// TextNode
-				updater = mi2.parseTemplate(ch.nodeValue, ch, comp);
+				updater = mi2.parseTemplate(ch.nodeValue, el, ch, comp);
 				if(updater) list.push(forTextNode(ch,updater));
 			}
 			ch = ch.nextSibling;
