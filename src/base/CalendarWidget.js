@@ -28,7 +28,7 @@ function(proto, superProto, comp, superComp){
 		this.date = new Date();
 
 		this.initElements();
-		var l = [this.done.el, this.year.el, this.month.el];
+		var l = [this.done.el, this.year.el, this.month.el, this.today.el, this.done.el, this.clear.el];
 
 		this.listen(this.el,'mousedown',function(evt){
 			for(var i=0; i<l.length; i++) if(evt.target == l[i]) return;
