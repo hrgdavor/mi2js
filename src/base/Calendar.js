@@ -12,15 +12,20 @@ function(proto, superProto, comp, superComp){
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
-		this.editDate = t == 'date' || t =='datetime';
+		this.editDate = t != 'time';
 
         this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
 
 		this.addClass('Calendar');
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
+
+		if(this.el.tagName != 'INPUT'){
+			this.input.attr('name',this.attr('name'));
+			this.input.attr('value',this.attr('value'));
+		} 
 
 		this.widget = mi2.addComp(this,{tag:'DIV', attr:{as:'base/CalendarWidget'}});
 		this.widget.setVisible(false);

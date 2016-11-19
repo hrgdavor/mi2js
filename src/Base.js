@@ -22,6 +22,8 @@
 	proto.__init = function(){
 		if(!this.__initialized){
 			this.initTemplate();
+			this.parseChildren();
+			this.initChildren();
 			this.fireEvent('init',{ });
 		}
 		this.__initialized = true;
@@ -31,10 +33,10 @@
 		if(this.__template){
 			this.el.innerHTML = this.__template;
 		}
-		if(this.__template || this.el.getAttribute('template') == 'inline'){
-			this.parseChildren();
-			this.initChildren();
-		}
+		// if(this.__template || this.el.getAttribute('template') == 'inline'){
+		// 	this.parseChildren();
+		// 	this.initChildren();
+		// }
 		delete this.__template;
 	};
 
@@ -94,6 +96,10 @@
 	proto.isTransitive = function(){ return false; };
 
 	proto.fireEvent = function(evtName, ex){
+		if(typeof(evtName) != 'string'){
+			ex = evtName;
+			evtName = ex.name;
+		}
 
 		if(evtName == 'show'){
 			// if not initialized yet, fire init event first

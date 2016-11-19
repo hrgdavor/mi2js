@@ -36,14 +36,19 @@ function(proto, superProto, comp, superComp){
 		// move them to THEAD
 		for(var i=0; i<arr.length; i++) TR.appendChild(arr[i]);
 
-		var cells = TBODY.getElementsByTagName('TD');
+		superProto.initTemplate.call(this);
+	};
+
+	proto.parseChildren = function(){
+		superProto.parseChildren.call(this);
+
+		var cells = this.TBODY.getElementsByTagName('TD');
 		var cellTpl = [];
 		for(var i=0; i<cells.length; i++){
 			cellTpl[i] = cells[i].outerHTML;
 		}
 
-		superProto.initTemplate.call(this);
-
+		var TR    = findOrAdd(this.THEAD, 'TR');
 		var columns = {}, column;
 		this.columns = [];
 		arr = TR.children;

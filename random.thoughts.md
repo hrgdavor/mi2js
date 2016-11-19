@@ -6,12 +6,14 @@
     - define
   - if lazyInit nothing else happens until visible or initialized
     - if component does not have a parent and is visible already initialize it anyway so root component is started properly as expected by the user
-  - `__init` - do initialization if not done already
+  - `__init` - do initialization if not done already (safe to call multiple times)
   - `afterParentInit` ( in this pahse all children are created but their tempalte is not applied yet )
   - `initTemplate` ( apply template and construct children, at this stage it is like all children are lazy-initialized )
   - `afterInitTemplate`
   - `initChildren` ( initTemplate for each child that is "not lazyInit and hidden" )
 
+initializing component template has few use cases.
+ - a node without children and component that has html defined to put inside
 
 # cleanup
  - remove leftovers of previous approach to inputs 

@@ -26,13 +26,13 @@ function(proto, superProto, comp, superComp){
         this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.parseChildren = function(){
+		superProto.parseChildren.call(this);
 		var el = this.el;
 		// input html node
 		if(!this.input) this.input = this;
 		this.inp=this.input.el;
-
+		if(!this.inp) console.log('input problem', this.el);
 		if(el.type == 'checkbox'){
 			var n = el.nextElementSibling;
 			if(n && n.className && n.className.indexOf('checkboxLabel') != -1){

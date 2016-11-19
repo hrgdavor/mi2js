@@ -13,10 +13,6 @@
 	 to be live after created */
 	mi2.comp.make = function(el, compName, parent, parNode){
 		var c = mi2.comp.construct(el, compName, parent, parNode);
-		if(!c.__template){
-			c.parseChildren();
-			c.initChildren();			
-		}
 		c.__init();
 		return c;
 	};

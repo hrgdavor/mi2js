@@ -24,8 +24,8 @@ function(proto, superProto, comp, superComp){
 
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.parseChildren = function(){
+		superProto.parseChildren.call(this);
 
 		this.idInput.attr("name", this.attr("name"));
 

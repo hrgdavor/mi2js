@@ -62,7 +62,7 @@ describe( 'base/Table.js', function () {
 '</tr></thead>'
         );
 
-        expect(comp.$columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy();
+        expect(comp.$columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy(comp.$columns.item('age'));
 
         var map = comp.columnIndexMap(['first','age']);
         expect(map).toEqual({'2':true, '0':true});

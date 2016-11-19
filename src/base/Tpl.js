@@ -10,7 +10,7 @@ function(proto, superProto, comp, superComp){
 
     proto.parseChildren = function(){
         superProto.parseChildren.call(this);
-        this.loadTemplate();
+        if(!this.template) this.loadTemplate();
     };
 
     // in case of inline template

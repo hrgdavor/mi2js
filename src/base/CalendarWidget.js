@@ -14,8 +14,8 @@ function(proto, superProto, comp, superComp){
 		this.addClass('CalendarWidget');
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 
 		this.listen(this.dayGrid.el,'mousedown','on_dayClick');
 

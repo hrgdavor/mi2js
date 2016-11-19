@@ -90,8 +90,7 @@ function(proto, superProto, comp, superComp){
 				} 
 			} 
 			ch = ch.nextSibling;
-		}
-	}
+		}	}
 
 	proto.setValue = function(arr){
 		arr = arr || [];
@@ -120,7 +119,6 @@ function(proto, superProto, comp, superComp){
 
 	proto.makeItem = function(newData,i){
 		var node = $.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
-
 		var comp = $.comp.make(node, null, this);
 
 		if(!comp.getValue) comp.getValue = defGetValue;

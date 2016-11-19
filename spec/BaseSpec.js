@@ -19,11 +19,6 @@ describe( 'comp.js Component utilities', function () {
 			this.on_hide_count = 0;
 			this.on_init_count = 0;
 		}
-		// components that allow inline template
-		// proto.initTemplate = function(){
-		// 	this.parseChildren();
-		// 	this.initChildren();
-		// };
 		proto.on_show = function(){ this.on_show_count++; }
 		proto.on_hide = function(){ this.on_hide_count++; }
 		proto.on_init = function(){ this.on_init_count++; }
