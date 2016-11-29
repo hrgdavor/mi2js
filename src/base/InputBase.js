@@ -39,7 +39,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.checkSubmit = function(evt){
 		if(this.checkSubmitKey(evt) && this.parent){
-			this.parent.fireEvent('submit',{src:this, domEvent:evt});
+			this.parent.fireEvent('submit', {src:this, domEvent:evt, eventFor:'parent'} );
 		}
 	};
 

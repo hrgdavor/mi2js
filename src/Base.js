@@ -97,8 +97,9 @@
 
 	proto.fireEvent = function(evtName, ex){
 		if(typeof(evtName) != 'string'){
+			// evtName is actually an object with event data, and name inside
 			ex = evtName;
-			evtName = ex.name;
+			evtName = evtName.name;
 		}
 
 		if(evtName == 'show'){

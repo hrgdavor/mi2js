@@ -19,8 +19,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 
 		this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
 		

@@ -8,14 +8,18 @@ function(proto, superProto, comp, superComp){
 
 	proto.initTemplate = function(){
 		var el = this.el;
-		var html = el.innerHTML;
+		this.titleHTML = el.innerHTML;
 		el.innerHTML = '';
 
 		superProto.initTemplate.call(this);
 
 		this.texts = this.attrDef('texts','+,-').split(',');
+	};
 
-		this.title.setHtml(html);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
+
+		this.title.setHtml(this.titleHTML);
 
 		var code = this.attrDef('target','+');
 		this.panel = this.parent.findRef(code, this);
