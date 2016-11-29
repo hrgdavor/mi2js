@@ -44,8 +44,8 @@ function(proto, superProto, comp, superComp){
 			}
 		}
 
-
 		this.listen(this.input.el,'blur',  'on_blur');
+		this.listen(this.input.el,'keypress',this.checkSubmit);
 	};
 
 	proto.on_blur = function(evt){

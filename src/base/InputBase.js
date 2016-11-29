@@ -37,6 +37,16 @@ function(proto, superProto, comp, superComp){
 		mi2.markValidate(this,data);
 	};
 
+	proto.checkSubmit = function(evt){
+		if(this.checkSubmitKey(evt) && this.parent){
+			this.parent.fireEvent('submit',{src:this, domEvent:evt});
+		}
+	};
+
+	proto.checkSubmitKey = function(evt){
+		return evt.keyCode == 13 && !this.attrBoolean('no-submit');
+	};
+
 	proto.checkChanged = function(old, value){
 		return value !== old;
 	};
