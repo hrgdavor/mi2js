@@ -1,19 +1,25 @@
 (function(mi2){
+/** 
+@namespace mi2JS(html)
+*/
 
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
-	/** Create a html node. <br>
-		Example: mi2.addTag(document.body, 
-			{	tag:'DIV', 
-				html: '<b>Title:</b>Sunshine', 
-				attr:{'class':'freaky-line'}
-			}
-		);
+	/** 
+	Create a html node. <br>
+	Example: mi2.addTag(document.body, 
+		{	tag:'DIV', 
+			html: '<b>Title:</b>Sunshine', 
+			attr:{'class':'freaky-line'}
+		}
+	);
+	
+	@function addTag
+	@memberof mi2JS(html)
+	@param {HTMLElement} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
+	@param {Object} tag - tag name, must be uppercase
 
-		@param {HTMLElement} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
-		@param {Object} tag - tag name, must be uppercase
-
-		@returns {HTMLElement} new node
+	@returns {HTMLElement} new node
 	*/
 	mi2.addTag = function(parent, tpl, nextSibling){
 

@@ -1,5 +1,7 @@
 (function(){
-
+/** 
+@namespace mi2JS(core)
+*/
 var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 	if( this instanceof $){ // called as "new mi2JS(node);"
 		this.el = node instanceof String ? $.find(node, root) : node;
@@ -8,8 +10,18 @@ var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 		return new $(node, root);
 };
 
+/**  &#47;^[A-Za-z]+[\w-_]*&#47; - defines allowed tag names when sent as parameter to find/findAll
+@constant tagNameReg
+@memberof mi2JS(core)
+*/
 $.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 
+/** return first node matching the search criteria
+@function find
+@memberof mi2JS(core)
+@param {String} search Search pattern
+@param {HTMLElement} root root node
+*/
 $.find = function(search, root){
 	$.nn('find',{search:search});//ASSERT
 
@@ -23,6 +35,12 @@ $.find = function(search, root){
 	return root.querySelector(search); 
 }
 
+/** return all nodes matching the search criteria
+@function findAll
+@memberof mi2JS(core)
+@param {String} search Search pattern
+@param {HTMLElement} root root node
+*/
 $.findAll = function(search, root){
 	$.nn('find',{search:search});//ASSERT
 
@@ -46,15 +64,22 @@ $.bind = function(object, func){
 	return function() { func.apply(object, arguments); };
 };
 
-/**
- * Extends one class with another.
- *
- * @param {Function} destination The class that should be inheriting things.
- * @param {Function} source The parent class that should be inherited from.
- * @return {Object} The prototype of the parent.
- * 
- * from Oliver Caldwell's blog:  Prototypical inheritance done right
- * http://oli.me.uk/2013/06/01/prototypical-inheritance-done-right/
+/** 
+<p>
+Extends destination class with source class.
+</p>
+<p><i>
+Taken over from Oliver Caldwell's blog:  Prototypical inheritance done right<br>
+{@link http://oli.me.uk/2013/06/01/prototypical-inheritance-done-right/}
+</i></p>
+
+@function extend
+@memberof mi2JS(core)
+ 
+@param {class} destination The class that should be inheriting things.
+@param {class} source The parent class that should be inherited from.
+@return {object} The prototype of the parent.
+  
  */
 $.extend = function(destination, source) {
 	destination.prototype = Object.create(source.prototype);
