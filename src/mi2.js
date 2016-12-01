@@ -1,6 +1,14 @@
 (function(){
 /** 
 @namespace mi2JS(core)
+
+*/
+
+/** Very basic wrapper used for scripting(similar to JQuery and alike). Contains some useful
+   methods to allow manipulation, and can be extended further if needed. For more advanced 
+   functionalities check {@link mi2JS(comp).Base} component and it's descendants in {@link mi2JS(comp)}.
+@class NodeWrapper
+@memberof mi2JS(core)
 */
 var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 	if( this instanceof $){ // called as "new mi2JS(node);"
@@ -20,7 +28,7 @@ $.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 @function find
 @memberof mi2JS(core)
 @param {String} search Search pattern
-@param {HTMLElement} root root node
+@param {Element} root root node
 */
 $.find = function(search, root){
 	$.nn('find',{search:search});//ASSERT
@@ -39,7 +47,7 @@ $.find = function(search, root){
 @function findAll
 @memberof mi2JS(core)
 @param {String} search Search pattern
-@param {HTMLElement} root root node
+@param {Element} root root node
 */
 $.findAll = function(search, root){
 	$.nn('find',{search:search});//ASSERT

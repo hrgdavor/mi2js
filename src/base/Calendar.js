@@ -95,7 +95,7 @@ function(proto, superProto, comp, superComp){
 		this.setValue(evt.date);
 		this.on_blur({});
 		this.input.el.blur();
-        if(this.parent) this.parent.fireEvent('nextInput',{src:this});		
+        this.fireEvent({name:'nextInput',eventFor:'parent'});
 	};
 
 	proto.validate = function(defReq){

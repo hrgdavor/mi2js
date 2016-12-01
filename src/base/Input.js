@@ -3,6 +3,12 @@ mi2JS.comp.add('base/Input', 'base/InputBase', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
+/** 
+@namespace mi2JS(comp)
+@class base/Input
+@extends base/InputBase
+@memberof mi2JS(comp)
+*/
 
 	var mi2 = mi2JS; // minimizer friendly
 

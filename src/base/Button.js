@@ -26,7 +26,8 @@ function(proto, superProto, comp, superComp){
 			if(this._lastClick && now - this._lastClick < this.minClickDelay) return;	
 			this._lastClick = now;
 
-			this.parent.fireEvent(eventData.events[0],eventData);
+			this.fireEvent(eventData);
+
 			evt.stop();
 			return false;
 		}
@@ -50,11 +51,11 @@ function(proto, superProto, comp, superComp){
 				action:actions[0],
 				actions:actions,
 				events:evtNames,
+				name: evtNames[0],
 				domEvent: evt,
 				cancelClick: cancelClick,
 				target: el,
-				src:this,
-				eventFor: 'parent'
+				fireTo: 'parent'
 			};
 	};
 

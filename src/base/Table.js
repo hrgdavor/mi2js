@@ -82,12 +82,12 @@ function(proto, superProto, comp, superComp){
 			el = el.parentNode;
 		}
 
-		if(TR && this.parent.fireEvent){
-			this.parent.fireEvent(evtName || 'rowClick',{
+		if(TR){
+			this.fireEvent({
+				name:evtName || 'rowClick',
+				fireTo:'parent',
 				action:action,
 				domEvent: evt, 
-				src:this,
-				eventFor: 'parent',
 				tr:TR,
 				td:TD
 			});

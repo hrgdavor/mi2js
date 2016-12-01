@@ -56,7 +56,8 @@
 	/** regexp that checks if expression is a template expression. */
 	var tplReg = /\$\{([^}]*)\}/g;
 
-	/* @parameter str - template string that defines the functionality
+	/**
+	   @parameter str - template string that defines the functionality
 	   @parameter el - element where template value will be inserted
 	   @parameter part - part of element(text node or attribute)
 	   @parameter comp - component instance

@@ -54,7 +54,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_page = function(evt){
-		this.parent.fireEvent("page",{page:evt.action, offset:evt.action*this.limit, src:this});
+		this.fireEvent({name:'page', page:evt.action, offset:evt.action*this.limit, fireTo:'parent'});
 	};
 
 });

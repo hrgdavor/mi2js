@@ -1,5 +1,14 @@
 (function(){
+/** 
+@namespace mi2JS(comp)
+*/
 
+/** Base class for all components. Goes beyond simple {@link NodeWrapper} to add parent/child/children
+  relationship. Also adding other functionalities needed for component based composition of an application.
+@class Base
+@memberof mi2JS(comp)
+@extends NodeWrapper
+*/
 	var mi2 = mi2JS;
 	var mi2Proto = mi2.prototype;
 
@@ -24,7 +33,7 @@
 			this.initTemplate();
 			this.parseChildren();
 			this.initChildren();
-			this.fireEvent('init',{ });
+			this.fireEvent('init');
 		}
 		this.__initialized = true;
 	};
@@ -95,32 +104,72 @@
 
 	proto.isTransitive = function(){ return false; };
 
-	proto.fireEvent = function(evtName, ex){
-		if(typeof(evtName) != 'string'){
-			// evtName is actually an object with event data, and name inside
-			ex = evtName;
-			evtName = evtName.name;
+/** Event object used for firing events inside components
+  @typedef EventObject
+  @type {object}
+  @property {string} name - event name
+  @property {string} fireTo - direction of the event
+  @property {Object} src - source component where the the event originated
+  @property {Event} domEvent - (optional) should be passed whan DOM Event was th cause
+ */
+
+
+
+/** Fire event in desired direction in component tree (the component itself, to children, to parent)
+	
+	@method fireEvent
+	@memberof mi2JS(comp).Base
+
+	@param {String|EventObject} evt event or just event name
+
+
+	@example
+// version when there is no additional data with event
+this.someComp.fireEvent('reload'); 
+
+// tell child component to reload
+this.someComp.fireEvent({name:'reload'}); 
+
+// tell all children components to reload
+this.fireEvent({name:'reload', fireTo:'children'}); 
+
+// tell parent you want to submit (inputs can fire this)
+this.fireEvent({name:'submit', fireTo:'parent'}); 
+
+// if the event is caused by domEvent, pass it along as domEvent property
+this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt}); 
+
+	*/
+	proto.fireEvent = function(evt){
+		if(typeof(evt) == 'string'){
+			evt = {name:evt};
 		}
+		var evtName = evt.name;
 
 		if(evtName == 'show'){
 			// if not initialized yet, fire init event first
 			this.__init();
 		}
 
-		if(!ex) ex = {};
-		ex.name = evtName;
-		ex.target = this;
+		if(!evt) evt = {};
+		evt.name = evtName;
+		evt.target = this;
 
-		if(ex.eventFor == 'parent' && this.isTransitive && this.isTransitive()){
-			if(this.parent) this.parent.fireEvent(evtName, ex);
-			return;
+		var initialFire = !evt.__src;
+		if(initialFire) evt.src = evt.__src = this;
+		
+		if(evt.fireTo == 'parent'){
+			if((this.isTransitive && this.isTransitive()) || initialFire){
+				if(this.parent) this.parent.fireEvent(evtName, evt);
+				return;
+			}
 		}
 
 		if(typeof(this['on_'+evtName]) == 'function'){
 			try{
-				this['on_'+evtName](ex);
+				this['on_'+evtName](evt);
 			}catch(e){
-				console.log('Error calling event handler function ','on_'+evtName, ex, 'component', this , 'error', e);
+				console.log('Error calling event handler function ','on_'+evtName, evt, 'component', this , 'error', e);
 				console.error(e.message);
 			}
 
@@ -130,21 +179,21 @@
 		if(this.__listeners) l=this.__listeners[evtName];
 		if(l) for(var i=0; i<l.length; i++){
 			try{
-				l[i].callback(ex);
+				l[i].callback(evt);
 			}catch(e){
-				console.log('Error firing event ',evtName, ex, 'listener', l[i].scope, 'error', e);
+				console.log('Error firing event ',evtName, evt, 'listener', l[i].scope, 'error', e);
 				console.error(e.message);
 			}
 		}
 
 		var child;
-		if(ex.eventFor == 'children' && this.children){
+		if(evt.fireTo == 'children' && this.children){
 			for(var i=0; i<this.children.length; i++){
 				child = this.children[i];
 				// if hidden no need for hide/show event to propagate
 				if(!child.isVisible() && (evtName == 'hide' || evtName == 'show' )) continue; 
 				
-				child.fireEvent(evtName, ex);
+				child.fireEvent(evt);
 			}
 		}
 	};
@@ -239,7 +288,7 @@
 		// when hidden by parent, there is no point in firing the event
 		// correct event will be fired when parent becomes visible
 		if(!this.parent || this.parent.isVisibleTruly()) 
-			this.fireEvent(visible ? 'show':'hide',{eventFor:'children'});
+			this.fireEvent({name:visible ? 'show':'hide',fireTo:'children'});
 	};
 
 }(mi2JS));

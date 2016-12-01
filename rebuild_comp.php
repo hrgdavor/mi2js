@@ -33,7 +33,7 @@ function rebuild_comp_do($in_dir,$out_dir,$lang, $langMt){
 	}
 }
 
-function rebuild_comp_file($in_dir, $out_dir, $name, $langMt){ global $TRANS;
+function rebuild_comp_file($in_dir, $out_dir, $name, $langMt){ global $TRANS, $BUILD_SEPARATE_MIN_JS;
 	$output = $out_dir."/".$name.".js";
 
 	$in_js = $in_dir."/".$name.".js";
@@ -73,6 +73,12 @@ function rebuild_comp_file($in_dir, $out_dir, $name, $langMt){ global $TRANS;
 	}
 
 	flush($fp); fclose($fp);
+	if($BUILD_SEPARATE_MIN_JS){
+		if(!file_exists('.min/'.$out_dir)) mkdir('.min/'.$out_dir, 0777, true);
+		$cmd = "java -jar compiler.jar --js ".$output.'  --js_output_file .min/'.$output;
+		echo "<br>generating minimized file<br/>".htmlspecialchars($cmd)."<br>";
+		system($cmd." 2>&1");		
+	}
 }
 
 function rebuild_comp_trans($match){ global $TRANS;

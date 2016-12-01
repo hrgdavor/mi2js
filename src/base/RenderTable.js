@@ -223,13 +223,15 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		var td = bt.tagName == 'TD' ? bt:$.parent(bt,'TD');
 		var action = null, param = null;
 		while(bt.tagName != 'TD' && !action ){
-			action = bt.getAttribute("action");
-			param = bt.getAttribute("param");
+			action = bt.getAttribute('action');
+			param = bt.getAttribute('param');
 			bt=bt.parentNode;
 		}
-		if(! action ) action = "edit";
-		var tr = $.parent(bt,"TR");
-		this.parent.fireEvent("rowClick",{
+		if(! action ) action = 'edit';
+		var tr = $.parent(bt,'TR');
+		this.fireEvent({
+			name:'rowClick',
+			fireTo:'parent',
 			tr: tr, 
 			data:tr.data, 
 			td:td, 

@@ -39,7 +39,7 @@ function(proto, superProto, comp, superComp){
 			alert(this.stopSubmit);
 			// make sure submit does not hapen on error, and error can go into console
 			try{
-				this.parent.fireEvent('submit',{src:this, domEvent:evt});
+				this.fireEvent({name:'submit', domEvent:evt, fireTo:'parent'});
 			}catch(e){
 				evt.stop();
 				console.error(e);

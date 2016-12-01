@@ -43,11 +43,11 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.fireFocus = function(evt){
-		this.fireEvent('focus',{domEvent:evt});
+		this.fireEvent({name:'focus',domEvent:evt});
 	};
 
 	proto.fireBlur = function(evt){
-		this.fireEvent('blur',{domEvent:evt});
+		this.fireEvent({name:'blur',domEvent:evt});
 	};
 
 	proto.initElements = function(){
@@ -144,7 +144,7 @@ function(proto, superProto, comp, superComp){
 	proto.on_done = function(evt){
 		var date = this.date;
 		if(evt && evt.action == 'clear') date = null;
-		if(this.parent) this.parent.fireEvent('dateSelected',{widget: this, date:date});
+		this.fireEvent({name:'dateSelected', widget: this, date:date, fireTo:'parent'});
 	};
 
 	proto.on_today = function(evt){

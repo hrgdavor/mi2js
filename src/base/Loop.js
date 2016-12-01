@@ -137,8 +137,7 @@ function(proto, superProto, comp, superComp){
 	This distinction also avoids Loop inside a Loopp accidentaly coliding for this event. 
 	*/
 	proto.itemCreated = function(item, i){
-		if(this.parent)
-			this.parent.fireEvent('itemCreated',{item:item, index:i});
+		this.fireEvent({name:'itemCreated',item:item, index:i, fireTo:'parent'});
 	};
 
 	proto.setItemValue = function(item, newData){
@@ -152,7 +151,7 @@ function(proto, superProto, comp, superComp){
 
 		item.el.index = i;
 		this.setItemValue(item, newData);
-		this.fireEvent('afterSetItemValue', {index:i, data:newData, item:item});
+		this.fireEvent({name:'afterSetItemValue', index:i, data:newData, item:item});
 		item.setVisible(true);
 	};
 
@@ -167,7 +166,7 @@ function(proto, superProto, comp, superComp){
 		this.setItem(data,index);
 		this.count++;
         this.items = this.allItems.slice(0,this.count);
-		this.fireEvent('afterAdd', {index:index, data:data, item:this.item(index)});
+		this.fireEvent({name:'afterAdd', index:index, data:data, item:this.item(index)});
 	};
 
 	proto.pop = function(data){
@@ -178,7 +177,7 @@ function(proto, superProto, comp, superComp){
 
         this.items = this.allItems.slice(0,this.count);
 
-		this.fireEvent('afterPop', {item:item});
+		this.fireEvent({name:'afterPop', item:item});
 		return item;
 	};
 

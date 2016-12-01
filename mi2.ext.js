@@ -174,13 +174,13 @@
 				console.log(method, params, "RPC ERROR ", rpcResp.error);
 
 				if( rpcResp.error.code == -3 ){  // not allowed
-					MAIN_APP.fireEvent('userNotification', { data:[{title:'you_are_not_allowed_to'}] });
+					MAIN_APP.fireEvent({name:'userNotification', data:[{title:'you_are_not_allowed_to'}] });
 				}
 
 				if( rpcResp.error.code == -2 || // auth
 						rpcResp.error.code == -4 // second login
 					){
-					MAIN_APP.fireEvent('authError', {data: { force:true } });
+					MAIN_APP.fireEvent({name:'authError', data: { force:true } });
 				}
 
 				if(errback) errback(rpcResp.error);

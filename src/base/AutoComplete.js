@@ -118,7 +118,7 @@ function(proto, superProto, comp, superComp){
 	proto.next = function(){
 		if(this.nextInput) this.nextInput.focus();
 		else this.textInput.el.blur();
-		if(this.parent) this.parent.fireEvent('nextInput',{src:this});
+		if(this.parent) this.fireEvent({name:'nextInput', fireTo:'parent'});
 	};
 
 	proto.focus = function(){
@@ -268,7 +268,7 @@ function(proto, superProto, comp, superComp){
         this.idInput.el.value = sel.id || '';
         this.setText(sel.text);
 		this.fireIfChanged();
-		this.parent.fireEvent("afterSelect",{src:this, selected:sel});
+		this.fireEvent({name:"afterSelect", selected:sel, fireTo:'parent'});
 	};
 
 	proto.getSelectedData = function(){

@@ -3,6 +3,13 @@ mi2JS.comp.add('base/InputBase', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
+/** 
+@namespace mi2JS(comp)
+@class base/InputBase
+@extends Base
+@memberof mi2JS(comp)
+*/
+
 
 	var mi2 = mi2JS; // minimizer friendly
 
@@ -39,7 +46,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.checkSubmit = function(evt){
 		if(this.checkSubmitKey(evt) && this.parent){
-			this.parent.fireEvent('submit', {src:this, domEvent:evt, eventFor:'parent'} );
+			this.fireEvent({name:'submit', domEvent:evt, fireTo:'parent'} );
 		}
 	};
 
@@ -61,7 +68,7 @@ function(proto, superProto, comp, superComp){
 		var value = this.getValue();
 		if(this.checkChanged(old, value)){
 			this.oldValue = value;
-			this.fireEvent('change',{oldValue:old, value: value});
+			this.fireEvent({name:'change', oldValue:old, value: value});
 		}
 	};
 

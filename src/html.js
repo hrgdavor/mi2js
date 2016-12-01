@@ -7,19 +7,23 @@
 
 	/** 
 	Create a html node. <br>
-	Example: mi2.addTag(document.body, 
+
+
+	@function addTag
+	@memberof mi2JS(html)
+	@param {Element} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
+	@param {Object} tag - tag name, must be uppercase
+
+	@returns {Element} new node
+
+	@example 
+	mi2.addTag(document.body, 
 		{	tag:'DIV', 
 			html: '<b>Title:</b>Sunshine', 
 			attr:{'class':'freaky-line'}
 		}
 	);
-	
-	@function addTag
-	@memberof mi2JS(html)
-	@param {HTMLElement} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
-	@param {Object} tag - tag name, must be uppercase
-
-	@returns {HTMLElement} new node
+	// returns creaed Element
 	*/
 	mi2.addTag = function(parent, tpl, nextSibling){
 
@@ -67,6 +71,10 @@
 		return tpl;
 	}
 
+	/** Check if node har a specified attribute defined (regardless of value, null or other)
+	@memberof NodeWrapper
+	@method hasAttr
+	*/
 	mi2Proto.hasAttr = function(name){
 		return this.el.hasAttribute(name);
 	};
