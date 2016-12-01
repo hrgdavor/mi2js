@@ -1,5 +1,7 @@
 <script>var util = {};</script>
 <?
+// generate minimized file for each js, so I can check size of each part when minimized
+$BUILD_SEPARATE_MIN_JS = false; 
 
 include "header.php";
 
@@ -32,9 +34,6 @@ if($_GET['inc']){
 	system($cmd." 2>&1");
 	system("echo //# sourceMappingURL=".$_GET['baseName'].".map >> build/".$_GET['baseName'].".c.js ");
 	echo "</pre>";
-	echo "<a href=\"build.php?sel=".str_replace(' ', '+', $_GET["sel"])
-		."&baseName=".$_GET['baseName']
-		."&copyTo=".$_GET['copyTo']."\">back</a>";
 
 	if($_GET['copyTo']){
 		$to = str_replace('\\', '/', $_GET['copyTo']);
@@ -43,6 +42,11 @@ if($_GET['inc']){
 		copy('build/'.$_GET['baseName'].".c.js", $to.'/'.$_GET['baseName'].".c.js") or die(" - no copy");
 		copy('build/'.$_GET['baseName'].".map", $to.'/'.$_GET['baseName'].".map");
 	}
+	echo '<br>File size:'.filesize('build/'.$_GET['baseName'].".c.js");
+
+	echo "<br><br><a href=\"build.php?sel=".str_replace(' ', '+', $_GET["sel"])
+		."&baseName=".$_GET['baseName']
+		."&copyTo=".$_GET['copyTo']."\">back</a>";
 	exit;
 }
 
@@ -70,15 +74,26 @@ smallInfo {
 
 // --create_source_map
 var base = 'src/';
-var scripts = {
+var scripts = {}, scriptsGroup={};
+scriptsGroup.core = {
 	"mi2":{
 		"desc": "Base utilities, required by most" , 
 		"require":[]
 	},
 	"html":{
-		"desc": "Html utility function for wrapped object" , 
+		"desc": "Html basic utility functions for NodeWrapper" , 
 		"require":["mi2"]
 	},
+	"html.common":{
+		"desc": "Html extra utility functions for NodeWrapper" , 
+		"require":["mi2","html"]
+	},
+	"ajax": {
+		"desc": "Simple, minimal ajax implementation", 
+		"require":["mi2"]
+	}
+};
+scriptsGroup.comp = {
 	"filter":{
 		"desc": "Value filters" , 
 		"require":["mi2"]
@@ -93,25 +108,65 @@ var scripts = {
 	},
 	"comp": {
 		"desc": "Simple component abstraction over HTML nodes", 
-		"require":["mi2","html","parse"]
+		"require":["parse"]
+	},
+	"NWGroup": {
+		"desc": "", 
+		"require":["mi2"]
+	},
+	"Group": {
+		"desc": "", 
+		"require":["comp","NWGroup"]
 	},
 	"InputGroup": {
 		"desc": "", 
 		"require":["comp", "Group"]
 	},
-	"Group": {
+	"Base": {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"ajax": {
-		"desc": "Simple, minimal ajax implementation", 
-		"require":["mi2"]
-	},
-	"base/AutoComplete": {
-		"desc": "", 
-		"require":["comp"]
+	"base/Tpl": {
+		"desc": "Render values via template (template strings in html and attributes)", 
+		"require":["comp","template"]
 	},
 	"base/Button": {
+		"desc": "", 
+		"require":["comp"]
+	},
+	"base/Group": {
+		"desc": "", 
+		"require":["comp","Base"]
+	},
+	"base/Loop": {
+		"desc": "", 
+		"require":["comp","Group","base/Group"]
+	},
+	"base/Table": {
+		"desc": "", 
+		"require":["base/Loop"]
+	}
+};
+scriptsGroup.compForms = {
+	"validate": {
+		"desc": "", 
+		"require":[]
+	},
+	"base/Form": {
+		"desc": "", 
+		"require":["InputGroup"]
+	},
+	"base/InputBase": {
+		"desc": "", 
+		"require":["comp"]
+	},
+	"base/Input": {
+		"desc": "", 
+		"require":["base/InputBase"]
+	}
+};
+scriptsGroup.compExt = {
+	"base/AutoComplete": {
 		"desc": "", 
 		"require":["comp"]
 	},
@@ -123,30 +178,6 @@ var scripts = {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/Form": {
-		"desc": "", 
-		"require":["InputGroup"]
-	},
-	"base/Input": {
-		"desc": "", 
-		"require":["comp"]
-	},
-	"base/Tpl": {
-		"desc": "Render values via template (template strings in html and attributes)", 
-		"require":["comp","template"]
-	},
-	"base/Loop": {
-		"desc": "", 
-		"require":["comp","Group","Tpl"]
-	},
-	"base/Table": {
-		"desc": "", 
-		"require":["comp","loop"]
-	},
-	"base/TabPane": {
-		"desc": "", 
-		"require":["comp"]
-	},
 	"base/ShowHide": {
 		"desc": "", 
 		"require":["comp"]
@@ -155,13 +186,14 @@ var scripts = {
 		"desc": "", 
 		"require":["comp"]
 	},
-	"base/RenderTable": {
-		"desc": "", 
-		"require":["comp"]
-	}
 };
 function $(id){ return document.getElementById(id); }
 
+for(var grpCode in scriptsGroup){
+	for(var scCode in scriptsGroup[grpCode]){
+		scripts[scCode] = scriptsGroup[grpCode][scCode];
+	}
+}
 window.onload = function(){
 	console.log(document.form, document.location.href);
 	var href = document.location.href;
@@ -175,13 +207,16 @@ window.onload = function(){
 		for(var op in arr) sel[arr[op]] = 1;
 	}
 	var str = '';
-	for(var scCode in scripts){
-		var def = scripts[scCode];
-		var checked = sel[scCode] ? 'CHECKED':'';
-		str += '<div><span class="chb" onclick="doCheck(event,this)">';
-		str += '<input type="checkbox" name="'+scCode+'" '+checked+'/>'+scCode+'</span>';
-		str += '<smallInfo>'+def.desc+'</smallInfo>';
-		str += '</div>';
+	for(var grpCode in scriptsGroup){
+		str += '<div><b>'+grpCode+'</b></div>';
+		for(var scCode in scriptsGroup[grpCode]){
+			var def = scriptsGroup[grpCode][scCode];
+			var checked = sel[scCode] ? 'CHECKED':'';
+			str += '<div><span class="chb" onclick="doCheck(event,this)">';
+			str += '<input type="checkbox" name="'+scCode+'" '+checked+'/>'+scCode+'</span>';
+			str += '<smallInfo>'+def.desc+'</smallInfo>';
+			str += '</div>';
+		}
 	}
 	$('selection').innerHTML = str;
 };
@@ -244,7 +279,11 @@ copy to: <input id="copyTo" name="copyTo" value="<?=$_GET['copyTo']?>" style="wi
 </form>
 
 <a href="#" onclick="generateFiles();return false;">Generate</a>
-
+<div><b>Selection</b></div>
+<ul>
+	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+template+parse+comp+Group+InputGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table+validate+base/Form+base/InputBase+base/Input+base/AutoComplete+base/Calendar+base/CalendarWidget+base/ShowHide+base/Pager&baseName=mi2">full components build</a></li>
+	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+template+parse+comp+Group+InputGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table&baseName=mi2">core components build</a></li>
+</ul>
 <hr/>
 Link to recently generated: 
 	<a href="build/<?=$_GET['baseName']?>.c.js?mt<?=rand(10000000,999999999)?>"><?=$_GET['baseName']?>.c.js</a> / 
