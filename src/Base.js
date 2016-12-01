@@ -152,7 +152,6 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		}
 
 		if(!evt) evt = {};
-		evt.name = evtName;
 		evt.target = this;
 
 		var initialFire = !evt.__src;
@@ -160,7 +159,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		
 		if(evt.fireTo == 'parent'){
 			if((this.isTransitive && this.isTransitive()) || initialFire){
-				if(this.parent) this.parent.fireEvent(evtName, evt);
+				if(this.parent) this.parent.fireEvent(evt);
 				return;
 			}
 		}
