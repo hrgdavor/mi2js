@@ -104,13 +104,19 @@
 
 	proto.isTransitive = function(){ return false; };
 
-/** Event object used for firing events inside components
+/** 
+<p>Event object used for firing events inside components</p>
+<p><b>src and target are added automatically, you can not pass them to fireEvent</b></p>
+<p>If you listen to 'submit' event on a Form, src will be the input that originated the 'submit' event
+and target will be the Form</p>
+
   @typedef EventObject
   @type {object}
   @property {string} name - event name
-  @property {string} fireTo - direction of the event
-  @property {Object} src - source component where the the event originated
-  @property {Event} domEvent - (optional) should be passed whan DOM Event was th cause
+  @property {string} fireTo - direction of the event (undefined|parent|children)
+  @property {Object} src - source/origin component where of the event
+  @property {Object} target - target component the event is firing from right now
+  @property {Event} domEvent - (optional) should be passed when DOM Event was the cause
  */
 
 
@@ -119,6 +125,7 @@
 	
 	@method fireEvent
 	@memberof mi2JS(comp).Base
+	@instance
 
 	@param {String|EventObject} evt event or just event name
 
