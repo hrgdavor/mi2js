@@ -64,6 +64,12 @@ $.findAll = function(search, root){
 	return root.querySelectorAll(search); 
 }
 
+/** use the object as scope for the function (popular)
+@function bind
+@memberof mi2JS(core)
+@param {Object} object scope for the function
+@param {Element} func function
+*/
 $.bind = function(object, func){
 	// dynamic
 	if(typeof func == 'string')
@@ -132,7 +138,12 @@ $.update = function(dest, update){
 	return dest;
 };
 
-$.isArray = Array.idArray ||  function (xs) {
+/** Check if the passed parameter is an array
+@function isArray
+@memberof mi2JS(core)
+@param {Object} object
+*/
+$.isArray = Array.isArray ||  function (xs) {
     return {}.toString.call(xs) === '[object Array]';
 };
 
@@ -194,6 +205,17 @@ $.isEmpty = function(obj){
 };
 
 
+/** Uses {@link mi2JS(core).fixEvent}. Listen for event on an object. Any object that has either 
+addEventListener or attachEvent.
+
+@function listen
+@memberof mi2JS(core)
+@param {Object} obj object that will generate the event
+@param {String} evt event name
+@param {Function} fnc callback
+@param {Object} self callback function scope ( bind will be performed )
+@param {boolean|object} options options parameter for addEventListener
+*/
 $.listen = function ( obj, evt, fnc, self, useCapture ){
 
 //	$.nn('$.listen', {obj:obj, evt:evt, fnc:fnc} );
@@ -204,13 +226,20 @@ $.listen = function ( obj, evt, fnc, self, useCapture ){
 	};
 
 	if (obj.addEventListener){
-		obj.addEventListener(evt,listener,useCapture === true);
+		obj.addEventListener(evt,listener,useCapture);
 		return true;
 	}
 	else 
 		return obj.attachEvent("on"+evt,listener);
 };
 
+/** Used by {@link mi2JS(core).listen}. Do some cleaning on the event object provided by the browser, for easier handling of browser differences.
+This is likely more extensive in other libraries. Override it if you need more.
+
+@function fixEvent
+@memberof mi2JS(core)
+@param {Event} evt Browser  event
+*/
 $.fixEvent = function(evt){
 	evt = evt || window.event;
 	evt.stop = function() {
