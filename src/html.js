@@ -3,6 +3,16 @@
 @namespace mi2JS(html)
 */
 
+/** 
+<p>Tempalte object for passing info about a HTML node taht should be created</p>
+<p>Used by {@link mi2JS(html).addTag}, {@link mi2JS(html).add}</p>
+  @typedef TagTemplate
+  @type {object}
+  @property {string} tag - tag name (uppercase)
+  @property {string} html - html code to put into innerHTML of the newly created node
+  @property {Object} attribs - name/value pairs for desired attributes and the values
+ */
+
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
 	/** 
@@ -11,8 +21,9 @@
 
 	@function addTag
 	@memberof mi2JS(html)
-	@param {Element} [parent] - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
-	@param {Object} tag - tag name, must be uppercase
+	@param {Element} parent - parent for the new node. Use null if you intend to add the node to a parent later using appendChild(..) .
+	@param {string|TagTemplate} tpl - tag name, or tag template object must be uppercase
+	@param {Object} tpl - tag name, must be uppercase
 
 	@returns {Element} new node
 
@@ -47,8 +58,16 @@
 		return e;
 	};
 
-	mi2.add = function(parent,tag){
-		return new mi2(mi2.addTag(parent,tag));
+	/** 
+	Create a html node, and returns a {@link mi2JS(core).NodeWrapper}. Uses {@link mi2JS(html).addTag} with same parameters <br>
+	but returns the created node wrapped with {@link mi2JS(core).NodeWrapper}.
+
+	@function add
+	@memberof mi2JS(html)
+	@see {@link mi2JS(html).addTag}
+	*/
+	mi2.add = function(parent, tpl, nextSibling){
+		return new mi2(mi2.addTag(parent, tpl, nextSibling));
 	}
 
 	/** Check if two rectangles are intersecting */
@@ -72,19 +91,22 @@
 	}
 
 	/** Check if node har a specified attribute defined (regardless of value, null or other)
-	@memberof NodeWrapper
+	@memberof mi2JS(core).NodeWrapper
 	@method hasAttr
 	*/
 	mi2Proto.hasAttr = function(name){
 		return this.el.hasAttribute(name);
 	};
 
-	mi2Proto.attrDef = function(name, def){
-		var val = this.el.getAttribute(name);
-		if(val === null) return def;
-		return val;
-	};
+	/** get/set attribute on the wrapped node. Setting attribute to null or undefined
+	will remove the attribute.
 
+	@memberof mi2JS(core).NodeWrapper
+	@method attr
+
+	@param {String} name attribute name
+	@param {String} value optionaly if sent sets the attribute
+	*/
 	mi2Proto.attr = function(name, val){
 		if(arguments.length > 1){
 			if(val === null || val === void 0){
@@ -96,6 +118,12 @@
 		}else{
 			return this.el.getAttribute(name);
 		}
+	};
+
+	mi2Proto.attrDef = function(name, def){
+		var val = this.el.getAttribute(name);
+		if(val === null) return def;
+		return val;
 	};
 
 	mi2Proto.attrNum = function(name, def){
