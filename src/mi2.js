@@ -10,6 +10,10 @@
 @class NodeWrapper
 @memberof mi2JS(core)
 */
+
+/**
+@name mi2JS
+*/
 var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 	if( this instanceof $){ // called as "new mi2JS(node);"
 		this.el = node instanceof String ? $.find(node, root) : node;
@@ -31,7 +35,7 @@ $.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 @param {Element} root root node
 */
 $.find = function(search, root){
-	$.nn('find',{search:search});//ASSERT
+	// $.nn('find',{search:search});//ASSERT
 
 	root = root || document.body;
 	if(root instanceof $) root = root.el;
@@ -50,7 +54,7 @@ $.find = function(search, root){
 @param {Element} root root node
 */
 $.findAll = function(search, root){
-	$.nn('find',{search:search});//ASSERT
+	// $.nn('find',{search:search});//ASSERT
 
 	root = root || document.body;
 	if(root instanceof $) root = root.el;
@@ -73,7 +77,7 @@ $.bind = function(object, func){
 };
 
 /** 
-<p>
+<p><b>utility for classes </b> - 
 Extends destination class with source class.
 </p>
 <p><i>
@@ -96,11 +100,30 @@ $.extend = function(destination, source) {
 	return source.prototype;
 };
 
+/**<p><b>utility for classes </b> - 
+Takes prototype of the source(mixin) class and copies properties to prototype of destination class.
+</p>
+@function mixin
+@memberof mi2JS(core)
+
+@param {class} destination - The class that is being enhanced with the mixin
+@param {class} source - The mixin class
+@param {boolean} overwrite - should the existing properties be overwritten
+*/
 $.mixin = function(dest, source, overwrite) {
 	var proto = dest.prototype, ext = source.prototype;
 	for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
 };
 
+/** Update dest object by adding properties from another object. Copied aro only own properties
+of the other object (checked by hasOwnProperty).
+
+@function update
+@memberof mi2JS(core)
+
+@param {Object} destination - The object that is being updated
+@param {Object} update - Object from which the properties are copied
+*/
 $.update = function(dest, update){
 	if(dest && update ){
 		for (var prop in update)
@@ -113,7 +136,13 @@ $.isArray = Array.idArray ||  function (xs) {
     return {}.toString.call(xs) === '[object Array]';
 };
 
-/** Make shallow copy */
+/** Make a shallow copy of an object.
+
+@function copy
+@memberof mi2JS(core)
+
+@param {Object} obj - objec to copy
+*/
 $.copy = function(obj){
     if ($.isArray(obj)) {
         var len = obj.length;
@@ -126,16 +155,34 @@ $.copy = function(obj){
 	return $.update({},obj);
 };
 
+/** Parse number using parseFloat, but return zero if not a number.
+
+@function num
+@memberof mi2JS(core)
+
+@param obj - string or anything else (if parseFloat fails, zero is returned)
+*/
 $.num = function(str){
 	var n = parseFloat(str);
 	if(isNaN(n)) return 0;
 	return n;
 };
 
-$.likeNull = function(obj){
-	return !obj;
-};
+/** Check if passed value is empty.
+<ul>
+  <li>null
+  <li>undefined
+  <li> === 0
+  <li>empty string
+  <li>empty array
+  <li>empty object (without any iterable properties)
+</ul>
 
+@function isEmpty
+@memberof mi2JS(core)
+
+@param obj
+*/
 $.isEmpty = function(obj){
 	if(obj === void 0 || obj === null || obj === 0) return true;
 	if(obj instanceof Array || typeof obj == 'string') return obj.length == 0;
@@ -146,21 +193,10 @@ $.isEmpty = function(obj){
 	return false;
 };
 
-/** Check if any of the the values are null and throw an Error. 
-	Use where fail-fast is needed so invalid parameters don't cause errors later.
-	
-*/
-$.nn = function(name,list){
-	for(var p in list){
-		if(list[p] === null || typeof(list[p]) == "undefined"){
-			console.error(name," parameter ",p," is null but should not be ");
-		}
-	}
-};
 
 $.listen = function ( obj, evt, fnc, self, useCapture ){
 
-	$.nn('$.listen', {obj:obj, evt:evt, fnc:fnc} );
+//	$.nn('$.listen', {obj:obj, evt:evt, fnc:fnc} );
 
 	var listener = function(evt){
 		if(typeof(fnc) == 'string') fnc = self[fnc];
