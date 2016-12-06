@@ -18,11 +18,13 @@ and target will be the Form</p>
   @property {Event} domEvent - (optional) should be passed when DOM Event was the cause
  */
 
-/** Base class for all components. Goes beyond simple {@link NodeWrapper} to add parent/child/children
-  relationship. Also adding other functionalities needed for component based composition of an application.
+/** <b>Extends:</b> {@link mi2JS(core).NodeWrapper}<br>
+Base class for all components. Goes beyond simple {@link NodeWrapper} to add parent/child/children
+relationship. Also adding other functionalities needed for component based composition of an application.
+
 @class Base
 @memberof mi2JS(comp)
-@extends mi2JS(core).NodeWrapper
+
 */
 	var mi2 = mi2JS;
 	var mi2Proto = mi2.prototype;
