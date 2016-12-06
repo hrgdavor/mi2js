@@ -6,7 +6,7 @@ function(proto, superProto, comp, superComp){
 /** 
 @namespace mi2JS(comp)
 @class base/Input
-@extends base/InputBase
+@extends mi2JS(comp).base/InputBase
 @memberof mi2JS(comp)
 */
 

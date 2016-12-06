@@ -70,7 +70,11 @@
 		return new mi2(mi2.addTag(parent, tpl, nextSibling));
 	}
 
-	/** Check if two rectangles are intersecting */
+	/** Check if two rectangles are intersecting each other.
+
+	@function intersect
+	@memberof mi2JS(html)
+	*/	
 	mi2.intersect = function(a, b) {
 		return (a.left <= b.right &&
 			b.left <= a.right &&
@@ -78,6 +82,13 @@
 			b.top <= a.bottom);
 	}
 
+	/** Generate {@link TagTemplate} object that represents the given Element.
+
+	@function toTemplate
+	@memberof mi2JS(html)
+	@param {Element} node 
+	@param {Object} defAttr oprional default attribute values
+	*/
 	mi2.toTemplate = function(node, defAttr){
 		var tpl = { tag: node.tagName, html: node.innerHTML};
 		var attr = defAttr ? mi2.copy(defAttr) : {};
@@ -91,8 +102,10 @@
 	}
 
 	/** Check if node har a specified attribute defined (regardless of value, null or other)
-	@memberof mi2JS(core).NodeWrapper
+
+	@instance
 	@method hasAttr
+	@memberof mi2JS(core).NodeWrapper
 	*/
 	mi2Proto.hasAttr = function(name){
 		return this.el.hasAttribute(name);
@@ -101,8 +114,9 @@
 	/** get/set attribute on the wrapped node. Setting attribute to null or undefined
 	will remove the attribute.
 
-	@memberof mi2JS(core).NodeWrapper
+	@instance
 	@method attr
+	@memberof mi2JS(core).NodeWrapper
 
 	@param {String} name attribute name
 	@param {String} value optionaly if sent sets the attribute
@@ -120,20 +134,47 @@
 		}
 	};
 
+	/** Get attribute, but return default value if not defined
+
+	@instance
+	@method attrDef
+	@memberof mi2JS(core).NodeWrapper
+	@param {string} name attribute name
+	@param {object} def default value if attribute is not present
+	*/
 	mi2Proto.attrDef = function(name, def){
 		var val = this.el.getAttribute(name);
 		if(val === null) return def;
 		return val;
 	};
 
+	/** Get attribute, but convert frist using {@link mi2JS(core).num}. Returns 0 when value not a number or
+	if attribute is not present.
+
+	@instance
+	@method attrNum
+	@memberof mi2JS(core).NodeWrapper
+	@param {string} name attribute name
+	@param {object} def default value if attribute is not present
+	*/
 	mi2Proto.attrNum = function(name, def){
 		return mi2.num( this.attrDef(name, def) );
 	};
 
 	/** Boolean from attribute
-		just defined - <input required> <input required="">
-		value same as name <input required="required">
-		value 1,true - <input required="1"> <input required="true">
+
+		@instance
+		@method attrBoolean
+		@memberof mi2JS(core).NodeWrapper
+		@param {string} name attribute name
+		@param {object} def default value if attribute is not present
+
+@example 
+Value is true for all these instances
+just defined - <input required> <input required="">
+value same as name <input required="required">
+value 1,true - <input required="1"> <input required="true">
+
 	*/
 	mi2Proto.attrBoolean = function(name, def){
 

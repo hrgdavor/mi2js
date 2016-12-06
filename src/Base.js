@@ -3,107 +3,6 @@
 @namespace mi2JS(comp)
 */
 
-/** Base class for all components. Goes beyond simple {@link NodeWrapper} to add parent/child/children
-  relationship. Also adding other functionalities needed for component based composition of an application.
-@class Base
-@memberof mi2JS(comp)
-@extends NodeWrapper
-*/
-	var mi2 = mi2JS;
-	var mi2Proto = mi2.prototype;
-
-	function Base(){}
-
-	mi2.comp.def.Base = Base;
-	mi2.comp.tpl.Base = '';
-	Base.compName = 'Base';
-	// extend mi2JS to get addClass and other html utility functions (html.js must be included in the bundle to have them)
-	mi2.extend(Base, mi2);
-
-	var proto = Base.prototype; //
-
-	/* called when the component is initially constructed */
-	proto.construct = function(el, parent){
-		this.children = [];
-		this.el = el;
-	};
-
-	proto.__init = function(){
-		if(!this.__initialized){
-			this.initTemplate();
-			this.parseChildren();
-			this.initChildren();
-			this.fireEvent('init');
-		}
-		this.__initialized = true;
-	};
-
-	proto.initTemplate = function(){
-		if(this.__template){
-			this.el.innerHTML = this.__template;
-		}
-		// if(this.__template || this.el.getAttribute('template') == 'inline'){
-		// 	this.parseChildren();
-		// 	this.initChildren();
-		// }
-		delete this.__template;
-	};
-
-	proto.parseChildren = function(){
-		mi2.parseChildren(this.el,this);
-	};
-
-	proto.initChildren = function(){
-		var c;
-		for(var i=0; i<this.children.length; i++){
-			c = this.children[i];
-			if(!c.lazyInit) c.__init();
-		}
-	};
-
-	proto.on_init = function(evt){ };
-
-	proto.getCompName = function(){
-		if(this.el && this.el.getAttribute){
-			return this.el.getAttribute('as');
-		}
-	};
-
-	/** listener shortcut that by default binds callback function to current object/component
-	so you can use this in callback without extra bloat otherwise needed
-	*/
-	proto.listen = function(el,evt,listener){
-		listener = listener || this['on_'+evt];
-
-		if(el.addListener){
-			el.addListener( evt, listener, this);
-		}else //dom node
-			mi2.listen( el, evt, listener, this);
-	};
-
-	//setTimeout and setInterval shortcut that by default binds callback function to current object
-	//so you can use this in callback without extra bloat otherwise needed
-	proto.setTimeout = function(fc,delay){
-		return setTimeout( fc.bind(this), delay );
-	};
-  
-	proto.setInterval = function(fc,delay){
-		return setInterval( fc.bind(this), delay );
-	};
-
-	proto.addListener = function(evtName,callback, scope){
-		if(!this.__listeners) this.__listeners = {};
-		var l = this.__listeners[evtName];
-		if(!l) l = this.__listeners[evtName] = [];
-
-		// bind a scope to the callback function
-		if(scope) callback = mi2.bind( scope, callback );
-		
-		l.push({callback:callback, scope:scope });
-	};
-
-	proto.isTransitive = function(){ return false; };
-
 /** 
 <p>Event object used for firing events inside components</p>
 <p><b>src and target are added automatically, you can not pass them to fireEvent</b></p>
@@ -118,6 +17,180 @@ and target will be the Form</p>
   @property {Object} target - target component the event is firing from right now
   @property {Event} domEvent - (optional) should be passed when DOM Event was the cause
  */
+
+/** Base class for all components. Goes beyond simple {@link NodeWrapper} to add parent/child/children
+  relationship. Also adding other functionalities needed for component based composition of an application.
+@class Base
+@memberof mi2JS(comp)
+@extends mi2JS(core).NodeWrapper
+*/
+	var mi2 = mi2JS;
+	var mi2Proto = mi2.prototype;
+
+	function Base(){}
+
+	mi2.comp.def.Base = Base;
+	mi2.comp.tpl.Base = '';
+	Base.compName = 'Base';
+	// extend NodeWrapper to get addClass and other html utility functions (html.js must be included in the bundle to have them)
+	mi2.extend(Base, mi2);
+
+	var proto = Base.prototype; //
+
+	/* called when the component is initially constructed
+	@instance
+	@function construct 
+	@memberof mi2JS(comp).Base
+	@param {Element} el
+	@param {object} parent
+	*/
+	proto.construct = function(el, parent){
+		this.children = [];
+		this.el = el;
+	};
+
+	/** initialize the compoenent if not initialized already. Can be called more than once,
+	but only executes the first time. Subsequent calls are ignored.
+	@instance
+	@function __init
+	@memberof mi2JS(comp).Base
+	*/
+	proto.__init = function(){
+		if(!this.__initialized){
+			this.initTemplate();
+			this.parseChildren();
+			this.initChildren();
+			this.fireEvent('init');
+		}
+		this.__initialized = true;
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.initTemplate = function(){
+		if(this.__template){
+			this.el.innerHTML = this.__template;
+		}
+		// if(this.__template || this.el.getAttribute('template') == 'inline'){
+		// 	this.parseChildren();
+		// 	this.initChildren();
+		// }
+		delete this.__template;
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.parseChildren = function(){
+		mi2.parseChildren(this.el,this);
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.initChildren = function(){
+		var c;
+		for(var i=0; i<this.children.length; i++){
+			c = this.children[i];
+			if(!c.lazyInit) c.__init();
+		}
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.on_init = function(evt){ };
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.getCompName = function(){
+		if(this.el && this.el.getAttribute){
+			return this.el.getAttribute('as');
+		}
+	};
+
+	/** listener shortcut that by default binds callback function to current object/component
+	so you can use this in callback without extra bloat otherwise needed
+	*/
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.listen = function(el,evt,listener){
+		listener = listener || this['on_'+evt];
+
+		if(el.addListener){
+			el.addListener( evt, listener, this);
+		}else //dom node
+			mi2.listen( el, evt, listener, this);
+	};
+
+	//setTimeout and setInterval shortcut that by default binds callback function to current object
+	//so you can use this in callback without extra bloat otherwise needed
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.setTimeout = function(fc,delay){
+		return setTimeout( fc.bind(this), delay );
+	};
+  
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.setInterval = function(fc,delay){
+		return setInterval( fc.bind(this), delay );
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.addListener = function(evtName,callback, scope){
+		if(!this.__listeners) this.__listeners = {};
+		var l = this.__listeners[evtName];
+		if(!l) l = this.__listeners[evtName] = [];
+
+		// bind a scope to the callback function
+		if(scope) callback = mi2.bind( scope, callback );
+		
+		l.push({callback:callback, scope:scope });
+	};
+
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.isTransitive = function(){ return false; };
+
 
 
 
@@ -204,11 +277,23 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		}
 	};
 
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.addRef = function(r){
 		if(!this.__refs) this.__refs = [];
 		this.__refs.push(r);
 	};
 
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.addChild = function(c){
 		if(!this.el) {
 			var msg = 'Component not propery initialized. Must call Base constructor before parseChildren';
@@ -220,12 +305,24 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		this.children.push(c);
 	};
 
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.removeChild = function(){
 		var found = -1, cnt = this.children.length >>> 0;
 		for(var i =0; i<cnt; i++) if(c == this.children[i]) return; 
 		if(found != -1) this.children.splice(found,1);
 	};
 
+	/** 
+	@instance
+	@function 
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.setParent = function(p){
 		var old = this.parent;
 		if(old && old.removeChild) 
@@ -234,7 +331,14 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		if(p  && p.addChild) p.addChild(this);
 	};
 
-	/* find component that is holding the DOM node */
+	/* find component that is holding the DOM node in question
+
+	@instance
+	@function findRef
+	@memberof mi2JS(comp).Base
+	@param {Element|string} toFind element to find
+	@param {Component} from starting point
+	*/
 	proto.findRef = function(toFind, from){
 		var testFunc = function(comp){
 			return comp.el == toFind;
@@ -263,10 +367,31 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 			return new mi2(toFind);
 	}
 
+	/** Call the static {@link mi2JS(core).find} using the component's HTML node and provided search critria.
+	@instance
+	@function find
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.find    = function(search){ return mi2.find   (this.el, search); }
+	
+	/** Call the static {@link mi2JS(core).findAll} using the component's HTML node and provided search critria.
+	@instance
+	@function findAll
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
 	proto.findAll = function(search){ return mi2.findAll(this.el, search); }
 
-	/** Use this when the tag on which the component is defined*/
+	/** Useful when the tag on which the component is defined should be replaced.
+	Copies all the attributes and child nodes to the new node with specified tag name.
+
+	@instance
+	@function replaceTag
+	@memberof mi2JS(comp).Base
+	@param {Element} el node
+	@param {Object} tag tag name
+	*/
 	proto.replaceTag = function(el,tag){
 		var ret = document.createElement(tag);
 		var arr = el.attributes;
@@ -277,6 +402,13 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		return ret;
 	};
 
+	/** Check visibility, but only report visible if the compoentn itself is visible,
+	and all of it's parents.
+
+	@instance
+	@function isVisibleTruly
+	@memberof mi2JS(comp).Base
+	*/
 	proto.isVisibleTruly = function(){
 		var c = this;
 		while(c){
@@ -286,6 +418,14 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		return true;
 	};
 
+	/** Change visibility of the component. 
+	It is reliant on the css used, and by default uses 'hidden' HMTL attribute.
+
+	@instance
+	@function setVisible
+	@memberof mi2JS(comp).Base
+	@param {boolean} visible
+	*/
 	proto.setVisible = function(visible){
 		if(visible == this.isVisible()) return;
 
