@@ -216,7 +216,7 @@ addEventListener or attachEvent.
 @param {Object} self callback function scope ( bind will be performed )
 @param {boolean|object} options options parameter for addEventListener
 */
-$.listen = function ( obj, evt, fnc, self, useCapture ){
+$.listen = function ( obj, evt, fnc, self, options ){
 
 //	$.nn('$.listen', {obj:obj, evt:evt, fnc:fnc} );
 
@@ -226,7 +226,7 @@ $.listen = function ( obj, evt, fnc, self, useCapture ){
 	};
 
 	if (obj.addEventListener){
-		obj.addEventListener(evt,listener,useCapture);
+		obj.addEventListener(evt,listener,options);
 		return true;
 	}
 	else 

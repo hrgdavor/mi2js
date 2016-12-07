@@ -52,7 +52,13 @@ relationship. Also adding other functionalities needed for component based compo
 	};
 
 	/** initialize the compoenent if not initialized already. Can be called more than once,
-	but only executes the first time. Subsequent calls are ignored.
+	but only executes the first time. Subsequent calls are ignored.<br>
+	If not initialized does this in sequence:
+	<li> {@link mi2JS(comp).Base#initTemplate initTemplate} - apply template2
+	<li> {@link mi2JS(comp).Base#parseChildren parseChildren} - parse DOM nodes (recusrsion stop swhen a child component is foud)
+	<li> {@link mi2JS(comp).Base#initChildren initChildren} - initialize child components (here the recursion continues again)
+	<li> Fire <b>init</b> event via {@link mi2JS(comp).Base#fireEvent fireEvent} (on_init will be called actually)
+
 	@instance
 	@function __init
 	@memberof mi2JS(comp).Base
@@ -69,7 +75,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function initTemplate
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -86,7 +92,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function parseChildren
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -96,7 +102,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function initChildren
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -110,7 +116,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function on_init
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -118,7 +124,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function getCompName
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -130,27 +136,27 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** listener shortcut that by default binds callback function to current object/component
 	so you can use this in callback without extra bloat otherwise needed
-	*/
-	/** 
+
 	@instance
-	@function 
+	@function listen
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.listen = function(el,evt,listener){
+	proto.listen = function(el,evt,listener, scope, options){
+		scope = scope || this;
 		listener = listener || this['on_'+evt];
 
 		if(el.addListener){
-			el.addListener( evt, listener, this);
+			el.addListener( evt, listener, scope);
 		}else //dom node
-			mi2.listen( el, evt, listener, this);
+			mi2.listen( el, evt, listener, scope, options);
 	};
 
-	//setTimeout and setInterval shortcut that by default binds callback function to current object
-	//so you can use this in callback without extra bloat otherwise needed
 	/** 
+	setTimeout shortcut that by default binds callback function to current object, 
+	so you can use this in callback without extra bloat otherwise needed
 	@instance
-	@function 
+	@function setTimeout
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -159,8 +165,11 @@ relationship. Also adding other functionalities needed for component based compo
 	};
   
 	/** 
+	setInterval shortcut that by default binds callback function to current object, 
+	so you can use this in callback without extra bloat otherwise needed
+
 	@instance
-	@function 
+	@function setInterval
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -170,7 +179,7 @@ relationship. Also adding other functionalities needed for component based compo
 
 	/** 
 	@instance
-	@function 
+	@function addListener
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
@@ -185,9 +194,13 @@ relationship. Also adding other functionalities needed for component based compo
 		l.push({callback:callback, scope:scope });
 	};
 
-	/** 
+	/** Implement this to return true for transitive components (example: base/Loop). 
+	Transitive component will forward events meant for parent.<br>
+	base/Button inside a base/Loop will fire the event when clicked, but base/Loop will forward it to it's parent.
+	This is desirable in this case as the loop is usually used inside an application component, and that component
+	will want to catch the event from the button like it is usual when the button is a direct child.
 	@instance
-	@function 
+	@function isTransitive
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/

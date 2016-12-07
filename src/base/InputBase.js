@@ -3,7 +3,7 @@ mi2JS.comp.add('base/InputBase', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
-/** <b>Extends:</b> {@link mi2JS(comp).Base}
+/** <b>Extends:</b> {@link mi2JS(comp).Base}<br>
 @namespace mi2JS(comp)
 @class base/InputBase
 @memberof mi2JS(comp)
