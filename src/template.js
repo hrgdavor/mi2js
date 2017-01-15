@@ -47,8 +47,9 @@
 		}
 	}
 
-	/** Fix value for string concatenation.
-	    @returns empty string instead of null or undefined */
+/** Fix value for string concatenation.
+@returns empty string instead of null or undefined 
+*/
 	function toEmpty(val){
 		return val === null || val === void 0 ? '':val;
 	}
@@ -57,15 +58,16 @@
 	var tplReg = /\$\{([^}]*)\}/g;
 
 /**
+@function parseTemplate
 @memberof mi2JS(core)
 
-	   @parameter str - template string that defines the functionality
-	   @parameter el - element where template value will be inserted
-	   @parameter part - part of element(text node or attribute)
-	   @parameter comp - component instance
+@parameter str - template string that defines the functionality
+@parameter el - element where template value will be inserted
+@parameter part - part of element(text node or attribute)
+@parameter comp - component instance
 
 
-	*/
+*/
 	mi2.parseTemplate = function(str, el, part, comp){
 		var arr = [];
 		var offset = 0;
