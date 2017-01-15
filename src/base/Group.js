@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/Group', 'Base', '',
+mi2JS.addCompClass('base/Group', 'Base', '',
 
 function(proto, superProto, comp){
 	

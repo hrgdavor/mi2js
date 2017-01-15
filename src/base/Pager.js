@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Pager', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/Pager', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

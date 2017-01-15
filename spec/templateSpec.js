@@ -34,7 +34,7 @@ describe( 'template.js', function () {
 
 	it('/ template component', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 		comp.setValue({name:'John'});
 
 		expect(comp.el.getAttribute('my-attr')).toEqual('John');
@@ -42,7 +42,7 @@ describe( 'template.js', function () {
 
 	it('/ template component remove attribute', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		comp.setValue({name:'John'});
 		expect(comp.hasAttr('my-attr')).toEqual(true);
@@ -56,7 +56,7 @@ describe( 'template.js', function () {
 
 	it('/ template component remove attribute', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'hidden':'${name|specNull}'}});
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		comp.setValue({name:'John'});
 		expect(comp.hasAttr('hidden')).toEqual(true);
@@ -76,7 +76,7 @@ describe( 'template.js', function () {
 
 	it('/ template component complex', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last|specTest}:X'} );
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
 		expect(comp.el.getAttribute('my-attr')).toEqual('Adam');
@@ -85,7 +85,7 @@ describe( 'template.js', function () {
 
 	it('/ template component complex', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest|specTest2}:X'} );
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
 		expect(comp.el.innerHTML).toEqual('X:(Jones--):X');
@@ -93,7 +93,7 @@ describe( 'template.js', function () {
 
 	it('/ template component complex 2', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest2|specTest}:X'} );
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
 		expect(comp.el.innerHTML).toEqual('X:(Jones)--:X');

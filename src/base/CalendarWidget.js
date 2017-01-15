@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/CalendarWidget', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/CalendarWidget', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

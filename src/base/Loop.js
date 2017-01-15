@@ -1,11 +1,11 @@
-mi2JS.comp.add('base/Loop', 'base/Group', '',
+mi2JS.addCompClass('base/Loop', 'base/Group', '',
 
 /**
 if component extends Loop and has an element bound to itemsArea it will be used instead
 of the component root.
 
 example with inline template: 
-	mi2JS.comp.add('base/List', 'lock3/Loop', '<div class="title">title</div><div p="itemsArea"></div>',
+	mi2JS.addCompClass('base/List', 'lock3/Loop', '<div class="title">title</div><div p="itemsArea"></div>',
 
 example in separate template file:
 	<div class="title">title</div>
@@ -119,7 +119,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.makeItem = function(newData,i){
 		var node = $.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
-		var comp = $.comp.make(node, null, this);
+		var comp = $.makeComp(node, null, this);
 
 		if(!comp.getValue) comp.getValue = defGetValue;
 		if(!comp.setValue) comp.setValue = defSetValue;

@@ -3,7 +3,7 @@ Combination of button functionality with variable expansion support.
 
 */
 
-mi2JS.comp.add('base/Button', 'base/Tpl', '',
+mi2JS.addCompClass('base/Button', 'base/Tpl', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

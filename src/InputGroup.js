@@ -20,7 +20,7 @@
 			var comp = this.items[p];
 			var compName = comp.attr('as'); 
 			if(!compName){
-				this.items[p] = mi2.comp.make(comp.el,'base/Input',this);
+				this.items[p] = mi2.makeComp(comp.el,'base/Input',this);
 			}else if(!comp.getValue || ! comp.setValue){
 				console.log('invalid input for Form component ', comp.el, ' inputs in Form must implement getValue & setValue and',compName,'does not');
 			}

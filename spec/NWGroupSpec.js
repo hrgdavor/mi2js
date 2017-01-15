@@ -1,7 +1,7 @@
 describe( 'Group.js', function () { 
 	var mi2 = mi2JS;
 
-	mi2JS.comp.add('test/GroupTest', 'Base', '',
+	mi2JS.addCompClass('test/GroupTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
 		proto.setValue = function(value){
 			this.value = value;

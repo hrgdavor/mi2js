@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/MultiInput', 'base/Loop', '',
+mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
 
 // component initializer function that defines constructor and adds methods to the prototype
     function(proto, superProto, comp, superComp) {

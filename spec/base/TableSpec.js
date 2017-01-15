@@ -23,7 +23,7 @@ describe( 'base/Table.js', function () {
 
     it('/ basic ', function (){
 
-        var comp = mi2.comp.make(node);
+        var comp = mi2.makeComp(node);
 
 
         // after reading template
@@ -62,7 +62,7 @@ describe( 'base/Table.js', function () {
 '</tr></thead>'
         );
 
-        expect(comp.$columns.item('age') instanceof mi2.comp.get('Base')).toBeTruthy(comp.$columns.item('age'));
+        expect(comp.$columns.item('age') instanceof mi2.getComp('Base')).toBeTruthy(comp.$columns.item('age'));
 
         var map = comp.columnIndexMap(['first','age']);
         expect(map).toEqual({'2':true, '0':true});
@@ -73,7 +73,7 @@ describe( 'base/Table.js', function () {
 
 
     it('/ sort ', function (){
-        var comp = mi2.comp.make(node);
+        var comp = mi2.makeComp(node);
 
         expect(comp.getSort()).toEqual({});
         expect(mi2.isEmpty(comp.getSort())).toEqual(true);
@@ -89,7 +89,7 @@ describe( 'base/Table.js', function () {
     });
 
     it('/ not sortable ', function (){
-        var comp = mi2.comp.make(node);
+        var comp = mi2.makeComp(node);
 
         expect(comp.getSort()).toEqual({});
         expect(mi2.isEmpty(comp.getSort())).toEqual(true);
@@ -104,7 +104,7 @@ describe( 'base/Table.js', function () {
     });
 
     it('/ column index ', function (){
-        var comp = mi2.comp.make(node);
+        var comp = mi2.makeComp(node);
         
         expect(comp.columnIndex('first')).toEqual(0);
         expect(comp.columnIndex('last')).toEqual(1);

@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Tpl', 'Base', '',
+mi2JS.addCompClass('base/Tpl', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

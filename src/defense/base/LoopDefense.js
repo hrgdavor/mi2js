@@ -1,5 +1,5 @@
 (function(mi2){
-	var loopProto = mi2.comp.get('Base');
+	var loopProto = mi2.getComp('Base');
 
 	
 	

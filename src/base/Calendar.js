@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Calendar', 'base/InputBase', '<input p="input" as="base/Input">',
+mi2JS.addCompClass('base/Calendar', 'base/InputBase', '<input p="input" as="base/Input">',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

@@ -2,7 +2,7 @@ describe( 'base/Loop.js', function () {
 	var mi2 = mi2JS;
 	mi2.addFilter('loopTest', function(value){ return value+'--'});
 
-	mi2JS.comp.add('test/LoopTest', 'Base', '',
+	mi2JS.addCompClass('test/LoopTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
 		proto.setValue = function(value){
 			this.value = value;
@@ -21,7 +21,7 @@ describe( 'base/Loop.js', function () {
 				html: '<div template as="base/Tpl" >Name: ${name}, Last: ${last}</div>' 
 			});
 
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		var data = [
 			{name:"John", last:'Doe', age:44},
@@ -43,7 +43,7 @@ describe( 'base/Loop.js', function () {
 				html: '<div template as="base/Tpl" >Name: ${name}, Last: ${last}</div><b>xx</b>' 
 			});
 
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		var data = [
 			{name:"John", last:'Doe', age:44},

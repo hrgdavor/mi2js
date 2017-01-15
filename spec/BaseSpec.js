@@ -1,17 +1,17 @@
 describe( 'comp.js Component utilities', function () { 
 	var mi2 = mi2JS;
 
-	mi2JS.comp.add('test/LazyTestIn', 'Base', '<b p="bt1" as="base/Button">ok</b>',
+	mi2JS.addCompClass('test/LazyTestIn', 'Base', '<b p="bt1" as="base/Button">ok</b>',
 	function(proto, superProto, comp, superComp){
 		proto.lazyInit = true;
 	});
 
-	mi2JS.comp.add('test/LazyTest', 'Base', '<div p="inside" as="test/LazyTestIn"></div>',
+	mi2JS.addCompClass('test/LazyTest', 'Base', '<div p="inside" as="test/LazyTestIn"></div>',
 	function(proto, superProto, comp, superComp){
 	});
 
 
-	mi2JS.comp.add('test/ShowHideInitTest', 'Base', '',
+	mi2JS.addCompClass('test/ShowHideInitTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
 		proto.construct = function(el,parent){
 			superProto.construct.call(this,el,parent);
@@ -26,20 +26,20 @@ describe( 'comp.js Component utilities', function () {
 
 
 	it(' / lazyInit', function () {
-		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/LazyTest',hidden:''}, html:''});
+		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/LazyTestIn',hidden:''}, html:''});
 
-		expect(comp.el.inside).toEqual(undefined);
-		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"></div>');
+		expect(comp.bt1).toEqual(undefined);
+		expect(comp.el.innerHTML).toEqual('');
 		comp.setVisible(true);
-		expect(comp.el.innerHTML).toEqual('<div p="inside" as="test/LazyTestIn"><b p="bt1" as="base/Button">ok</b></div>');
-		expect(comp.inside instanceof mi2.comp.get('test/LazyTestIn')).toBeTruthy();	
+		expect(comp.el.innerHTML).toEqual('<b p="bt1" as="base/Button">ok</b>');
+		expect(comp.bt1 instanceof mi2.getComp('base/Button')).toBeTruthy();	
 	});
 
 
 
 	describe('setTimeout-bind', function () {
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base'}});
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		var self = null;
 

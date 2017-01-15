@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/CheckBox', 'base/InputBase', '',
+mi2JS.addCompClass('base/CheckBox', 'base/InputBase', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

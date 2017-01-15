@@ -1,26 +1,29 @@
 (function(mi2){
-
-	if(!mi2.comp) mi2.comp = {def:{}, tpl:{}, later:{}, tags:{}, counterSeq:0};
+/** 
+@namespace mi2JS(comp)
+*/
+	// if the script is loaded again, it will reuse existing mi2.compData
+	var compData = mi2.compData = mi2.compData || {def:{}, tpl:{}, later:{}, tags:{}, counterSeq:0};
 
 	var mi2Proto = mi2.prototype;
 
 	mi2.addComp = function(parent, tag, parNode){
 		var node = mi2.addTag(parent, tag);
-		return mi2.comp.make(node, null, parent, parNode);
+		return mi2.makeComp(node, null, parent, parNode);
 	}
 
 	/* Construct and initialize component, as most code would ecpect the componet
 	 to be live after created */
-	mi2.comp.make = function(el, compName, parent, parNode){
-		var c = mi2.comp.construct(el, compName, parent, parNode);
-		c.__init();
+	mi2.makeComp = function(el, compName, parent, parNode){
+		var c = mi2.constructComp(el, compName, parent, parNode);
+		if(!c.lazyInit) c.__init();
 		return c;
 	};
 
 	/* Just construct the component without initialization. This is mostly used during 
 	automatic component template parsing (parseChildren) and initialization is done
 	 in the second run on all previously created components */
-	mi2.comp.construct = function(el, compName, parent, parNode){
+	mi2.constructComp = function(el, compName, parent, parNode){
 		try{
 
 			// sanitize, to allow === null check to work later
@@ -28,15 +31,15 @@
 
 			if( !compName ){
 				compName = el.getAttribute('as');
-				if(!compName) compName = this.tags[el.tagName];
+				if(!compName) compName = compData.tags[el.tagName];
 			}
 
 			el.setAttribute('as', compName);
-			el.compRefId = mi2.comp.counterSeq++;
+			el.compRefId = mi2.compData.counterSeq++;
 
-			var compDef = this.get(compName, el);
+			var compDef = this.getComp(compName, el);
 			var c = new compDef();
-			c.__template = this.getTpl(compName);
+			c.__template = this.getCompCompTpl(compName);
 			c.construct(el, parent);
 			c.setParent(parent);
 
@@ -51,19 +54,19 @@
 		}
 	};
 
-	mi2.comp.getTpl = function(name){ 
-		var tpl = this.tpl[name];
+	mi2.getCompCompTpl = function(name){ 
+		var tpl = compData.tpl[name];
 		if(!tpl && tpl !== '') throw new Error('Component template not found: '+name);
 		return tpl;
 	};
 
-	mi2.comp.check = function(name){ return this.def[name] || this.later[name]; }
+	mi2.checkComp = function(name){ return compData.def[name] || compData.later[name]; }
 	
-	mi2.comp.get = function(name, el){ 
-		var compDef = this.def[name];
-		if(!compDef && this.later[name]){
-			// initialize the parent component by calling the function in this.later
-			compDef = this.later[name]();
+	mi2.getComp = function(name, el){ 
+		var compDef = compData.def[name];
+		if(!compDef && compData.later[name]){
+			// initialize the parent component by calling the function in compData.later
+			compDef = compData.later[name]();
 		}
 		if(!compDef) {
 			var msg = 'Component not found: '+name;
@@ -73,25 +76,25 @@
 		return compDef; 
 	};
 
-	mi2.comp.add = function(name, supName, tpl, initializer){
-		if(this.def[name] || this.later[name]) console.error('Component with same name already defined '+name);
-		this.tags[name.replace('/','-').toUpperCase()] = name;
-		this.tags[name] = name; // cover cases where tag is upercase(HTL), or exact case (XHTML)
+	mi2.addCompClass = function(name, supName, tpl, initializer){
+		if(compData.def[name] || compData.later[name]) console.error('Component with same name already defined '+name);
+		compData.tags[name.replace('/','-').toUpperCase()] = name;
+		compData.tags[name] = name; // cover cases where tag is upercase(HTL), or exact case (XHTML)
 
-		// if(this.def[supName]){
+		// if(compData.def[supName]){
 			// this.initComp(name, supName, tpl, initializer);
 		// }else{
 			// collect first, initialize whn needed
 			// so if any mixing is extended changes may apply to the component
-			this.later[name]  = function(){ return mi2.comp.initComp(name, supName, tpl, initializer); };
+			compData.later[name]  = function(){ return mi2.initComp(name, supName, tpl, initializer); };
 		// }
 
 	};
 
-	mi2.comp.initComp = function(name, supName, tpl, initializer){
-		var comp = this.def[name];
+	mi2.initComp = function(name, supName, tpl, initializer){
+		var comp = compData.def[name];
 
-		var superClass = this.get(supName);
+		var superClass = this.getComp(supName);
 		if(!comp){
 			comp = eval('(function '+name.replace('/','_')+'(){})');
 			comp.superClass = superClass;
@@ -104,14 +107,14 @@
 		comp.compName = name;
 
 		if(tpl && tpl == 'extend:') 
-			tpl = this.getTpl(supName);
+			tpl = this.getCompCompTpl(supName);
 		else if(tpl && tpl.length > 7 && tpl.substring(0,7) == 'extend:') 
-			tpl = this.getTpl(tpl.substring(7));
+			tpl = this.getCompCompTpl(tpl.substring(7));
 
 		if(tpl || tpl === '') 
-			this.tpl[name] = tpl;
+			compData.tpl[name] = tpl;
 
-		return (this.def[name] = comp);
+		return (compData.def[name] = comp);
 	};
 
 }(mi2JS));

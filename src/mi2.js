@@ -6,7 +6,7 @@
 
 /** Very basic wrapper used for scripting(similar to JQuery and alike). Contains some useful
    methods to allow manipulation, and can be extended further if needed. For more advanced 
-   functionalities check {@link mi2JS(comp).Base} component and it's descendants in {@link mi2JS(comp)}.
+   functionalities check {@link mi2JS.comp..Base} component and it's descendants in {@link mi2JS.comp.}.
 @class NodeWrapper
 @memberof mi2JS(core)
 */

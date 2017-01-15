@@ -132,7 +132,7 @@ function writeIfNoFile(file, content){
 function makeJsFile(compName, compBase,genTemplate){
 	var template = genTemplate ? "<-TEMPLATE->":"";
 	return ""
-		+"\nmi2JS.comp.add('"+compName+"', '"+compBase+"', '"+template+"',\n\n"
+		+"\nmi2JS.addCompClass('"+compName+"', '"+compBase+"', '"+template+"',\n\n"
 		+"// component initializer function that defines constructor and adds methods to the prototype\n"
 		+"function(proto, superProto, comp, superComp){\n\n"
 		+"	var mi2 = mi2JS;\n\n"

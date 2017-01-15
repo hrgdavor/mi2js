@@ -1,4 +1,4 @@
-mi2JS.comp.add('base/Table', 'base/Loop', '',
+mi2JS.addCompClass('base/Table', 'base/Loop', '',
 
 /**
 

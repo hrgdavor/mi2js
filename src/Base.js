@@ -1,7 +1,4 @@
 (function(){
-/** 
-@namespace mi2JS(comp)
-*/
 
 /** 
 <p>Event object used for firing events inside components</p>
@@ -31,8 +28,8 @@ relationship. Also adding other functionalities needed for component based compo
 
 	function Base(){}
 
-	mi2.comp.def.Base = Base;
-	mi2.comp.tpl.Base = '';
+	mi2.compData.def.Base = Base;
+	mi2.compData.tpl.Base = '';
 	Base.compName = 'Base';
 	// extend NodeWrapper to get addClass and other html utility functions (html.js must be included in the bundle to have them)
 	mi2.extend(Base, mi2);

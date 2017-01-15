@@ -1,5 +1,5 @@
 
-mi2JS.comp.add('base/Form', 'base/Group', '',
+mi2JS.addCompClass('base/Form', 'base/Group', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){

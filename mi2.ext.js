@@ -1,6 +1,6 @@
 
 (function(mi2){
-	var Base = mi2.comp.get('Base');
+	var Base = mi2.getComp('Base');
 	var baseProto = Base.prototype;
 	var mi2Proto = mi2.prototype;
 
@@ -116,8 +116,8 @@
 		scripts.unshift('/js/'+this.constructor.compName+'.js');
 		this.reloadScripts(scripts, function(){
 			var compName = this.constructor.compName;
-			var comp = mi2.comp.get(compName);
-			comp.prototype.constructor.call(this,this.el,mi2.comp.tpl[compName],this.parent);
+			var comp = mi2.getComp(compName);
+			comp.prototype.constructor.call(this,this.el,mi2.compData.tpl[compName],this.parent);
 			if(callback) callback.call(this);
 		});
 	};

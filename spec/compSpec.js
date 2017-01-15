@@ -5,7 +5,7 @@ describe( 'comp.js Component utilities', function () {
 	it(' / mi2JS html functions inherited', function () {
 
 		var node = mi2.addTag(null, 'DIV');
-		var base = mi2.comp.make(node,'Base');
+		var base = mi2.makeComp(node,'Base');
 
 		expect(base.addClass).toBeDefined();
 
@@ -21,7 +21,7 @@ describe( 'comp.js Component utilities', function () {
 
 	it(' / add', function () {
 
-		var baseComp = mi2.comp.get('Base');
+		var baseComp = mi2.getComp('Base');
 
 		expect(baseComp.compName).toEqual('Base');
 
@@ -37,20 +37,20 @@ describe( 'comp.js Component utilities', function () {
 		comp.addClass('test2');
 
 		expect(comp instanceof mi2).toBeTruthy();
-		expect(comp instanceof mi2.comp.get('Base')).toBeTruthy();
-		expect(comp instanceof mi2.comp.get('base/Loop')).toBeTruthy();
+		expect(comp instanceof mi2.getComp('Base')).toBeTruthy();
+		expect(comp instanceof mi2.getComp('base/Loop')).toBeTruthy();
 		expect(comp.el.className).toEqual('test2');
 
 	});
 
 	it(' / make2', function () {
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base'}});
-		var comp = mi2.comp.make(node);
+		var comp = mi2.makeComp(node);
 
 		comp.addClass('test');
 
 		expect(comp instanceof mi2).toBeTruthy();
-		expect(comp instanceof mi2.comp.get('Base')).toBeTruthy();
+		expect(comp instanceof mi2.getComp('Base')).toBeTruthy();
 		expect(comp.el).toEqual(node);
 		expect(comp.el.className).toEqual('test');
 
@@ -62,8 +62,8 @@ describe( 'comp.js Component utilities', function () {
 		comp.btOk.setVisible(false);
 
 		expect(comp instanceof mi2).toBeTruthy();
-		expect(comp instanceof mi2.comp.get('Base')).toBeTruthy();
-		expect(comp.btOk instanceof mi2.comp.get('base/Button')).toBeTruthy();
+		expect(comp instanceof mi2.getComp('Base')).toBeTruthy();
+		expect(comp.btOk instanceof mi2.getComp('base/Button')).toBeTruthy();
 
 	});
 

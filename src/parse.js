@@ -1,24 +1,24 @@
 (function(){
 
-var $ = mi2JS;
-
+var mi2 = mi2JS;
+var compData = mi2.compData;
 /* */
-$.parse = function(elem, obj){
-	if(!elem) $.nn({elem:elem});
+mi2.parse = function(elem, obj){
+	if(!elem) mi2.nn({elem:elem});
 
-	if(typeof(elem) == "string") elem = $.addHtml(elem);
+	if(typeof(elem) == "string") elem = mi2.addHtml(elem);
 
 	if(!obj){
-		if($.comp){
-			var compName = elem.getAttribute('as') || $.comp.tags[elem.tagName];
+		if(compData){
+			var compName = elem.getAttribute('as') || compData.tags[elem.tagName];
 			if(compName)
-				obj = $.comp.make(elem, compName, obj);
+				obj = mi2.makeComp(elem, compName, obj);
 			else
-				obj = new $(elem);
+				obj = new mi2(elem);
 		}
 	}  
 
-//	$.parseChildren(elem, obj);
+//	mi2.parseChildren(elem, obj);
 
 	return obj;
 };
@@ -33,7 +33,7 @@ img.      |  obj.img[1]
 bt.edit   |  obj.bt.edit
 bt.save   |  obj.bt.save
 */
-$.setRef = function(obj, comp, prop){
+mi2.setRef = function(obj, comp, prop){
 	if(!prop) return;
 
 	var idx = -1;
@@ -46,7 +46,7 @@ $.setRef = function(obj, comp, prop){
 				//example: p="bt.edit"
 				if(!obj[group]){
 					obj[group] = {};
-					obj['$'+group] = new $.NWGroup(obj[group]);
+					obj['$'+group] = new mi2.NWGroup(obj[group]);
 				} 
 				comp.__propName  = prop;
                 if(obj[group][prop]) logPropTaken(group+'.'+prop, obj, obj[group][prop]);
@@ -55,7 +55,7 @@ $.setRef = function(obj, comp, prop){
                 //example: p="bt."
 				if(!obj[group]){
 					obj[group] = [];
-					obj['$'+group] = new $.NWGroup(obj[group]);
+					obj['$'+group] = new mi2.NWGroup(obj[group]);
 				} 
                 comp.__propName = obj[group].length;
 				obj[group].push(comp);
@@ -79,24 +79,24 @@ function logPropTaken(prop, obj, by){
     (for components made correctly html element ref will be moved to .node property under that object)
   - assign will not go into recursion here, so component can choose the initialization itself
 */
- $.parseChildren = function(elem, obj){
+ mi2.parseChildren = function(elem, obj){
 	var el = elem.firstElementChild,next,templateAttr;
 	while(el){
 		next = el.nextElementSibling;
 		templateAttr = el.getAttribute('template');
 		if(el.getAttribute && el.tagName != 'TEMPLATE' && (templateAttr === null || templateAttr === 'inline') ){
 			var comp = null, compName;
-			if($.comp){
-				compName = el.getAttribute('as') || $.comp.tags[el.tagName];
+			if(compData){
+				compName = el.getAttribute('as') || compData.tags[el.tagName];
 				if(compName && templateAttr !== ''){
-					comp = $.comp.construct(el, compName, obj);
+					comp = mi2.constructComp(el, compName, obj);
 				}
 			}
 
 			var prop = el.getAttribute('p');
 			if(prop){
-				if(!comp) comp = new $(el);
-				$.setRef(obj, comp, prop);
+				if(!comp) comp = new mi2(el);
+				mi2.setRef(obj, comp, prop);
 				// if property id "group." the part after dot is based on index, 
 				// we put the index into html for consistency.
 				// for example "group.3" for fourth time such element is found
@@ -107,7 +107,7 @@ function logPropTaken(prop, obj, by){
 
 			// recursion is stopped for components with inline template, as the component will decide how to initialize
 			if(templateAttr === null)
-				$.parseChildren(el, obj);
+				mi2.parseChildren(el, obj);
 		}
 
 
