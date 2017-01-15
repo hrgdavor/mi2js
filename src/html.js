@@ -153,7 +153,7 @@
 
 	@instance
 	@method attrNum
-	@memberof mi2JS(core).NodeWrapper
+@memberof mi2JS(core).NodeWrapper
 	@param {string} name attribute name
 	@param {object} def default value if attribute is not present
 	*/
@@ -165,7 +165,7 @@
 
 		@instance
 		@method attrBoolean
-		@memberof mi2JS(core).NodeWrapper
+@memberof mi2JS(core).NodeWrapper
 		@param {string} name attribute name
 		@param {object} def default value if attribute is not present
 
@@ -198,6 +198,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 	/** Add class to the element if condition is true, and remove if false. 
+
+@memberof mi2JS(core).NodeWrapper
 		@parameter toAdd - className to add/remove 
 		@parameter condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
 	*/
@@ -208,35 +210,52 @@ value 1,true - <input required="1"> <input required="true">
 			this.el.classList.remove(toAdd);
 	};
 
-	/*** Same as classIf but reversed condition. */
+	/*** Same as classIf but reversed condition. 
+@memberof mi2JS(core).NodeWrapper
+	*/
 	mi2Proto.classUnless = function(toAdd, condition){ 
 		this.classIf(toAdd, !condition); 
 	};
 
-	/** Add a css class to the element. Common function to initiate change defined in css. */
+	/** Add a css class to the element. Common function to initiate change defined in css. 
+@memberof mi2JS(core).NodeWrapper
+	*/
 	mi2Proto.addClass = function(toAdd) {
 		this.el.classList.add(toAdd);
 	};
 
-	/** Check if one of space separated values is in the element's className */
+	/** Check if one of space separated values is in the element's className 
+@memberof mi2JS(core).NodeWrapper
+	*/
 	mi2Proto.hasClass = function(name) {
 		return this.el.classList.contains(name);
 	};
 
-	/** Remove a css class from the element (leaving others intact) */
+	/** Remove a css class from the element (leaving others intact) 
+@memberof mi2JS(core).NodeWrapper
+	*/
 	mi2Proto.removeClass = function(toRemove) {
 		if(this.el.classList.length)
 			return this.el.classList.remove(toRemove);
 	};
 
+/*
+@memberof mi2JS(core).NodeWrapper
+*/
 	mi2Proto.setHtml = function(html){
 		if(this.el.innerHTML !== html) this.el.innerHTML = html;
 	};
 
+/*
+@memberof mi2JS(core).NodeWrapper
+*/
 	mi2Proto.setText = function(text){
 		if(this.el.textContent !== text) this.el.textContent = text;	
 	};
 
+/*
+@memberof mi2JS(core).NodeWrapper
+*/
 	mi2Proto.getText = function(){
 		return this.el.textContent;	
 	};
