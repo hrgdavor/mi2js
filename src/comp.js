@@ -1,19 +1,28 @@
 (function(mi2){
-/** 
+/**
 @namespace mi2JS(comp)
 */
+
 	// if the script is loaded again, it will reuse existing mi2.compData
 	var compData = mi2.compData = mi2.compData || {def:{}, tpl:{}, later:{}, tags:{}, counterSeq:0};
 
 	var mi2Proto = mi2.prototype;
 
+/** 
+@namespace mi2JS(comp)
+
+@function makeComp
+@memberof mi2JS(comp)
+*/
 	mi2.addComp = function(parent, tag, parNode){
 		var node = mi2.addTag(parent, tag);
 		return mi2.makeComp(node, null, parent, parNode);
 	}
 
-/* Construct and initialize component, as most code would ecpect the componet
+/**
+ Construct and initialize component, as most code would ecpect the componet
 to be live after created 
+
 @function makeComp
 @memberof mi2JS(comp)
 
@@ -24,7 +33,7 @@ to be live after created
 		return c;
 	};
 
-/* 
+/**
 Just construct the component without initialization. This is mostly used during 
 automatic component template parsing (parseChildren) and initialization is done
  in the second run on all previously created components 
@@ -62,7 +71,7 @@ automatic component template parsing (parseChildren) and initialization is done
 			throw e;
 		}
 	};
-/*
+/**
 @function getCompCompTpl
 @memberof mi2JS(comp)
 */
@@ -72,13 +81,13 @@ automatic component template parsing (parseChildren) and initialization is done
 		return tpl;
 	};
 
-/*
+/**
 @function checkComp
 @memberof mi2JS(comp)
 */
 	mi2.checkComp = function(name){ return compData.def[name] || compData.later[name]; }
 	
-/*
+/**
 @function getComp
 @memberof mi2JS(comp)
 */
@@ -96,7 +105,7 @@ automatic component template parsing (parseChildren) and initialization is done
 		return compDef; 
 	};
 
-/*
+/**
 @function addCompClass
 @memberof mi2JS(comp)
 */
@@ -115,7 +124,7 @@ automatic component template parsing (parseChildren) and initialization is done
 
 	};
 
-/*
+/**
 @function initComp
 @memberof mi2JS(comp)
 */
