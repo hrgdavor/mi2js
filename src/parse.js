@@ -35,6 +35,7 @@ img.      |  obj.img[1]
 bt.edit   |  obj.bt.edit
 bt.save   |  obj.bt.save
 
+@function setRef
 @memberof mi2JS(core)
 */
 mi2.setRef = function(obj, comp, prop){

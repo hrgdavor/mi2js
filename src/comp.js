@@ -12,17 +12,26 @@
 		return mi2.makeComp(node, null, parent, parNode);
 	}
 
-	/* Construct and initialize component, as most code would ecpect the componet
-	 to be live after created */
+/* Construct and initialize component, as most code would ecpect the componet
+to be live after created 
+@function makeComp
+@memberof mi2JS(comp)
+
+*/
 	mi2.makeComp = function(el, compName, parent, parNode){
 		var c = mi2.constructComp(el, compName, parent, parNode);
 		if(!c.lazyInit) c.__init();
 		return c;
 	};
 
-	/* Just construct the component without initialization. This is mostly used during 
-	automatic component template parsing (parseChildren) and initialization is done
-	 in the second run on all previously created components */
+/* 
+Just construct the component without initialization. This is mostly used during 
+automatic component template parsing (parseChildren) and initialization is done
+ in the second run on all previously created components 
+
+@function constructComp
+@memberof mi2JS(comp)
+ */
 	mi2.constructComp = function(el, compName, parent, parNode){
 		try{
 
@@ -53,15 +62,26 @@
 			throw e;
 		}
 	};
-
+/*
+@function getCompCompTpl
+@memberof mi2JS(comp)
+*/
 	mi2.getCompCompTpl = function(name){ 
 		var tpl = compData.tpl[name];
 		if(!tpl && tpl !== '') throw new Error('Component template not found: '+name);
 		return tpl;
 	};
 
+/*
+@function checkComp
+@memberof mi2JS(comp)
+*/
 	mi2.checkComp = function(name){ return compData.def[name] || compData.later[name]; }
 	
+/*
+@function getComp
+@memberof mi2JS(comp)
+*/
 	mi2.getComp = function(name, el){ 
 		var compDef = compData.def[name];
 		if(!compDef && compData.later[name]){
@@ -76,6 +96,10 @@
 		return compDef; 
 	};
 
+/*
+@function addCompClass
+@memberof mi2JS(comp)
+*/
 	mi2.addCompClass = function(name, supName, tpl, initializer){
 		if(compData.def[name] || compData.later[name]) console.error('Component with same name already defined '+name);
 		compData.tags[name.replace('/','-').toUpperCase()] = name;
@@ -91,6 +115,10 @@
 
 	};
 
+/*
+@function initComp
+@memberof mi2JS(comp)
+*/
 	mi2.initComp = function(name, supName, tpl, initializer){
 		var comp = compData.def[name];
 
