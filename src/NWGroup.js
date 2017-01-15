@@ -1,7 +1,10 @@
 (function(){
 
 	var mi2 = mi2JS;
-
+/**
+@class NWGroup
+@memberof mi2JS(core)
+*/
 	var DEF = mi2.NWGroup = function NWGroup(group){
 
 		// better we fix the case when called without "new" operator than confusing developer with err later
@@ -28,7 +31,13 @@
 		return obj;
 	}
 
-	/** Call func on all items */
+/** 
+Call func on all items 
+
+@method callFunc
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.callFunc = function(funcName, params){
 		var func;
 		for(var p in this.items){
@@ -37,6 +46,12 @@
 		}
 	};
 
+/** 
+
+@method item
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.item = function(code){
 		if(code && code.tagName){
 			var ret;
@@ -48,7 +63,13 @@
 		return this.items[code];
 	};
 
-	/* call function on each element */
+/** 
+call function on each element 
+
+@method forEach
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.forEach = function(func, params){
 		var items = this.items;
 		for(var p in items){
@@ -56,6 +77,12 @@
 		}
 	}
 
+/** 
+
+@method firstResult
+@instance
+@memberof mi2JS(core).NWGroup
+*/
     proto.firstResult = function(func, params){
         var items = this.items;
         for(var p in items){
@@ -64,12 +91,24 @@
         }
     }
 
+/** 
+
+@method forEachGet
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.forEachGet = function(func, params){
 		return this.items instanceof Array ? 
 			this.forEachGetArray(func, params) : this.forEachGetObject(func, params);
 	};
 
-	/* call function on each element, but collect returned values */
+/** 
+call function on each element, but collect returned values as array
+
+@method forEachGetArray
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.forEachGetArray = function(func, params){
 		var items = this.items;
 		var ret = [], fromFunc;
@@ -80,7 +119,13 @@
 		return ret;
 	}
 
-	/* call function on each element, but collect returned values */
+/** 
+call function on each element, but collect returned values as object
+
+@method forEachGetObject
+@instance
+@memberof mi2JS(core).NWGroup
+*/
 	proto.forEachGetObject = function(func, params){
 		var items = this.items;
 		var ret = {}, fromFunc;
