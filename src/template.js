@@ -61,6 +61,9 @@
 	   @parameter el - element where template value will be inserted
 	   @parameter part - part of element(text node or attribute)
 	   @parameter comp - component instance
+
+		@memberof mi2JS(core)
+
 	*/
 	mi2.parseTemplate = function(str, el, part, comp){
 		var arr = [];
@@ -77,6 +80,9 @@
 		return genPrinter(arr, el, part, comp);
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.parseExpander = function(exp){
 		var tpl;
 		for(var p in exp){
@@ -88,6 +94,9 @@
 		return exp;
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.expandData = function(data, exp, copy){
 		var ret = copy ? mi2.update({},data) : {};
 
@@ -98,6 +107,9 @@
 		return ret;
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.expandArray = function(arr, exp, copy){
 		var ret = [];
 		
@@ -130,6 +142,9 @@
 		}
 	}
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.loadTemplate = function(el, comp){
 		if(el instanceof mi2) el = el.el;
 		var list = [];
@@ -138,6 +153,9 @@
 		return list;
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.loadTemplateRec = function(el, list, comp){
 		list = list || [];
 		var attribs = el.attributes;
