@@ -78,12 +78,14 @@ function logPropTaken(prop, obj, by){
 }
 
 /**
+@function parseChildren
+@memberof mi2JS(core)
+
  if as=".." attribute is present, component will be instantiated with that node as root 
   - reference wil now point to component object
     (for components made correctly html element ref will be moved to .node property under that object)
   - assign will not go into recursion here, so component can choose the initialization itself
 
-@memberof mi2JS(core)
 */
  mi2.parseChildren = function(elem, obj){
 	var el = elem.firstElementChild,next,templateAttr;
