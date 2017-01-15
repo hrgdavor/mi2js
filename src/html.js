@@ -187,7 +187,14 @@ value 1,true - <input required="1"> <input required="true">
 		return false;
 	};
 
-	/* no strong need to use dataset, and attributes work on more browsers */
+/* 
+
+@function data
+@instance
+@memberof mi2JS(core).NodeWrapper
+
+no real need to use dataset, and attributes work on more browsers 
+*/
 	mi2Proto.data = function(name, val){
 		name = 'data-'+name;
 		if(arguments.length > 1){
@@ -199,6 +206,8 @@ value 1,true - <input required="1"> <input required="true">
 
 	/** Add class to the element if condition is true, and remove if false. 
 
+@function classIf
+@instance
 @memberof mi2JS(core).NodeWrapper
 		@parameter toAdd - className to add/remove 
 		@parameter condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
@@ -211,6 +220,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 	/*** Same as classIf but reversed condition. 
+@function classUnless
+@instance
 @memberof mi2JS(core).NodeWrapper
 	*/
 	mi2Proto.classUnless = function(toAdd, condition){ 
@@ -218,6 +229,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 	/** Add a css class to the element. Common function to initiate change defined in css. 
+@function addClass
+@instance
 @memberof mi2JS(core).NodeWrapper
 	*/
 	mi2Proto.addClass = function(toAdd) {
@@ -225,6 +238,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 	/** Check if one of space separated values is in the element's className 
+@function hasClass
+@instance
 @memberof mi2JS(core).NodeWrapper
 	*/
 	mi2Proto.hasClass = function(name) {
@@ -232,6 +247,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 	/** Remove a css class from the element (leaving others intact) 
+@function removeClass
+@instance
 @memberof mi2JS(core).NodeWrapper
 	*/
 	mi2Proto.removeClass = function(toRemove) {
@@ -240,6 +257,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 /*
+@function setHtml
+@instance
 @memberof mi2JS(core).NodeWrapper
 */
 	mi2Proto.setHtml = function(html){
@@ -247,6 +266,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 /*
+@function setText
+@instance
 @memberof mi2JS(core).NodeWrapper
 */
 	mi2Proto.setText = function(text){
@@ -254,6 +275,8 @@ value 1,true - <input required="1"> <input required="true">
 	};
 
 /*
+@function getText
+@instance
 @memberof mi2JS(core).NodeWrapper
 */
 	mi2Proto.getText = function(){
