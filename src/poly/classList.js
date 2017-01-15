@@ -1,11 +1,16 @@
 (function(mi2){
+/**
+Polyfill for browsers that do not have classList support
+
+@namespace polyClassList
+*/
 
 	var mi2Proto = mi2.prototype; // allow minimizer to shorten prototype assignments
 
-	/** Add class to the element if condition is true, and remove if false. 
-		@parameter toAdd - className to add/remove 
-		@parameter condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
-	*/
+/**
+@function classIf
+@memberof polyClassList
+*/
 	mi2Proto.classIf = function(toAdd, condition){
 		if(condition)
 			this.addClass(toAdd);
@@ -13,12 +18,18 @@
 			this.removeClass(toAdd);
 	};
 
-	/*** Same as classIf but reversed condition. */
+/**
+@function classUnless
+@memberof polyClassList
+*/
 	mi2Proto.classUnless = function(toAdd, condition){ 
 		this.classIf(toAdd, !condition); 
 	};
 
-	/** Add a css class to the element. Common function to initiate change defined in css. */
+/**
+@function addClass
+@memberof polyClassList
+*/
 	mi2Proto.addClass = function(toAdd) {
 		if( !this.el.className ) 
 			this.el.className = toAdd;
@@ -26,7 +37,10 @@
 			this.el.className += ' ' + toAdd;
 	};
 
-	/** Check if one of space separated values is in the element's className */
+/**
+@function hasClass
+@memberof polyClassList
+*/
 	mi2Proto.hasClass = function(name) {
 			if(this.el.className == name) return true;
 			var a = this.el.className.split(' ');
@@ -34,7 +48,10 @@
 			return false;
 	};
 
-	/** Remove a css class from the element (leaving others intact) */
+/**
+@function removeClass
+@memberof polyClassList
+*/
 	mi2Proto.removeClass = function(toRemove) {
 		var newC = '';
 		var a = this.el.className.split(' ');
