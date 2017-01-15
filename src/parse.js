@@ -2,7 +2,9 @@
 
 var mi2 = mi2JS;
 var compData = mi2.compData;
-/* */
+/* 
+@memberof mi2JS(core)
+*/
 mi2.parse = function(elem, obj){
 	if(!elem) mi2.nn({elem:elem});
 
@@ -32,6 +34,8 @@ img.      |  obj.img[0]
 img.      |  obj.img[1]
 bt.edit   |  obj.bt.edit
 bt.save   |  obj.bt.save
+
+@memberof mi2JS(core)
 */
 mi2.setRef = function(obj, comp, prop){
 	if(!prop) return;
@@ -78,6 +82,8 @@ function logPropTaken(prop, obj, by){
   - reference wil now point to component object
     (for components made correctly html element ref will be moved to .node property under that object)
   - assign will not go into recursion here, so component can choose the initialization itself
+
+@memberof mi2JS(core)
 */
  mi2.parseChildren = function(elem, obj){
 	var el = elem.firstElementChild,next,templateAttr;

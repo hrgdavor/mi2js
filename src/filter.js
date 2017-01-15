@@ -1,7 +1,9 @@
 (function(mi2){
 
 	mi2.filters = {};
-
+/*
+@memberof mi2JS(core)
+*/
 	mi2.addFilter = function(fName, fc, params){
 		fc.paramCount = params || 0;
 		mi2.filters[fName] = fc;
@@ -16,6 +18,9 @@
 		return f;
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.parseFilter = function(str, resolve){
 		if(str === null || str === '') return null;
 		var filters = str.split('|');
@@ -34,10 +39,16 @@
 		return filter;
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.filterNext = function(value, args, skip){
 		return mi2.filter(value, Array.prototype.slice.call(args,skip+2), args[1], args[2]);
 	};
 
+/*
+@memberof mi2JS(core)
+*/
 	mi2.multiFilter = function(filters){
 		for(var i=0; i<filters.length; i++){
 			filters[i] = mi2.parseFilter(filters[i]);
@@ -50,7 +61,10 @@
 		}
 	}
 
-	/** filters: null, undefined, '', []  will return the original value without filtering */
+/** filters: null, undefined, '', []  will return the original value without filtering 
+
+@memberof mi2JS(core)
+*/
 	mi2.filter = function(value, fName, propName, data){
 		if(!fName) return value;
 

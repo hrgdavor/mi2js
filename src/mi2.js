@@ -10,19 +10,19 @@
 @class NodeWrapper
 @memberof mi2JS(core)
 */
-var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
-	if( this instanceof $){ // called as "new mi2JS(node);"
-		this.el = node instanceof String ? $.find(node, root) : node;
+var mi2 = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
+	if( this instanceof mi2){ // called as "new mi2JS(node);"
+		this.el = node instanceof String ? mi2.find(node, root) : node;
 		if(this.el === null) throw new Error('null node or not found '+node);			
 	}else 
-		return new $(node, root);
+		return new mi2(node, root);
 };
 
 /**  &#47;^[A-Za-z]+[\w-_]*&#47; - defines allowed tag names when sent as parameter to find/findAll
 @constant tagNameReg
 @memberof mi2JS(core)
 */
-$.tagNameReg = /^[A-Za-z]+[\w-_]*/;
+mi2.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 
 /** return first node matching the search criteria
 @function find
@@ -30,15 +30,15 @@ $.tagNameReg = /^[A-Za-z]+[\w-_]*/;
 @param {String} search Search pattern
 @param {Element} root root node
 */
-$.find = function(search, root){
-	// $.nn('find',{search:search});//ASSERT
+mi2.find = function(search, root){
+	// mi2.nn('find',{search:search});//ASSERT
 
 	root = root || document.body;
-	if(root instanceof $) root = root.el;
+	if(root instanceof mi2) root = root.el;
 
 	if(search.charAt(0) == '#') return root.getElementById(search.substring(1));
 
-	if($.tagNameReg.test(search)) return root.getElementsByTagName(search)[0];
+	if(mi2.tagNameReg.test(search)) return root.getElementsByTagName(search)[0];
 
 	return root.querySelector(search); 
 }
@@ -49,13 +49,13 @@ $.find = function(search, root){
 @param {String} search Search pattern
 @param {Element} root root node
 */
-$.findAll = function(search, root){
-	// $.nn('find',{search:search});//ASSERT
+mi2.findAll = function(search, root){
+	// mi2.nn('find',{search:search});//ASSERT
 
 	root = root || document.body;
-	if(root instanceof $) root = root.el;
+	if(root instanceof mi2) root = root.el;
 
-	if($.tagNameReg.test(search)) return root.getElementsByTagName(search);
+	if(mi2.tagNameReg.test(search)) return root.getElementsByTagName(search);
 
 	return root.querySelectorAll(search); 
 }
@@ -66,7 +66,7 @@ $.findAll = function(search, root){
 @param {Object} object scope for the function
 @param {Element} func function
 */
-$.bind = function(object, func){
+mi2.bind = function(object, func){
 	// dynamic
 	if(typeof func == 'string')
 		return function() { object[func].apply(object, arguments); };
@@ -95,7 +95,7 @@ Taken over from Oliver Caldwell's blog:  Prototypical inheritance done right<br>
 @return {object} The prototype of the parent.
   
  */
-$.extend = function(destination, source) {
+mi2.extend = function(destination, source) {
 	destination.prototype = Object.create(source.prototype);
 	destination.prototype.constructor = destination;
 	destination.superClass = source.prototype;
@@ -112,7 +112,7 @@ Takes prototype of the source(mixin) class and copies properties to prototype of
 @param {class} source - The mixin class
 @param {boolean} overwrite - should the existing properties be overwritten
 */
-$.mixin = function(dest, source, overwrite) {
+mi2.mixin = function(dest, source, overwrite) {
 	var proto = dest.prototype, ext = source.prototype;
 	for(var p in ext) if(!proto[p])	proto[p] = ext[p];	
 };
@@ -126,7 +126,7 @@ of the other object (checked by hasOwnProperty).
 @param {Object} destination - The object that is being updated
 @param {Object} update - Object from which the properties are copied
 */
-$.update = function(dest, update){
+mi2.update = function(dest, update){
 	if(dest && update ){
 		for (var prop in update)
 			if(update.hasOwnProperty(prop)) dest[prop] = update[prop];
@@ -139,7 +139,7 @@ $.update = function(dest, update){
 @memberof mi2JS(core)
 @param {Object} object
 */
-$.isArray = Array.isArray ||  function (xs) {
+mi2.isArray = Array.isArray ||  function (xs) {
     return {}.toString.call(xs) === '[object Array]';
 };
 
@@ -150,8 +150,8 @@ $.isArray = Array.isArray ||  function (xs) {
 
 @param {Object} obj - objec to copy
 */
-$.copy = function(obj){
-    if ($.isArray(obj)) {
+mi2.copy = function(obj){
+    if (mi2.isArray(obj)) {
         var len = obj.length;
         copy = Array(len);
         for (var i = 0; i < len; i++) {
@@ -159,7 +159,7 @@ $.copy = function(obj){
         }
         return copy;
     }
-	return $.update({},obj);
+	return mi2.update({},obj);
 };
 
 /** Parse number using parseFloat, but return zero if not a number.
@@ -169,7 +169,7 @@ $.copy = function(obj){
 
 @param obj - string or anything else (if parseFloat fails, zero is returned)
 */
-$.num = function(str){
+mi2.num = function(str){
 	var n = parseFloat(str);
 	if(isNaN(n)) return 0;
 	return n;
@@ -190,7 +190,7 @@ $.num = function(str){
 
 @param obj
 */
-$.isEmpty = function(obj){
+mi2.isEmpty = function(obj){
 	if(obj === void 0 || obj === null || obj === 0) return true;
 	if(obj instanceof Array || typeof obj == 'string') return obj.length == 0;
 	if(typeof obj == 'object'){
@@ -212,13 +212,13 @@ addEventListener or attachEvent.
 @param {Object} self callback function scope ( bind will be performed )
 @param {boolean|object} options options parameter for addEventListener
 */
-$.listen = function ( obj, evt, fnc, self, options ){
+mi2.listen = function ( obj, evt, fnc, self, options ){
 
-//	$.nn('$.listen', {obj:obj, evt:evt, fnc:fnc} );
+//	mi2.nn('mi2.listen', {obj:obj, evt:evt, fnc:fnc} );
 
 	var listener = function(evt){
 		if(typeof(fnc) == 'string') fnc = self[fnc];
-		fnc.call(self || obj, $.fixEvent(evt));
+		fnc.call(self || obj, mi2.fixEvent(evt));
 	};
 
 	if (obj.addEventListener){
@@ -236,7 +236,7 @@ This is likely more extensive in other libraries. Override it if you need more.
 @memberof mi2JS(core)
 @param {Event} evt Browser  event
 */
-$.fixEvent = function(evt){
+mi2.fixEvent = function(evt){
 	evt = evt || window.event;
 	evt.stop = function() {
 		if(this.preventDefault){ 
