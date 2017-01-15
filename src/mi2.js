@@ -10,11 +10,6 @@
 @class NodeWrapper
 @memberof mi2JS(core)
 */
-
-/**
-@name mi2JS
-@memberof mi2JS(core)
-*/
 var $ = window.mi2JS = window.mi2JS || function NodeWrapper(node, root){
 	if( this instanceof $){ // called as "new mi2JS(node);"
 		this.el = node instanceof String ? $.find(node, root) : node;
