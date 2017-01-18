@@ -1,4 +1,11 @@
 (function(mi2){
+/**
+Methods needed to suport templating inside {@link mi2JS(comp) components}. It is important to know that
+template strings are parsed from DOM nodes from the <b>text and attribute values only</b>.<br>
+
+@namespace mi2JS(template)
+*/
+
 	mi2.templateExpand = {};
 
 	mi2.templateExpand.filter = function(prop, el, part, comp){
@@ -47,7 +54,7 @@
 		}
 	}
 
-/** Fix value for string concatenation.
+/* Fix value for string concatenation.
 @returns empty string instead of null or undefined 
 */
 	function toEmpty(val){
@@ -59,12 +66,12 @@
 
 /**
 @function parseTemplate
-@memberof mi2JS(core)
+@memberof mi2JS(template)
 
-@parameter str - template string that defines the functionality
-@parameter el - element where template value will be inserted
-@parameter part - part of element(text node or attribute)
-@parameter comp - component instance
+@param str - template string that defines the functionality
+@param el - element where template value will be inserted
+@param part - part of element(text node or attribute)
+@param comp - component instance
 
 
 */
@@ -83,8 +90,9 @@
 		return genPrinter(arr, el, part, comp);
 	};
 
-/*
-@memberof mi2JS(core)
+/**
+@function parseExpander
+@memberof mi2JS(template)
 */
 	mi2.parseExpander = function(exp){
 		var tpl;
@@ -97,8 +105,9 @@
 		return exp;
 	};
 
-/*
-@memberof mi2JS(core)
+/**
+@function expandData
+@memberof mi2JS(template)
 */
 	mi2.expandData = function(data, exp, copy){
 		var ret = copy ? mi2.update({},data) : {};
@@ -110,8 +119,9 @@
 		return ret;
 	};
 
-/*
-@memberof mi2JS(core)
+/**
+@function expandArray
+@memberof mi2JS(template)
 */
 	mi2.expandArray = function(arr, exp, copy){
 		var ret = [];
@@ -145,8 +155,9 @@
 		}
 	}
 
-/*
-@memberof mi2JS(core)
+/**
+@function loadTemplate
+@memberof mi2JS(template)
 */
 	mi2.loadTemplate = function(el, comp){
 		if(el instanceof mi2) el = el.el;
@@ -156,8 +167,9 @@
 		return list;
 	};
 
-/*
-@memberof mi2JS(core)
+/**
+@function loadTemplateRec
+@memberof mi2JS(template)
 */
 	mi2.loadTemplateRec = function(el, list, comp){
 		list = list || [];

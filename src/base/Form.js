@@ -8,9 +8,6 @@ function(proto, superProto, comp, superComp){
 
 	mi2.mixin(comp,mi2.InputGroup);
 
-	/**
-		@param event - name of the event to fire on parent (default: submit)
-	*/
 	proto.construct = function(el, parent){
 		superProto.construct.call(this, el, parent);
 		if(this.getCompName() == 'base/Form'){

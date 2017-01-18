@@ -209,8 +209,8 @@ no real need to use dataset, and attributes work on more browsers
 @function classIf
 @instance
 @memberof mi2JS(core).NodeWrapper
-		@parameter toAdd - className to add/remove 
-		@parameter condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
+		@param toAdd - className to add/remove 
+		@param condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
 	*/
 	mi2Proto.classIf = function(toAdd, condition){
 		if(condition)

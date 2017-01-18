@@ -1,6 +1,7 @@
 mi2JS.addCompClass('base/Loop', 'base/Group', '',
 
-/**
+/**  <b>Extends:</b> {@link mi2JS(comp).base/Group}<br>
+
 if component extends Loop and has an element bound to itemsArea it will be used instead
 of the component root.
 
@@ -10,8 +11,10 @@ example with inline template:
 example in separate template file:
 	<div class="title">title</div>
 	<div p="itemsArea"></div>
-*/
 
+@class base/Loop
+@memberof mi2JS(comp)
+*/
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 	
@@ -42,6 +45,12 @@ function(proto, superProto, comp, superComp){
 		this.items = [];
 		this.count = 0;
 	};
+
+/**
+@function findItemTpl
+@instance
+@memberof mi2JS(comp).base/Loop
+*/
 
 	proto.findItemTpl = function(el){
 		var ch = el.firstElementChild;
