@@ -24,7 +24,7 @@
 		@param {function} errback - callback if communication error occurs
 		@param {boolean} [async=false] - async / sync
 		@param {int} timeout - timeout in ms
-		@param {object} - The value of this provided for the call to callback and errback, check Function.prototype.call docs online
+		@param {object} self - The value of this provided for the call to callback and errback, check Function.prototype.call docs online
 
 		@memberof mi2JS(core)
 	*/
