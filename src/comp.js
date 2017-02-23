@@ -15,7 +15,7 @@
 @memberof mi2JS(comp)
 */
 	mi2.addComp = function(parent, tag, parNode){
-		var node = mi2.addTag(parent, tag);
+		var node = mi2.addTag(parNode || parent, tag);
 		return mi2.makeComp(node, null, parent, parNode);
 	}
 
@@ -41,7 +41,7 @@ automatic component template parsing (parseChildren) and initialization is done
 @function constructComp
 @memberof mi2JS(comp)
  */
-	mi2.constructComp = function(el, compName, parent, parNode){
+	mi2.constructComp = function(el, compName, parent){
 		try{
 
 			// sanitize, to allow === null check to work later
