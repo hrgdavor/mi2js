@@ -1,5 +1,5 @@
 describe( 'mi2.js Base library', function () { 
-	var $ = mi2JS;
+	var $ = mi2= mi2JS;
 
 	describe( 'extend', function () { 
 
@@ -76,6 +76,29 @@ describe( 'mi2.js Base library', function () {
 		expect(node.getElementsByTagName('A').length).toEqual(1);
 		expect(a).not.toBeNull();
 		expect(a.tagName).toEqual('A');
+
+	});
+
+	it(' / copy & update', function () {
+		expect($.copy([1,2])).toEqual([1,2]);
+		expect($.copy([1,2],void 0)).toEqual([1,2]);
+		expect($.copy([1,2],[3])).toEqual([1,2,3]);
+
+		var arr = [1,2];
+		$.update(arr,[3]);
+		expect(arr).toEqual([1,2,3]);
+		
+		var orig = {a:1,b:2};
+		var copy = mi2.copy(orig);
+		copy.a=2;
+		expect(orig).toEqual({a:1,b:2});
+		expect(copy).toEqual({a:2,b:2});
+		
+		expect(mi2.copy(orig,{c:3},{d:4})).toEqual({a:1,b:2,c:3,d:4});
+
+		mi2.update(copy,{c:2});
+		expect(copy).toEqual({a:2,b:2,c:2});
+
 
 	});
 

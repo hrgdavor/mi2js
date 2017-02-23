@@ -118,18 +118,27 @@ mi2.mixin = function(dest, source, overwrite) {
 };
 
 /** Update dest object by adding properties from another object. Copied aro only own properties
-of the other object (checked by hasOwnProperty).
+of the other object (checked by hasOwnProperty).<br>
+For array, all elements of upodate array are added to the first array.
 
 @function update
 @memberof mi2JS(core)
 
 @param {Object} destination - The object that is being updated
-@param {Object} update - Object from which the properties are copied
+@param {Object} update - [one or more accepted as variable parameter func] Object from which the properties are copied
 */
-mi2.update = function(dest, update){
-	if(dest && update ){
-		for (var prop in update)
-			if(update.hasOwnProperty(prop)) dest[prop] = update[prop];
+mi2.update = function(dest){
+	var update;
+	for(var i=1; i<arguments.length; i++){
+		update = arguments[i];
+		if(update === void 0 || update === null) continue;
+	    if (mi2.isArray(dest)){
+	        arrayPush.apply(dest, update);
+	    }else{
+			for (var prop in update){
+				if(update.hasOwnProperty(prop)) dest[prop] = update[prop];
+			}	    	
+	    }
 	}
 	return dest;
 };
@@ -142,24 +151,24 @@ mi2.update = function(dest, update){
 mi2.isArray = Array.isArray ||  function (xs) {
     return {}.toString.call(xs) === '[object Array]';
 };
+var arrayPush = Array.prototype.push;
 
-/** Make a shallow copy of an object.
+/** Make a shallow copy of an object. All parameters both must be same type (all Object or all Array).<br>
+this method: mi2JS.copy(obj, update); is just a shortcut to  mi2JS.copy({}, obj, update);
 
 @function copy
 @memberof mi2JS(core)
 
-@param {Object} obj - objec to copy
+@param {Object} obj - object to make copy from
+@param {Object} update - [optional multiple time] additional update after the copy
 */
-mi2.copy = function(obj){
-    if (mi2.isArray(obj)) {
-        var len = obj.length;
-        copy = Array(len);
-        for (var i = 0; i < len; i++) {
-            copy[i] = obj[i];
-        }
-        return copy;
-    }
-	return mi2.update({},obj);
+mi2.copy = function(obj, update){
+    // copy is just an update with an empty object/array as start
+    var newArgs = [mi2.isArray(obj) ? []:{}];
+    // we made a new array with emty object, and push all arguments after that
+    arrayPush.apply(newArgs, arguments);
+    // now just call the update method with new arguments
+	return mi2.update.apply(mi2,newArgs);
 };
 
 /** Parse number using parseFloat, but return zero if not a number.
