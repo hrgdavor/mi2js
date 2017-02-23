@@ -8,13 +8,12 @@ function(proto, superProto, comp, superComp){
 
 	proto.construct = function(el, parent){
 		superProto.construct.call(this, el, parent);
-
-		this.pages = [];
-		this.opts = {pagesAbout: 5};		
 	};
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
+		this.pages = [];
+		this.opts = {pagesAbout: 5};		
 		this.setup({});
 	};
 
@@ -23,7 +22,7 @@ function(proto, superProto, comp, superComp){
 		var num = this.opts.pagesAbout * 2+1;
 		for(var i=0; i<num; i++){
 			if(i>=this.pages.length){
-				this.pages[i] = mi2.addComp(this,{tag:'B', attr:{as:"base/Button"}}, this.pagesArea);
+				this.pages[i] = mi2.addComp(this,{tag:'B', attr:{as:"base/Button"}}, this.pagesArea.el);
 				this.pages[i].setText(i+1);
 			}
 		}
