@@ -22,7 +22,7 @@ function(proto, superProto, comp, superComp){
 		var num = this.opts.pagesAbout * 2+1;
 		for(var i=0; i<num; i++){
 			if(i>=this.pages.length){
-				this.pages[i] = mi2.addComp(this,{tag:'B', attr:{as:"base/Button"}}, this.pagesArea.el);
+				this.pages[i] = mi2.addComp(this,{tag:'B', attr:{as:"base/Button", event:'page'}}, this.pagesArea.el);
 				this.pages[i].setText(i+1);
 			}
 		}
@@ -43,7 +43,7 @@ function(proto, superProto, comp, superComp){
 			this.pages[i].setVisible(i+offset<this.pagesCount);
 			this.pages[i].classIf("current", i+offset == this.curPage);
 			this.pages[i].setText(i+offset+1);
-			this.pages[i].action = i+offset;
+			this.pages[i].attr('action', i+offset);
 			this.pages[i].event = "page";
 		}
 		this.prev.setEnabled(this.curPage > 0);
@@ -53,7 +53,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_page = function(evt){
-		this.fireEvent({name:'page', page:evt.action, offset:evt.action*this.limit, fireTo:'parent'});
+		this.fireEvent({name:'page', page:evt.action, offset: mi2.num(evt.action)*this.limit, fireTo:'parent'});
 	};
 
 });
