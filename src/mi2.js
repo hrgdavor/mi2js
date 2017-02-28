@@ -233,9 +233,11 @@ mi2.listen = function ( obj, evt, fnc, self, options ){
 	if (obj.addEventListener){
 		obj.addEventListener(evt,listener,options);
 		return true;
-	}
-	else 
+	} else if(obj.attachEvent){
 		return obj.attachEvent("on"+evt,listener);
+	}else{
+		throw new Error('unable to add listener to '+obj);
+	}
 };
 
 /** Used by {@link mi2JS(core).listen}. Do some cleaning on the event object provided by the browser, for easier handling of browser differences.
