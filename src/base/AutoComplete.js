@@ -27,17 +27,19 @@ function(proto, superProto, comp, superComp){
 	proto.parseChildren = function(){
 		superProto.parseChildren.call(this);
 
-		this.idInput.attr("name", this.attr("name"));
+		this.idInput.attr("name", this.attr('name'));
 
-		this.clearBt.setVisible(!this.attr("disable_clear_button"));
-		this.noEmpty = this.attr("no_empty");
-		this.emptyText = this.attr("empty_text") || '';
-		this.freeText = (this.attr("free_text") || '0') != '0';
+		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button'));
+		this.noEmpty = this.attrBoolean('no_empty');
+		this.freeText = this.attrBoolean('free_text');
+		this.allowNew = this.attrBoolean('allow_new');
+		
+		this.emptyText = this.attrDef('empty_text', '') ;
 
 		if(this.emptyText) this.setText(this.emptyText);
 		this.list = [];
 		this.displayLimit = mi2JS.num(this.attr('limit') || 999999);
-		this.showall = this.attr('showall');
+		this.showall = this.attrBoolean('showall');
 		// sample data: [{id:1,text:"default"},{id:2, text:'other'}, {id:3, text:'other 2'}]
 
 		this.listen(this.textInput.el, "focus", function(evt){
@@ -55,8 +57,9 @@ function(proto, superProto, comp, superComp){
 			if(this.freeText){
                 this.idInput.el.value = this.textInput.el.value;
                 this.fireIfChanged();
-            }else
-                this.applySelection();
+            }else{
+               	this.applySelection(this.allowNew);
+            }
             this.hide();
         });
 
@@ -66,14 +69,16 @@ function(proto, superProto, comp, superComp){
                 if(this.freeText){
                     this.idInput.el.value = this.textInput.el.value;
                     this.fireIfChanged();
-                }else
-				    this.applySelection();
-			}
-			if(evt.keyCode == 13){ // ENTER
+                }else{
+                	this.applySelection(this.allowNew);
+                }
+			}else if(evt.keyCode == 13){ // ENTER
 				this.applySelection();
 				evt.stop();
 				this.next();
 				return false;
+			}else{
+
 			}
 		});
 
@@ -261,12 +266,17 @@ function(proto, superProto, comp, superComp){
 		}		
 	};
 
-	proto.applySelection = function(){
+	proto.applySelection = function(skipIfNotSame){
 		var sel = {};
 		if(this.selected) sel = this.selected.data || sel;
-		this.selectedData = sel;
-        this.idInput.el.value = sel.id || '';
-        this.setText(sel.text);
+		if(skipIfNotSame && sel.text != this.textInput.el.value){
+			sel = {text:this.textInput.el.value};
+			this.idInput.el.value = '';
+		}else{
+			this.selectedData = sel;
+	        this.idInput.el.value = sel.id || '';
+	        this.setText(sel.text);			
+		}
 		this.fireIfChanged();
 		this.fireEvent({name:"afterSelect", selected:sel, fireTo:'parent'});
 	};
