@@ -22,7 +22,7 @@ function(proto, superProto, comp, superComp){
 		var id, nw;
 		for(var i=0; i<it.length; i++){
 			nw = this.findRef(it[i]);
-			id = nw.data('id');
+			id = nw.dataAttr('id');
 			if(id !== null) this.items[id] = nw;
 		}
 	};
@@ -38,7 +38,7 @@ function(proto, superProto, comp, superComp){
 		var target = this.item(evt.target);
 		if(target){
 			if(this.attrBoolean('single-value')){
-				this.selectedIs(target.data('id'));
+				this.selectedIs(target.dataAttr('id'));
 			}else{
 				target.setSelected(!target.isSelected());
 			}
@@ -55,7 +55,7 @@ function(proto, superProto, comp, superComp){
 		for(var p in data){
 			var id = isArray ? data[p].id : p;
 			var item = mi2.add(this.el, this.itemTpl);
-			item.data('id', id);
+			item.dataAttr('id', id);
 			item.setText(   isArray ? data[p].text  : data[p]);
 			this.items[id] = item;
 		}
@@ -67,7 +67,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.getRawValue = function(value){
 		var ret = this.forEachGetArray(function(item){
-			if(item.isSelected()) return item.data('id');
+			if(item.isSelected()) return item.dataAttr('id');
 		});
 
 		if(this.attrBoolean('single-value')) ret = ret[0];

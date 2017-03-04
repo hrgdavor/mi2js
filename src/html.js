@@ -195,7 +195,7 @@ value 1,true - <input required="1"> <input required="true">
 
 no real need to use dataset, and attributes work on more browsers 
 */
-	mi2Proto.data = function(name, val){
+	mi2Proto.dataAttr = function(name, val){
 		name = 'data-'+name;
 		if(arguments.length > 1){
 			this.attr(name,val);
