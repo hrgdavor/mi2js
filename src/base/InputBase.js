@@ -16,10 +16,10 @@ function(proto, superProto, comp, superComp){
 		superProto.construct.call(this, el, parent);
 		
 		if(this.hasAttr('in-filter'))
-			this.inFilter = mi2.parseFilter(this.attr('in-filter'));
+			this.inFilter = mi2.parseFilter(this.attrDef('in-filter'), this.inFilter);
 		
 		if(this.hasAttr('out-filter'))
-			this.outFilter = mi2.parseFilter(this.attr('out-filter'));		
+			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);		
 	};
 
 	proto.setReadOnly = function(readOnly){
