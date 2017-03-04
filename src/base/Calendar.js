@@ -117,19 +117,6 @@ function(proto, superProto, comp, superComp){
 		this.input.markValidate(data, info);
 	};
 
-	proto.getValue = function(){
-		var d = this.date = this.parseValue();
-		if(!d) return null;
-
-		if(this.editDate && this.editTime){
-			return d.getTime();
-		}else if(this.editDate){
-			return [d.getFullYear(),d.getMonth()+1,d.getDate()];
-		}else{
-			return [d.getHours(),d.getMinutes(),d.getSeconds(), d.getMilliseconds()];
-		}
-	};
-
 	proto.updateInput = function(){
 		var str = '';
 		if(this.date){
@@ -144,15 +131,17 @@ function(proto, superProto, comp, superComp){
 		this.input.el.value = str;
 	};
 
-	proto.setValue = function(value){
+	proto.getRawValue = function(){
+		var d = this.date = this.parseValue();
+		return d ? d:null;
+	};
+
+	proto.setRawValue = function(value){
 		if(!value || value instanceof Date){
 			this.date = value;
-		}else if(this.editDate && this.editTime){
-			this.date = new Date(value);
-		}else if(this.editDate){
-			this.date = new Date(value[0], value[1]-1, value[2]);
 		}else{
-			this.date = new Date(0,0,0,value[0], value[1] || 0, value[2] ||0, value[3] ||0);
+			// if value is maybe in format Date constructor can recognize
+			this.date = new Date(value);
 		}
 		this.updateInput();
 	};
