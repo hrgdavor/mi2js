@@ -44,6 +44,8 @@ function(proto, superProto, comp, superComp){
 		this.allItems = [];
 		this.items = [];
 		this.count = 0;
+
+		this.itemMixin = function(tm,tmProto,tmSuper){};
 	};
 
 /**
@@ -129,6 +131,10 @@ function(proto, superProto, comp, superComp){
 	proto.makeItem = function(newData,i){
 		var node = $.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
 		var comp = $.makeComp(node, null, this);
+		var compClass = $.getComp(comp.getCompName());
+		var superClass = compClass.superClass;
+
+		this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);
 
 		if(!comp.getValue) comp.getValue = defGetValue;
 		if(!comp.setValue) comp.setValue = defSetValue;
