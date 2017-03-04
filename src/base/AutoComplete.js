@@ -171,6 +171,11 @@ function(proto, superProto, comp, superComp){
 		return this.data;
 	}
 
+	proto.getTextFor = function(id){
+		var data = this.getDataFor(id);
+		return data ? data.text:null;
+	};
+
 	proto.getDataFor = function(id){
 		var allData = this.getOptions();
 		if(id) for(var i=0; i<allData.length; i++){
