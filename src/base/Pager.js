@@ -47,9 +47,9 @@ function(proto, superProto, comp, superComp){
 			this.pages[i].event = "page";
 		}
 		this.prev.setEnabled(this.curPage > 0);
-		this.prev.action = this.curPage-1;
+		this.prev.attr('action', this.curPage-1);
 		this.next.setEnabled(this.curPage < this.pagesCount-1);
-		this.next.action = this.curPage+1;
+		this.next.attr('action', this.curPage+1);
 	};
 
 	proto.on_page = function(evt){
