@@ -67,7 +67,7 @@ automatic component template parsing (parseChildren) and initialization is done
 			// log the component and the node where the error happened
 			// this will occur for each parent too as the error is rethrown
 			// and error will show up in console for inspection of execution stack
-			console.log('error while creating a component ',compName, el, e);
+			console.log('error while creating a component ',compName, el, '\ninside the component ', parent,'\n', e);
 			throw e;
 		}
 	};
