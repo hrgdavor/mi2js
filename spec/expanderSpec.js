@@ -1,38 +1,38 @@
-describe( 'template.js', function () {
+describe( 'expander.js', function () {
 	var mi2 = mi2JS;
 	mi2.addFilter('specTest', function(value){ return value+'--'});
 	mi2.addFilter('specTest2', function(value){ return '('+value+')'});
 	mi2.addFilter('specNull', function(value){ return value == 'null-like'? null:value });
 
 	it('/ not found', function (){
-		expect(mi2.parseTemplate('some text without template')).toEqual(null);
+		expect(mi2.parseExpanderExp('some text without expression')).toEqual(null);
 	});
 
 	it('/ simple', function (){
-		var builderFunc = mi2.parseTemplate('Name:${name}');
+		var builderFunc = mi2.parseExpanderExp('Name:${name}');
 
 		expect(builderFunc({name:'John'})).toEqual('Name:John');
 	});
 
 	it('/ simple', function (){
-		var builderFunc = mi2.parseTemplate('const ${const:TRUE}');
+		var builderFunc = mi2.parseExpanderExp('const ${const:TRUE}');
 		expect(builderFunc({})).toEqual('const true');
 	});
 
 	it('/ array', function (){
-		var builderFunc = mi2.parseTemplate('Value must be between ${0} and ${1}');
+		var builderFunc = mi2.parseExpanderExp('Value must be between ${0} and ${1}');
 
 		expect(builderFunc([10,20])).toEqual('Value must be between 10 and 20');
 		expect(builderFunc({'0':10,'1':20})).toEqual('Value must be between 10 and 20');
 	});
 
 	it('/ formatted', function (){
-		var builderFunc = mi2.parseTemplate('Name:${name|specTest}');
+		var builderFunc = mi2.parseExpanderExp('Name:${name|specTest}');
 
 		expect(builderFunc({name:'John'})).toEqual('Name:John--');
 	});
 
-	it('/ template component', function (){
+	it('/ expander component', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'John'});
@@ -40,7 +40,7 @@ describe( 'template.js', function () {
 		expect(comp.el.getAttribute('my-attr')).toEqual('John');
 	});
 
-	it('/ template component remove attribute', function (){
+	it('/ expander component remove attribute', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
 		var comp = mi2.makeComp(node);
 
@@ -54,7 +54,7 @@ describe( 'template.js', function () {
 	});
 
 
-	it('/ template component remove attribute', function (){
+	it('/ expander component remove attribute', function (){
 		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'hidden':'${name|specNull}'}});
 		var comp = mi2.makeComp(node);
 
@@ -74,7 +74,7 @@ describe( 'template.js', function () {
 		expect(comp.attr('hidden')).toEqual(null);
 	});
 
-	it('/ template component complex', function (){
+	it('/ expander component complex', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last|specTest}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
@@ -83,7 +83,7 @@ describe( 'template.js', function () {
 		expect(comp.el.innerHTML).toEqual('X:Jones--:X');
 	});
 
-	it('/ template component complex', function (){
+	it('/ expander component complex', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest|specTest2}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
@@ -91,7 +91,7 @@ describe( 'template.js', function () {
 		expect(comp.el.innerHTML).toEqual('X:(Jones--):X');
 	});
 
-	it('/ template component complex 2', function (){
+	it('/ expander component complex 2', function (){
 		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest2|specTest}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});

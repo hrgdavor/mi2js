@@ -33,8 +33,9 @@ module.exports = function(config) {
       'src/base/Table.js',
       'src/base/MultiInput.js',
 
-      'spec/*.js',
-      'spec/base/*.js',
+      'spec/expanderSpec.js',
+      // 'spec/*.js',
+      // 'spec/base/*.js',
 
        {pattern: 'spec/test.json', included: false}
     ],

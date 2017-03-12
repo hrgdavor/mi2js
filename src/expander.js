@@ -3,12 +3,12 @@
 Methods needed to suport templating inside {@link mi2JS(comp) components}. It is important to know that
 template strings are parsed from DOM nodes from the <b>text and attribute values only</b>.<br>
 
-@namespace mi2JS(template)
+@namespace mi2JS(expander)
 */
 
-	mi2.templateExpand = {};
+	mi2.expandPrefix = {};
 
-	mi2.templateExpand.filter = function(prop, el, part, comp){
+	mi2.expandPrefix.filter = function(prop, el, part, comp){
 		var idx = prop.indexOf('|');
 
 		// simple value extract
@@ -22,7 +22,7 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 		};
 	}
 
-	mi2.templateExpand['const'] = function(prop, el, part, comp){
+	mi2.expandPrefix['const'] = function(prop, el, part, comp){
 		var val = mi2.filters['const'](prop);
 		return function(){ return val; };
 	};
@@ -33,8 +33,8 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 			prefix = prop.substring(0,idx);
 			prop = prop.substring(idx+1);
 		}
-		if(!mi2.templateExpand[prefix]) consol.error('prefix not supported '+prefix+' in expression '+prefix+':'+prop);
-		return mi2.templateExpand[prefix](prop, el, part, comp);
+		if(!mi2.expandPrefix[prefix]) consol.error('prefix not supported '+prefix+' in expression '+prefix+':'+prop);
+		return mi2.expandPrefix[prefix](prop, el, part, comp);
 	}
 
 	function genPrinter(arr){
@@ -61,21 +61,21 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 		return val === null || val === void 0 ? '':val;
 	}
 
-	/** regexp that checks if expression is a template expression. */
+	/** regexp that checks if expression is a expander expression. */
 	var tplReg = /\$\{([^}]*)\}/g;
 
 /**
-@function parseTemplate
-@memberof mi2JS(template)
+@function parseExpanderExp
+@memberof mi2JS(expander)
 
-@param str - template string that defines the functionality
-@param el - element where template value will be inserted
+@param str - expander expression that defines the functionality
+@param el - element where expanded value will be inserted
 @param part - part of element(text node or attribute)
 @param comp - component instance
 
 
 */
-	mi2.parseTemplate = function(str, el, part, comp){
+	mi2.parseExpanderExp = function(str, el, part, comp){
 		var arr = [];
 		var offset = 0;
 		str.replace(tplReg, function(match, prop, idx){
@@ -92,13 +92,13 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 
 /**
 @function parseExpander
-@memberof mi2JS(template)
+@memberof mi2JS(expander)
 */
 	mi2.parseExpander = function(exp){
 		var tpl;
 		for(var p in exp){
 			if(typeof exp[p] == 'string'){
-				tpl = mi2.parseTemplate(exp[p]);
+				tpl = mi2.parseExpanderExp(exp[p]);
 				if(tpl) exp[p] = tpl;
 			}
 		}
@@ -107,7 +107,7 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 
 /**
 @function expandData
-@memberof mi2JS(template)
+@memberof mi2JS(expander)
 */
 	mi2.expandData = function(data, exp, copy){
 		var ret = copy ? mi2.update({},data) : {};
@@ -121,7 +121,7 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 
 /**
 @function expandArray
-@memberof mi2JS(template)
+@memberof mi2JS(expander)
 */
 	mi2.expandArray = function(arr, exp, copy){
 		var ret = [];
@@ -156,33 +156,33 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 	}
 
 /**
-@function loadTemplate
-@memberof mi2JS(template)
+@function loadExpander
+@memberof mi2JS(expander)
 */
-	mi2.loadTemplate = function(el, comp){
+	mi2.loadExpander = function(el, comp){
 		if(el instanceof mi2) el = el.el;
 		var list = [];
-		mi2.loadTemplateRec(el,list,comp)
+		mi2.loadExpanderRec(el,list,comp)
 		list.setValue = setValue;
 		return list;
 	};
 
 /**
-@function loadTemplateRec
-@memberof mi2JS(template)
+@function loadExpanderRec
+@memberof mi2JS(expander)
 */
-	mi2.loadTemplateRec = function(el, list, comp){
+	mi2.loadExpanderRec = function(el, list, comp){
 		list = list || [];
 		var attribs = el.attributes;
 		var count = attribs.length;
 		var updater, wrapped;
 
-		// We go in reverse because templated attributes are removed right away.
+		// We go in reverse because attributes with expressions are removed right away.
 		// This way we do not go out of bounds ot the collection as it shortens
 		for(var i=count-1; i>=0; i--){
 			if(!attribs[i].value) continue;
 
-			updater = mi2.parseTemplate(attribs[i].value, el, attribs[i], comp);
+			updater = mi2.parseExpanderExp(attribs[i].value, el, attribs[i], comp);
 			if(updater){
 				if(wrapped == null) wrapped = new mi2(el); // create wrapper only if needed
 				list.push(forAttr(wrapped, attribs[i].name, updater));
@@ -193,10 +193,10 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 		while(ch){
 			if(ch.tagName){
 				if(!ch.hasAttribute('template'))
-					mi2.loadTemplateRec(ch,list, comp);
+					mi2.loadExpanderRec(ch,list, comp);
 			}else{
 				// TextNode
-				updater = mi2.parseTemplate(ch.nodeValue, el, ch, comp);
+				updater = mi2.parseExpanderExp(ch.nodeValue, el, ch, comp);
 				if(updater) list.push(forTextNode(ch,updater));
 			}
 			ch = ch.nextSibling;
