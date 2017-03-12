@@ -90,7 +90,8 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
-	proto.itemIndex = function(item){
+	proto.getItemIndex = function(item){
+		if(!item) return -1;
 		if(item instanceof mi2) item = item.el;
 		return item.loopIndex;
 	};
@@ -219,6 +220,19 @@ function(proto, superProto, comp, superComp){
 	    		it[i].el.loopIndex = i;
 	    	}    	
 		}		
+	};
+
+	proto.moveItem = function(fromIndex, insertBefore){
+    	var item = this.allItems.splice(fromIndex,1)[0];
+    	var elBefore = null;
+    	if(insertBefore == -1){
+    		this.allItems.push(item);
+    	}else{
+    		elBefore = this.allItems[insertBefore].el;
+    		this.allItems.splice(insertBefore,0,item);
+    	}
+    	this.itemsArea.insertBefore(item.el, elBefore);
+    	this._fixItemList(true);
 	};
 
 	proto.splice = function(index, deleteCount){
