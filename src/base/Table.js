@@ -11,7 +11,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.itemTpl = {
 		tag:'TR',
-		attr: { as: 'base/Tpl' },
+		attr: { as: 'Base' },
 		html: ''
 	};
 
@@ -72,7 +72,7 @@ function(proto, superProto, comp, superComp){
 		var el = evt.target;
 		while(el.tagName != 'TBODY'){
 			comp = el.getAttribute('as');
-			if(comp && !(comp == 'base/Tpl' || comp =='Base' )) return; // do not mess with other components
+			if(comp && !(comp == 'Base' || comp =='Base' )) return; // do not mess with other components
 
 			evtName = evtName || el.getAttribute('event');
 			action  = action  || el.getAttribute('action');

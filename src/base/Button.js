@@ -3,16 +3,16 @@ Combination of button functionality with variable expansion support.
 
 */
 
-mi2JS.addCompClass('base/Button', 'base/Tpl', '',
+mi2JS.addCompClass('base/Button', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 
 	proto.minClickDelay = 300;
 
-	proto.initTemplate = function(){
-		superProto.initTemplate.call(this);
-		this.listen(this.el,'click');
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
+		this.listen(this.el,'click');		
 	};
 
 	proto.on_click = function(evt){
@@ -66,7 +66,7 @@ function(proto, superProto, comp, superComp){
 		
 		// do not mess with other components
 		comp = el.getAttribute('as');
-		return (comp && el != this.el && !(comp == 'base/Tpl' || comp =='Base' )); 
+		return (comp && el != this.el && !(comp == 'Base' || comp =='Base' )); 
 	};
 
 });

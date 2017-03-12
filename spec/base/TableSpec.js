@@ -44,12 +44,12 @@ describe( 'base/Table.js', function () {
 
         expect(comp.el.innerHTML).toEqual(
 '<tbody>'+
-    '<tr as="base/Tpl">'+
+    '<tr as="Base">'+
         '<td gender="M">John</td>'+
         '<td>Doe</td>'+
         '<td>44</td>'+
     '</tr>'+
-    '<tr as="base/Tpl">'+
+    '<tr as="Base">'+
         '<td gender="F">Mary</td>'+
         '<td>Blast</td>'+
         '<td>33</td>'+

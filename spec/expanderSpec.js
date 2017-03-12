@@ -33,7 +33,7 @@ describe( 'expander.js', function () {
 	});
 
 	it('/ expander component', function (){
-		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base', 'my-attr':'${name}'}});
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'John'});
 
@@ -41,7 +41,7 @@ describe( 'expander.js', function () {
 	});
 
 	it('/ expander component remove attribute', function (){
-		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'my-attr':'${name}'}});
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base', 'my-attr':'${name}'}});
 		var comp = mi2.makeComp(node);
 
 		comp.setValue({name:'John'});
@@ -55,7 +55,7 @@ describe( 'expander.js', function () {
 
 
 	it('/ expander component remove attribute', function (){
-		var node = mi2.addTag(null,{tag:'B', attr:{as:'base/Tpl', 'hidden':'${name|specNull}'}});
+		var node = mi2.addTag(null,{tag:'B', attr:{as:'Base', 'hidden':'${name|specNull}'}});
 		var comp = mi2.makeComp(node);
 
 		comp.setValue({name:'John'});
@@ -75,7 +75,7 @@ describe( 'expander.js', function () {
 	});
 
 	it('/ expander component complex', function (){
-		var node = mi2.addTag(null,{tag:'base-tpl', attr:{'my-attr':'${name}'}, html:'X:${last|specTest}:X'} );
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base','my-attr':'${name}'}, html:'X:${last|specTest}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
@@ -84,7 +84,7 @@ describe( 'expander.js', function () {
 	});
 
 	it('/ expander component complex', function (){
-		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest|specTest2}:X'} );
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base',}, html:'X:${last|specTest|specTest2}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
@@ -92,11 +92,27 @@ describe( 'expander.js', function () {
 	});
 
 	it('/ expander component complex 2', function (){
-		var node = mi2.addTag(null,{tag:'base-tpl', attr:{}, html:'X:${last|specTest2|specTest}:X'} );
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base',}, html:'X:${last|specTest2|specTest}:X'} );
 		var comp = mi2.makeComp(node);
 		comp.setValue({name:'Adam', last:'Jones'});
 
 		expect(comp.el.innerHTML).toEqual('X:(Jones)--:X');
+	});
+
+	it('/ expander component complex 2', function (){
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base',}, html:'X:${|specTest2|specTest}:X'} );
+		var comp = mi2.makeComp(node);
+		comp.setValue('Jones');
+
+		expect(comp.el.innerHTML).toEqual('X:(Jones)--:X');
+	});
+
+	it('/ expander component whole object', function (){
+		var node = mi2.addTag(null,{tag:'DIV', attr:{as:'Base',}, html:'X:${}:X'} );
+		var comp = mi2.makeComp(node);
+		comp.setValue('Jones');
+
+		expect(comp.el.innerHTML).toEqual('X:Jones:X');
 	});
 
 

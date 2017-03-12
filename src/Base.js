@@ -449,11 +449,19 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 			this.fireEvent({name:visible ? 'show':'hide',fireTo:'children'});
 	};
 
-    proto.expandVars =
-    proto.setValue = function(data){
-        if(!this.__expander) {
-            this.__expander = mi2.loadExpander(this.el, this);
-        }
+
+	/** Expand data expressions in the component and the children.
+	If you need to hide the expressions before the data is set first time
+	call this.loadExpander(); during component initialization.
+
+	@instance
+	@function expandVars
+	@memberof mi2JS(comp).Base
+	@param {Object} data
+	*/
+    proto.expandVars = function(data){
+        if(!this.__expander) this.loadExpander();
+
         this.__expander.setValue(data);
         var count = this.__expanderFwd.length;
         for(var i=0; i<count; i++){
@@ -461,6 +469,25 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
         }
     };
 
+	/** By default setValue calls this.expandVars. Input components for example override 
+	setValue for purpose of setting input values
+
+	@instance
+	@function expandVars
+	@memberof mi2JS(comp).Base
+	@param {Object} data
+	*/
+    proto.setValue = proto.expandVars;
+
+	/** Expand data expressions in the component and the children.
+	If you need to hide the expressions before the data is set first time
+	call this.loadExpander(); during component initialization.
+
+	@instance
+	@function expandVars
+	@memberof mi2JS(comp).Base
+	@param {Object} data
+	*/
     proto.loadExpander = function(){
         this.__expander = mi2.loadExpander(this.el, this);
         this.__expanderFwd = [];
@@ -475,6 +502,5 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
             }
         }
     };
-
 
 }(mi2JS));
