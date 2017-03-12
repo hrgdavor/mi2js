@@ -14,11 +14,88 @@ describe( 'base/Loop.js', function () {
 		};
 	});
 
+	it('/ splice', function (){
+		var loop = mi2.addComp(null, {tag: 'B', attr:{as:'base/Loop'}, html:'<b template></b>'});
+		loop.setItemValue = function(item,value){
+			item.el.loopValue = value;
+			item.loopValue = value;
+			item.setText(value);
+		};
+		loop.getItemValue = function(item){
+			return item.el.loopValue;
+		};
+		loop.setValue([1,2,3,4]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4]);
+
+		loop.pop();		
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b hidden="">4</b>');
+		expect(loop.getValue()).toEqual([1,2,3]);
+
+		loop.push(14);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>14</b>');
+		expect(loop.getValue()).toEqual([1,2,3,14]);
+
+		var tmpItem = loop.getItem(1);	
+		loop.splice(1,1);
+		// check that the elemnt was moved properly
+		expect(loop.count).toEqual(3);
+		expect(tmpItem).toEqual(loop.allItems[3]);
+		expect(loop.getValue()).toEqual([1,3,14]);
+
+		// reset to start again
+		loop.setValue([1,2,3,4]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4]);
+
+		var tmpItem = loop.getItem(1);	
+		loop.splice(1,2);
+		expect(loop.count).toEqual(2);
+		expect(tmpItem).toEqual(loop.allItems[2]);
+		expect(loop.getValue()).toEqual([1,4]);
+
+
+		// reset to start again
+		loop.setValue([1,2,3,4]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4]);
+
+		var tmpItem = loop.getItem(2);
+		loop.splice(1,2,9);
+		expect(tmpItem).toEqual(loop.allItems[3]);//moved to last
+		expect(loop.getValue()).toEqual([1,9,4]);
+
+		// reset to start again
+		loop.setValue([1,2,3,4]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4]);
+
+		loop.splice(1,2,8,9);
+		expect(loop.getValue()).toEqual([1,8,9,4]);
+
+		// reset to start again
+		loop.setValue([1,2,3,4]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4]);
+
+		loop.splice(1,0,8,9);
+		expect(loop.getValue()).toEqual([1,8,9,2,3,4]);
+
+		// reset to start again
+		loop.setValue([1,2,3,4,5]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>2</b><b>3</b><b>4</b><b>5</b><b hidden="">4</b>');
+		expect(loop.getValue()).toEqual([1,2,3,4,5]);
+
+		loop.splice(1,1,8,9);
+		expect(loop.getValue()).toEqual([1,8,9,3,4,5]);
+		expect(loop.el.innerHTML).toEqual('<b>1</b><b>8</b><b>9</b><b>3</b><b>4</b><b>5</b>');
+
+	});
 
 	it('/ basic ', function (){
 		var node = mi2.addTag(null, {tag:'DIV', 
 				attr: {as:'base/Loop'},
-				html: '<div template as="base/Tpl" >Name: ${name}, Last: ${last}</div>' 
+				html: '<div template as="Base" >Name: ${name}, Last: ${last}</div>' 
 			});
 
 		var comp = mi2.makeComp(node);
@@ -32,15 +109,15 @@ describe( 'base/Loop.js', function () {
 
 		expect(comp.getItems().length).toEqual(2);
 		expect(comp.el.innerHTML).toEqual(
-'<div as="base/Tpl">Name: John, Last: Doe</div>'+
-'<div as="base/Tpl">Name: Mary, Last: Blast</div>'
+'<div as="Base">Name: John, Last: Doe</div>'+
+'<div as="Base">Name: Mary, Last: Blast</div>'
 		);
 	});
 
 	it('/ not the only child ', function (){
 		var node = mi2.addTag(null, {tag:'DIV', 
 				attr: {as:'base/Loop'},
-				html: '<div template as="base/Tpl" >Name: ${name}, Last: ${last}</div><b>xx</b>' 
+				html: '<div template as="Base" >Name: ${name}, Last: ${last}</div><b>xx</b>' 
 			});
 
 		var comp = mi2.makeComp(node);
@@ -54,8 +131,8 @@ describe( 'base/Loop.js', function () {
 
 		expect(comp.getItems().length).toEqual(2);
 		expect(comp.el.innerHTML).toEqual(
-'<div as="base/Tpl">Name: John, Last: Doe</div>'+
-'<div as="base/Tpl">Name: Mary, Last: Blast</div>'+
+'<div as="Base">Name: John, Last: Doe</div>'+
+'<div as="Base">Name: Mary, Last: Blast</div>'+
 '<b>xx</b>'
 		);
 	});

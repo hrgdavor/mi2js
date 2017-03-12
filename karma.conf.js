@@ -23,7 +23,6 @@ module.exports = function(config) {
       'src/*.js',
       'src/util/filter.sample.js',
 
-      'src/base/Tpl.js',
       'src/base/Button.js',
       'src/base/Group.js',
       'src/base/Loop.js',
@@ -33,9 +32,9 @@ module.exports = function(config) {
       'src/base/Table.js',
       'src/base/MultiInput.js',
 
-      'spec/expanderSpec.js',
-      // 'spec/*.js',
-      // 'spec/base/*.js',
+      // 'spec/loopSpec.js',
+      'spec/*.js',
+      'spec/base/*.js',
 
        {pattern: 'spec/test.json', included: false}
     ],

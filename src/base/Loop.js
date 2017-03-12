@@ -18,11 +18,11 @@ example in separate template file:
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 	
-	var $ = mi2JS;
+	var mi2 = mi2JS;
 
 	proto.itemTpl = {
 		tag:'DIV',
-		attr: { as: 'base/Tpl' },
+		attr: { },
 		html: ''
 	};
 
@@ -71,7 +71,7 @@ function(proto, superProto, comp, superComp){
 
 		if(ch && ch.tagName){
 			this.itemsArea = ch.parentNode;
-			this.itemTpl = $.toTemplate(ch, this.itemTpl.attr);
+			this.itemTpl = mi2.toTemplate(ch, this.itemTpl.attr);
 			this.itemNextSibling = ch.nextElementSibling;
 			ch.parentNode.removeChild(ch);
 		}else
@@ -90,6 +90,11 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
+	proto.itemIndex = function(item){
+		if(item instanceof mi2) item = item.el;
+		return item.loopIndex;
+	};
+
 	proto.findItemsArea = function(el){
 		var ch = el.firstChild;
 		while(ch){
@@ -101,7 +106,8 @@ function(proto, superProto, comp, superComp){
 				} 
 			} 
 			ch = ch.nextSibling;
-		}	}
+		}	
+	};
 
 	proto.setValue = function(arr){
 		arr = arr || [];
@@ -111,8 +117,7 @@ function(proto, superProto, comp, superComp){
 		this.count = arr.length;
 		if(this.noData) this.noData.setVisible(!this.count);
 
-		// update items array to match visible elements
-        this.items = this.allItems.slice(0,this.count);
+		this._fixItemList();
 
 		for(var i=arr.length; i<this.allItems.length; i++){
 			this.allItems[i].setVisible(false);
@@ -125,16 +130,24 @@ function(proto, superProto, comp, superComp){
 		return this.items;
 	};
 
-	function defGetValue(){ }
-	function defSetValue(){ }
+	proto.getItem = function(index){
+		return this.items[index];
+	};
+
+	function defGetValue(){  }
+	function defSetValue(){  }
 
 	proto.makeItem = function(newData,i){
-		var node = $.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
-		var comp = $.makeComp(node, null, this);
-		var compClass = $.getComp(comp.getCompName());
-		var superClass = compClass.superClass;
+		var node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
+		if(this.itemTpl.attr.as){
+			var comp = mi2.makeComp(node, null, this);
+			var compClass = mi2.getComp(comp.getCompName());
+			var superClass = compClass.superClass;
 
-		this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);
+			this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);			
+		}else{
+			comp = new mi2(node);
+		}
 
 		if(!comp.getValue) comp.getValue = defGetValue;
 		if(!comp.setValue) comp.setValue = defSetValue;
@@ -159,28 +172,30 @@ function(proto, superProto, comp, superComp){
 		item.setValue(newData);
 	};
 
+	proto.getItemValue = function(item){
+		return item.getValue();
+	};
+
 	proto.setItem = function(newData,i){
 		var item = this.allItems[i];
 
 		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
 
-		item.el.index = i;
+		item.el.loopIndex = i;
 		this.setItemValue(item, newData);
 		this.fireEvent({name:'afterSetItemValue', index:i, data:newData, item:item});
 		item.setVisible(true);
 	};
 
 	proto.getValue = function(){
-		return this.forEachGet(function(item){
-			return item.getValue();
-		});
+		return this.forEachGet(this.getItemValue.bind(this));
 	};
 
 	proto.push = function(data){
 		var index = this.count;
 		this.setItem(data,index);
 		this.count++;
-        this.items = this.allItems.slice(0,this.count);
+		this._fixItemList();
 		this.fireEvent({name:'afterAdd', index:index, data:data, item:this.item(index)});
 	};
 
@@ -190,10 +205,53 @@ function(proto, superProto, comp, superComp){
 		var item = this.items.pop();
 		item.setVisible(false);
 
-        this.items = this.allItems.slice(0,this.count);
+		this._fixItemList();
 
 		this.fireEvent({name:'afterPop', item:item});
 		return item;
 	};
+
+	proto._fixItemList = function(reindex){
+        this.items = this.allItems.slice(0,this.count);
+		if(reindex){
+	    	var it = this.allItems;
+	    	for(var i=0; i<it.length; i++){
+	    		it[i].el.loopIndex = i;
+	    	}    	
+		}		
+	};
+
+	proto.splice = function(index, deleteCount){
+		var toAdd = Array.prototype.splice.call(arguments,2);
+
+		// items not used and hidden for reuse later
+		var countReusable = this.allItems.length - this.count;
+
+		for(var d=0; d<toAdd.length; d++){
+			if(deleteCount <= 0){
+				// need to inject new item (reuse one from the end of allItems array, or create new)
+				var newItem = countReusable > 0 ? this.allItems.pop():this.makeItem(toAdd[d], index);
+				this.allItems.splice(index,0, newItem);
+				var next = this.allItems[index+1];
+				this.itemsArea.insertBefore(this.allItems[index].el, next ? next.el:null);
+				countReusable--;
+			}
+			this.setItem(toAdd[d], index );
+			index++;
+			deleteCount--;
+		}
+
+		if(deleteCount >0){
+			var removed = this.allItems.splice(index,deleteCount);
+			for(var i =0; i<removed.length; i++){
+				var tmp = removed[i];
+				this.itemsArea.insertBefore(tmp.el,this.itemNextSibling||null);
+				this.allItems.push(tmp);
+				tmp.setVisible(false);
+			}			
+		}
+		this.count = this.count - deleteCount;
+		this._fixItemList(true);
+	}
 
 });
