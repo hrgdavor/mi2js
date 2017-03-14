@@ -262,9 +262,9 @@ function(proto, superProto, comp, superComp){
 				this.itemsArea.insertBefore(tmp.el,this.itemNextSibling||null);
 				this.allItems.push(tmp);
 				tmp.setVisible(false);
-			}			
+			}
 		}
-		this.count = this.count - deleteCount;
+		this.count = Math.max(this.count - deleteCount,0);
 		this._fixItemList(true);
 	}
 
