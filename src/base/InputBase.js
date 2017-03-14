@@ -44,9 +44,14 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.checkSubmit = function(evt){
+		// TODO parametrize fire event like button
 		if(this.checkSubmitKey(evt) && this.parent){
-			this.fireEvent({name:'submit', domEvent:evt, fireTo:'parent'} );
+			this.fireEvent( this.eventData(evt) );
 		}
+	};
+
+	proto.eventData = function(evt){
+		return {name:this.attrDef('event','submit'), action: this.attr('action'), domEvent:evt, fireTo:'parent'};
 	};
 
 	proto.checkSubmitKey = function(evt){
