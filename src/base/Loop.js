@@ -224,11 +224,11 @@ function(proto, superProto, comp, superComp){
 
 	proto.moveItem = function(fromIndex, insertBefore){
     	var item = this.allItems.splice(fromIndex,1)[0];
-    	var elBefore = null;
-    	if(insertBefore == -1){
+    	if(fromIndex < insertBefore) insertBefore--;
+    	var elBefore = insertBefore < 0 ? null : elBefore = this.allItems[insertBefore].el;
+    	if(insertBefore < 0){
     		this.allItems.push(item);
     	}else{
-    		elBefore = this.allItems[insertBefore].el;
     		this.allItems.splice(insertBefore,0,item);
     	}
     	this.itemsArea.insertBefore(item.el, elBefore);
