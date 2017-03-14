@@ -152,10 +152,6 @@ scriptsGroup.compForms = {
 		"desc": "", 
 		"require":[]
 	},
-	"base/Form": {
-		"desc": "", 
-		"require":["InputGroup"]
-	},
 	"base/InputBase": {
 		"desc": "", 
 		"require":["comp"]

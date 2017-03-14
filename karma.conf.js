@@ -19,7 +19,6 @@ module.exports = function(config) {
       'src/comp.js',
       'src/poly/bind.js',
       'src/NWGroup.js',
-      'src/InputGroup.js',
       'src/*.js',
       'src/util/filter.sample.js',
 
