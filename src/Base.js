@@ -201,7 +201,7 @@ relationship. Also adding other functionalities needed for component based compo
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.isTransitive = function(){ return false; };
+	proto.isTransitive = function(evt){ return false; };
 
 
 
@@ -250,7 +250,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		if(initialFire) evt.src = evt.__src = this;
 		
 		if(evt.fireTo == 'parent'){
-			if((this.isTransitive && this.isTransitive()) || initialFire){
+			if((this.isTransitive(evt)) || initialFire){
 				if(this.parent) this.parent.fireEvent(evt);
 				return;
 			}
