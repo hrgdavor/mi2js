@@ -1,11 +1,11 @@
 (function(){
 
 var mi2 = mi2JS;
-var compData = mi2.compData;
 /* 
 @memberof mi2JS(core)
 */
 mi2.parse = function(elem, obj){
+	var compData = mi2.compData;
 	if(!elem) mi2.nn({elem:elem});
 
 	if(typeof(elem) == "string") elem = mi2.addHtml(elem);
@@ -75,7 +75,7 @@ mi2.setRef = function(obj, comp, prop){
 };
 
 function logPropTaken(prop, obj, by){
-    console.log('WARNING! property: '+prop+' is already filled on ', obj, ' by ', by);
+    // console.log('WARNING! property: '+prop+' is already filled on ', obj, ' by ', by);
 }
 
 /**
@@ -89,6 +89,7 @@ function logPropTaken(prop, obj, by){
 @memberof mi2JS(core)
 */
  mi2.parseChildren = function(elem, obj){
+	var compData = mi2.compData;
 	var el = elem.firstElementChild,next,templateAttr;
 	while(el){
 		next = el.nextElementSibling;
