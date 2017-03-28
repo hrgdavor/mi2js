@@ -133,14 +133,20 @@ mi2.update = function(dest){
 		update = arguments[i];
 		if(update === void 0 || update === null) continue;
 	    if (mi2.isArray(dest)){
-	        arrayPush.apply(dest, update);
+	        dest = dest.concat(dest, update);
 	    }else{
-			for (var prop in update){
-				if(update.hasOwnProperty(prop)) dest[prop] = update[prop];
-			}	    	
+	    	mi2.updateObj(dest,update);
 	    }
 	}
 	return dest;
+};
+
+mi2.updateObj = function(dest, update){
+	var prop,keys = Object.keys(update);// only own keys are returned
+	for (var i=0; i<keys.length; i++){
+		prop = keys[i];
+		dest[prop] = update[prop];
+	}	    	
 };
 
 /** Check if the passed parameter is an array

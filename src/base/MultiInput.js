@@ -6,7 +6,7 @@ mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
         var mi2 = mi2JS;
 
         proto.initTemplate = function(){
-            superProto.initTemplate.call(this);
+            superProto.initTemplate.apply(this,arguments);
 
             if(this.hasAttr('in-filter'))
                 this.inFilter = mi2.parseFilter(this.attr('in-filter'));
@@ -26,7 +26,7 @@ mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
         }
 
         proto.itemCreated = function(item, i){
-            superProto.itemCreated.call(this,item, i);
+            superProto.itemCreated.apply(this,arguments);
             this.listen(item,'change', this.on_itemChange);
         };
 

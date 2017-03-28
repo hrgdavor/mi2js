@@ -14,7 +14,7 @@ describe( 'comp.js Component utilities', function () {
 	mi2JS.addCompClass('test/ShowHideInitTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
 		proto.construct = function(el,parent){
-			superProto.construct.call(this,el,parent);
+			superProto.construct.apply(this,arguments);
 			this.on_show_count = 0;
 			this.on_hide_count = 0;
 			this.on_init_count = 0;
