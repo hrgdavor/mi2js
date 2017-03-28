@@ -160,6 +160,18 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.setTimeout = function(fc,delay){
 		return setTimeout( fc.bind(this), delay );
 	};
+
+	/** 
+	requestAnimationFrame shortcut that by default binds callback function to current object, 
+	so you can use this in callback without extra bloat otherwise needed
+	@instance
+	@function requestAnimationFrame
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.requestAnimationFrame = function(fc){
+		return requestAnimationFrame( fc.bind(this) );
+	};
   
 	/** 
 	setInterval shortcut that by default binds callback function to current object, 
