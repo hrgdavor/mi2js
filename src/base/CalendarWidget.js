@@ -56,7 +56,7 @@ function(proto, superProto, comp, superComp){
 		var names = this.dayNames.el.getAttribute('names').split(',');
 		for(var i=0; i<7; i++){
 			var wd = (i+this.dayOffset)%7;
-			mi2.addTag(tr, {tag:'TH',attr:{'class':'day'+wd,html:names[wd]}});
+			mi2.addTag(tr, {tag:'TH',attr:{'class':'day'+wd},html:names[wd]});
 		}
 		this.days = [];
 		for(var r=0; r<6; r++){
