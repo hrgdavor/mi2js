@@ -246,6 +246,16 @@ no real need to use dataset, and attributes work on more browsers
 		return this.el.classList.contains(name);
 	};
 
+/** Check if node has a class and toggle it
+@function hasClass
+@instance
+@memberof mi2JS(core).NodeWrapper
+	*/
+	mi2Proto.toggleClass = function(name) {
+		return this.el.classList.toggle(name);
+	};
+
+
 	/** Remove a css class from the element (leaving others intact) 
 @function removeClass
 @instance
