@@ -62,12 +62,12 @@ relationship. Also adding other functionalities needed for component based compo
 	*/
 	proto.__init = function(){
 		if(!this.__initialized){
+			this.__initialized = true;
 			this.initTemplate();
 			this.parseChildren();
 			this.initChildren();
 			this.fireEvent('init');
 		}
-		this.__initialized = true;
 	};
 
 	/** 
