@@ -13,13 +13,15 @@ function(proto, superProto, comp, superComp){
 
 		superProto.initTemplate.call(this);
 
-		this.texts = this.attrDef('texts','+,-').split(',');
+		this.texts = this.attrDef('texts','&#x25B2;,&#x25BC;').split(',');
 	};
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
 
 		this.title.setHtml(this.titleHTML);
+
+		this.listen(this.el, 'click');
 
 		var code = this.attrDef('target','+');
 		this.panel = this.parent.findRef(code, this);
@@ -31,17 +33,24 @@ function(proto, superProto, comp, superComp){
 	proto.updateButton = function(){
 		try{
 			var idx = this.panel.isVisible() ? 1:0;
-			this.button.setText(this.texts[idx]);
+			this.button.setHtml(this.texts[idx]);
 			this.classIf('collapsed', !idx);
 		}catch(e){
 			console.error('updateButton error '+e.message);
 		}
 	};
 
-	proto.on_showHide = function(sel){
-		var panel = this.panel;
-		panel.setVisible(!panel.isVisible());
-		this.updateButton();
-	};
+	proto.setValue = function(val){
+		this.panel.setVisible(val);
+	}
 
+	proto.getValue = function(val){
+		return this.panel.isVisible();
+	}
+
+	proto.on_click = function(sel){
+		this.updateButton();
+		this.setValue(!this.getValue());
+		this.fireEvent({name:'change', value:this.panel.isVisible()});
+	};
 });
