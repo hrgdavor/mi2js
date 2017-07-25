@@ -158,6 +158,10 @@ call function on each element, but collect returned values as object
 		this.callFunc('setReadOnly',[readOnly]);
 	};
 
+	proto.setConfig = function(){
+		this.callFunc('setConfig',arguments);
+	};
+
 	proto.setValue = function(value){
 		for(var p in this.items){
 			this.items[p].setValue(value[p]);
