@@ -26,8 +26,6 @@ function(proto, superProto, comp, superComp){
 		html: ''
 	};
 
-	proto.isTransitive = function(evt){ return true; };
-
 	proto.initTemplate = function(){
 		var el = this.el;
 		

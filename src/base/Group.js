@@ -5,6 +5,11 @@ mi2JS.addCompClass('base/Group', 'Base', '',
 */
 function(proto, superProto, comp){
 	
+	// we want setValue from NWGroup to be null, or the one from Base as mi2JS.mixin will not overwritten
+	proto.setValue = null;
+
+	proto.isTransitive = function(evt){ return true; };
+
 	// add/mixin methods from NWGroup but do not override any existing methods
 	// this assumes both use this.items for keeping list of items
 	mi2JS.mixin(comp,mi2JS.NWGroup);
