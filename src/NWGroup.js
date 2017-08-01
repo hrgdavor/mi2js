@@ -163,6 +163,7 @@ call function on each element, but collect returned values as object
 	};
 
 	proto.setValue = function(value){
+		value = value || {};
 		for(var p in this.items){
 			this.items[p].setValue(value[p]);
 		}
