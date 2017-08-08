@@ -118,10 +118,22 @@ function(proto, superProto, comp, superComp){
 
 		this._fixItemList();
 
-		for(var i=arr.length; i<this.allItems.length; i++){
-			this.allItems[i].setVisible(false);
-		}
 		this.fireEvent('afterSetValue');
+	};
+
+	proto.setConfig = function(arr){
+		arr = arr || [];
+		for(var i=0; i<arr.length; i++){
+			this.setItem(void 0,i);
+			console.log(this.allItems);
+			this.allItems[i].setConfig(arr[i]);
+		}
+		this.count = arr.length;
+		if(this.noData) this.noData.setVisible(!this.count);
+
+		this._fixItemList();
+
+		this.fireEvent('afterSetConfig');
 	};
 
 	/** returns only active items (do not access .times property directly as it contains also disabled ones) */
@@ -181,9 +193,11 @@ function(proto, superProto, comp, superComp){
 		if(!item) item = this.allItems[i] = this.makeItem(newData, i);
 
 		item.el.loopIndex = i;
-		this.setItemValue(item, newData);
-		this.fireEvent({name:'afterSetItemValue', index:i, data:newData, item:item});
-		item.setVisible(true);
+		if(newData != void 0){
+			this.setItemValue(item, newData);
+			this.fireEvent({name:'afterSetItemValue', index:i, data:newData, item:item});
+			item.setVisible(true);
+		}
 	};
 
 	proto.getValue = function(){
@@ -216,6 +230,7 @@ function(proto, superProto, comp, superComp){
 	    	var it = this.allItems;
 	    	for(var i=0; i<it.length; i++){
 	    		it[i].el.loopIndex = i;
+	    		it[i].setVisible(i<this.count);
 	    	}    	
 		}		
 	};
