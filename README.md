@@ -1,29 +1,37 @@
 # mi2js
 
-A JS library, materializing slowly, trying to stay small.
+A JS/HMTL Component library, materializing slowly, trying to stay small by
+  - adding useful features that do not require a lot of code
+  - staying intentionally less advanced to reduce code-base
+  - targeting back-ofice applications and not public web pages or websites to avoid many of horrible 
+    requirements forced onto public web (SEO, bullshit IE browser)
+  - IE shit will still mostly work, and one can use polyfills for some cases, but certainly do not intend to clog this library with IE fixes
 
 ## Guidelines
-Some thoughts while making decisions in the code
- - create small and useful core
- - keep core simple, short and independent
- - remove features from the core that are not essential (obviously is influenced by personal preference)
-  - aim for less code in library
-  - ask: will I need this often enough (almost in every project) ?
-  - ask: can it be a separate addon ?
-  - split into small pieces, 
-  - work later on having full build for those that do not need the hassle, and enable taking out things not needed for optimization freaks (I do that sometimes)
- - simpler code will likely have less bugs :)
- - the utilities int the lib should make resulting code simple and readable
+Some consideratoins (not necessarily strict rules) while making decisions in the code
+  - create small and useful core
+  - keep simple, short and independent
+  - aim for less code in library (less bugs to make/test/fix)
+  - implement/reimplement features in a way that makes application code simpler and more readable/understandable
+
+## Guidelines and future
+  - remove features that are not essential (obviously this is influenced by personal preference)
+  - split into small pieces to enable custom build with specific feature-set
+  - consideing moving to ES6 syntax taht is transpiled to ES5
+  - considering adding type-safety support without abandoning core JavaScript tricks I like to use (better FLow support looks like good direction)
+  - I like Angular approach with directives, but am not fan of switching to TypeScriupt and also not fan of bi-directional binding
 
 ## Code
  - clearing up the code documentation to generate nicer docs using jsdoc and also [doclets.io](https://doclets.io/hrgdavor/mi2js/master])
  - minimizer friendly 
  - avoid too short variable names ( I tend to break this one often :D ) 
- - keep code for Web Components in JS files, no coding in HTML template (error handling becomes tedious, and code that interprets it, get complicated)
+ - keep code for Web Components in JS files, no coding in HTML template (error handling becomes tedious, and code that interprets it gets complicated and large)
  - provide means to easily pinpoint error source (not just stack trace)
 
+
+
 ## Browsers
-Personally, I do not care about any browser without Flexbox support ( Flexbox not actually required by the library )
+Personally, I do not care about any browser without Flexbox support ( Flexbox is not actually required by the library )
  - Issues mostly easily fixable by polyfills
  - __PhantomJS__ - polyfill for Function.bind is used
   - when printing HTML->PDF

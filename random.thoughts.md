@@ -57,6 +57,13 @@ Use case for `base/Button`
    - example: event="delete" action="archive"
    - example: event="rowClick" action="preview"
 
+# useful boolean attributes in html
+  - disabled
+  - required
+  - selected
+  - checked
+  - readOnly
+  - open
 
 ## show/hide event
  - [x] parent show:
@@ -91,6 +98,38 @@ Use case for `base/Button`
  - render HTML (for short filtered texts without using components)
  - __actually it is a regualr filter, but receiving side mut allow the HTML to be injected and not converted to plain text__
  - 
+
+# unify array/map for components
+  - components sometimes follow organization like object graph
+  - a simple component can be regarded like a simple value in object graph
+  - components grouped by key/value are similar to objects and maps
+  - components repeated with just ordering (key being the location in the array is array like organization)
+  - common operations
+    - array: push(c) , map: add(key,c)
+    - array: remove(key), map: remove(key)
+    - array: remove(c), map: remove(c)  ... compare object and remove the key as well
+    - array: slice(index,count, insert extra...) ... useful array manipulation func
+    - array: move(c, cBefore)
+    - array: insertBefore(c, cBefore)
+    - array: insert(c, index) ... alias to slice(index,0,c)
+    - array: indexOf(c):key  map:indexOf()  ... makes sense even for map if needed 
+
+# inline loop
+```html
+<table as="base/Loop" template>
+  <tr  template>
+    <td p="leftColumns" loop as="base/CheckBox">${}</td>
+    <td>Divider</td>
+    <td p="rightColumns" loop="base/Loop" as="base/Button">${}</td>
+  </tr>
+  <tr class="footer">
+    <td>...</td>
+  </tr>
+</table>
+
+
+```
+
 
 # RenderTable
 examples of column config
