@@ -39,7 +39,7 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 
 	function genPrinter(arr){
 		return function(data){
-			data = data || {};
+			// data = data || {};
 			if(arr.length == 1){
 				// return exact value for single 
 				return arr[0] instanceof Function ? arr[0](data) : arr[0];

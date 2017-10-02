@@ -4,6 +4,20 @@
 
 */
 
+
+
+/** 
+Defines properties needed to extract single element template from a a node,
+or to programatically define such template.
+
+  @typedef ElementTemplate
+  @type {object}
+  @property {string} tag - tag name
+  @property {Object} attr - object containing key->value pairs for attributes
+  @property {string} html - innerHTML of the element
+ */
+
+
 /** Very basic wrapper used for scripting(similar to JQuery and alike). Contains some useful
    methods to allow manipulation, and can be extended further if needed. For more advanced 
    functionalities check {@link mi2JS.comp..Base} component and it's descendants in {@link mi2JS.comp.}.
@@ -129,10 +143,11 @@ For array, all elements of upodate array are added to the first array.
 */
 mi2.update = function(dest){
 	var update;
+	var isArray = mi2.isArray(dest);
 	for(var i=1; i<arguments.length; i++){
 		update = arguments[i];
 		if(update === void 0 || update === null) continue;
-	    if (mi2.isArray(dest)){
+	    if (isArray){
 	        dest = dest.concat(dest, update);
 	    }else{
 	    	mi2.updateObj(dest,update);

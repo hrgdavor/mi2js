@@ -116,7 +116,7 @@ function(proto, superProto, comp, superComp){
 		this.count = arr.length;
 		if(this.noData) this.noData.setVisible(!this.count);
 
-		this._fixItemList();
+		this._fixItemList(true);
 
 		this.fireEvent('afterSetValue');
 	};
@@ -125,7 +125,6 @@ function(proto, superProto, comp, superComp){
 		arr = arr || [];
 		for(var i=0; i<arr.length; i++){
 			this.setItem(void 0,i);
-			console.log(this.allItems);
 			this.allItems[i].setConfig(arr[i]);
 		}
 		this.count = arr.length;
