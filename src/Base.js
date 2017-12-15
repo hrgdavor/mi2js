@@ -46,6 +46,7 @@ relationship. Also adding other functionalities needed for component based compo
 	@param {object} parent
 	*/
 	proto.construct = function(el, parent){
+		this.state = {};
 		this.children = [];
 		this.el = el;
 	};
@@ -65,7 +66,11 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.__init = function(){
 		if(!this.__initialized){
 			this.__initialized = true;
-			this.initTemplate();
+			var def = this.initTemplate(mi2.h, mi2.t, this.state);
+			if(def){ // support for JSX templates
+				this._updaters = [];
+				mi2.insertHtml(this.el, null, def, this._updaters);
+			}
 			this.parseChildren();
 			this.initChildren();
 			this.fireEvent('init');

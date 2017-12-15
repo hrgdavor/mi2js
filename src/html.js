@@ -40,22 +40,7 @@
 
 		if(typeof tpl == 'string') tpl = {tag:tpl};
 
-		var e = document.createElement(tpl.tag);
-
-		if(parent){
-			if(parent instanceof mi2) parent = parent.el;
-			parent.insertBefore(e, nextSibling || null);
-		}
-		if(tpl.html)   e.innerHTML=tpl.html;
-
-		var attribs = tpl.attr;
-		if(attribs){
-			for(var attrName in attribs){
-				e.setAttribute(attrName, attribs[attrName]);
-			}
-		}
-		
-		return e;
+		return mi2.insertHtml(parent, tpl, nextSibling);
 	};
 
 	/** 

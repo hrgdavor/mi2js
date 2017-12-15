@@ -148,7 +148,7 @@ mi2.update = function(dest){
 		update = arguments[i];
 		if(update === void 0 || update === null) continue;
 	    if (isArray){
-	        dest = dest.concat(dest, update);
+	        arrayPush.apply(dest,update);
 	    }else{
 	    	mi2.updateObj(dest,update);
 	    }
@@ -189,7 +189,9 @@ mi2.copy = function(obj, update){
     // we made a new array with emty object, and push all arguments after that
     arrayPush.apply(newArgs, arguments);
     // now just call the update method with new arguments
-	return mi2.update.apply(mi2,newArgs);
+    newArgs = Array.prototype.slice.call(arguments,0);
+    newArgs.unshift(mi2.isArray(obj) ? []:{});
+	return mi2.update.apply(this, newArgs);
 };
 
 /** Parse number using parseFloat, but return zero if not a number.
@@ -292,5 +294,64 @@ mi2.fixEvent = function(evt){
 	return evt;
 };
 
+mi2.h = function(tag,attr){
+  return {tag:tag, attr:attr, children:Array.prototype.slice.call(arguments,2)};
+}
+
+mi2.t = function(code){	return code; }
+
+mi2.insertHtml = function(parent, def, before, updaters){
+	updaters = updaters || [];
+
+    function updateAttr(node, attr, func){
+        return function(){
+            var newValue = func();
+            if(node.getAttribute(attr) != newValue) node.setAttribute(attr, newValue);        
+        }
+    }
+
+    function updateText(node, func){
+        return function(){
+            var newValue = func();
+            if(node.textContent != newValue) node.textContent = newValue;
+        }
+    }
+
+    if(parent && parent instanceof mi2) parent = parent.el;
+
+    if (typeof def == 'string') {
+        var n = document.createTextNode(def);
+        parent.insertBefore(n, before);
+
+    } else if(def && def instanceof Function){
+        var n = document.createTextNode('');
+        parent.insertBefore(n, before);
+        // prepare text updater
+        updaters.push(updateText(n,def));
+
+    } else if(def instanceof Array){
+        def.forEach(function (c) { insertHtml(parent, null, c, updaters);} );
+
+    } else {
+        var n = document.createElement(def.tag);
+		if(def.html) n.innerHTML = def.html;
+        if (def.attr) {
+            for (var a in def.attr) {
+                var value = def.attr[a];
+                if(value && (value instanceof Function)){
+                    // preapre updater for attribute value
+                    updaters.push(updateAttr(n, a, value));
+                }else{
+                    n.setAttribute(a, value);
+                }
+            }
+        }
+        if(parent) parent.insertBefore(n, before);
+        if (def.children && def.children.length) {
+            insertHtml(n, null, def.children, updaters);
+        }
+        return n;
+    }
+}
 
 }());
