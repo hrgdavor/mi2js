@@ -27,6 +27,7 @@ if($_GET['inc']){
 	$cmd .= " --js_output_file build/".$_GET['baseName'].".c.js ";
 	$cmd .= " --create_source_map build/".$_GET['baseName'].".map ";
 	$cmd .= " --source_map_format V3 ";
+	$cmd .= " --language_in=ECMASCRIPT6_TYPED ";
 
 	echo "generating file<br/>".htmlspecialchars($cmd)."<br><br>";
 	flush();
