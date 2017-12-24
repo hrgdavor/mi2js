@@ -1,0 +1,8 @@
+{ 
+  "retainLines": true,
+  "plugins": [
+  	["babel-plugin-jsx-mi2", {addArrow:true}],
+  	"babel-plugin-translate-mi2",
+  	"syntax-jsx"
+  ]
+}

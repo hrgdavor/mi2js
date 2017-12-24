@@ -4,6 +4,12 @@
 module.exports = function(config) {
   config.set({
 
+    plugins: [
+      'karma-babel-preprocessor',
+      'karma-jasmine',
+      'karma-chrome-launcher',
+    ],
+
     // base path that will be used to resolve all patterns (eg. files, exclude)
     basePath: '',
 
@@ -34,6 +40,7 @@ module.exports = function(config) {
       // 'spec/loopSpec.js',
       'spec/*.js',
       'spec/base/*.js',
+      'spec/jsx/*.js',
 
        {pattern: 'spec/test.json', included: false}
     ],
@@ -47,7 +54,7 @@ module.exports = function(config) {
     // preprocess matching files before serving them to the browser
     // available preprocessors: https://npmjs.org/browse/keyword/karma-preprocessor
     preprocessors: {
-    
+      'spec/jsx/*.js' : ['babel']
     },
 
 
@@ -83,8 +90,8 @@ module.exports = function(config) {
     // - PhantomJS
     // - IE (only Windows; has to be installed with `npm install karma-ie-launcher`)
     browsers: [
-        'PhantomJS',
-        // 'Chrome'
+        //'PhantomJS',
+        'ChromeHeadless'
     ],
 
 

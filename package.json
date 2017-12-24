@@ -1,7 +1,13 @@
 {
+  "scripts": {
+    "test": "karma start --no-auto-watch --single-run true",
+    "dev-test": "karma start"
+  },
   "devDependencies": {
     "babel-core": "^6.26.0",
+    "babel-plugin-jsx-mi2": "^1.0.0",
     "babel-plugin-syntax-jsx": "^6.18.0",
+    "babel-plugin-translate-mi2": "^1.0.1",
     "babel-preset-minify": "^0.2.0",
     "jasmine-core": "^2.8.0",
     "karma": "^1.7.1",

@@ -55,7 +55,7 @@ relationship. Also adding other functionalities needed for component based compo
 	but only executes the first time. Subsequent calls are ignored.<br>
 	If not initialized does this in sequence:
 	<li> {@link mi2JS(comp).Base#initTemplate initTemplate} - apply template2
-	<li> {@link mi2JS(comp).Base#parseChildren parseChildren} - parse DOM nodes (recusrsion stop swhen a child component is foud)
+	<li> {@link mi2JS(comp).Base#parseChildren parseChildren} - parse DOM nodes (recusrsion stops when a child component is foud)
 	<li> {@link mi2JS(comp).Base#initChildren initChildren} - initialize child components (here the recursion continues again)
 	<li> Fire <b>init</b> event via {@link mi2JS(comp).Base#fireEvent fireEvent} (on_init will be called actually)
 
@@ -69,11 +69,27 @@ relationship. Also adding other functionalities needed for component based compo
 			var def = this.initTemplate(mi2.h, mi2.t, this.state);
 			if(def){ // support for JSX templates
 				this._updaters = [];
-				mi2.insertHtml(this.el, null, def, this._updaters);
+				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
+				mi2.insertHtml(this.el, def, null, this._updaters);
 			}
 			this.parseChildren();
 			this.initChildren();
 			this.fireEvent('init');
+		}
+	};
+
+	/** Update component content by calling all collected updaters. in case initTemplate returns
+	    definitions for HTML that contain updaters.
+	@instance
+	@function updateContent
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.updateContent = function(){
+		if(this._updaters){
+			for(var i =0; i< this._updaters.length; i++){
+				this._updaters[i]();
+			}
 		}
 	};
 
@@ -124,7 +140,9 @@ relationship. Also adding other functionalities needed for component based compo
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.on_init = function(evt){ };
+	proto.on_init = function(evt){ 
+		this.updateContent();// initial state values
+	};
 
 	/** 
 	@instance

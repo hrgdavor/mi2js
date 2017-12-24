@@ -330,7 +330,7 @@ mi2.insertHtml = function(parent, def, before, updaters){
         updaters.push(updateText(n,def));
 
     } else if(def instanceof Array){
-        def.forEach(function (c) { insertHtml(parent, null, c, updaters);} );
+        def.forEach(function (c) { mi2.insertHtml(parent, c, null, updaters);} );
 
     } else {
         var n = document.createElement(def.tag);
@@ -348,7 +348,7 @@ mi2.insertHtml = function(parent, def, before, updaters){
         }
         if(parent) parent.insertBefore(n, before);
         if (def.children && def.children.length) {
-            insertHtml(n, null, def.children, updaters);
+            mi2.insertHtml(n, def.children, null, updaters);
         }
         return n;
     }
