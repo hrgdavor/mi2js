@@ -26,6 +26,9 @@ function(proto, superProto, comp, superComp){
 				this.pages[i].setText(i+1);
 			}
 		}
+		for(var i=num; i<this.pages.length; i++){
+			this.pages[i].setVisible(false);
+		}
 	};
 
 	proto.update = function(table){
@@ -39,8 +42,9 @@ function(proto, superProto, comp, superComp){
 		if(offset < 0) offset = 0;
 
 		var count = this.pages.length >>>0;
+		var num = this.opts.pagesAbout * 2+1;
 		for(var i=0; i<count; i++){
-			this.pages[i].setVisible(i+offset<this.pagesCount);
+			this.pages[i].setVisible(i<num && i+offset<this.pagesCount);
 			this.pages[i].classIf("current", i+offset == this.curPage);
 			this.pages[i].setText(i+offset+1);
 			this.pages[i].attr('action', i+offset);
