@@ -52,7 +52,7 @@
 		}
 	}
 
-	mi2JS.vdifAttr = function(node, newAttr){
+	mi2JS.vdifAttr = function(node, newAttr, update){
 		var list = node.attributes;
 		var count = list.length;
 		var toRemove = [];
@@ -66,7 +66,7 @@
 			}
 		}
 
-		count = toRemove.length;
+		count = update ? 0 : toRemove.length;// do not remove attributes if in update mode
 		for(var i=0; i<count; i++){
 			node.removeAttribute(toRemove[i]);
 		}
