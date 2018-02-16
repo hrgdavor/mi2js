@@ -1,11 +1,12 @@
 (function(){
+	var mi2 = mi2JS;
 
-	mi2JS.vdiffNode = function(node, def){
-		mi2JS.vdifAttr(node, def.attr);
-		mi2JS.vdiffChildren(node, def.children);
+	mi2.vdiffNode = function(node, def){
+		mi2.vdifAttr(node, def.attr);
+		mi2.vdiffChildren(node, def.children);
 	}
 
-	mi2JS.vdiffChildren = function(node, children){
+	mi2.vdiffChildren = function(node, children){
 		children = children || [];
 		var def, remove, newNode, tag, tmp;
 		
@@ -29,7 +30,7 @@
 					node.insertBefore(document.createTextNode(def), next);
 				}
 
-			}else{
+			}else if(def instanceof mi2.TagDef){
 
 				tag = def.tag.toUpperCase();
 
@@ -42,7 +43,7 @@
 					newNode = document.createElement(tag);
 					node.insertBefore(newNode, next);
 				}
-				mi2JS.vdiffNode(newNode, def);
+				mi2.vdiffNode(newNode, def);
 			}
 		}
 		while(next){
@@ -52,7 +53,7 @@
 		}
 	}
 
-	mi2JS.vdifAttr = function(node, newAttr, update){
+	mi2.vdifAttr = function(node, newAttr, update){
 		var list = node.attributes;
 		var count = list.length;
 		var toRemove = [];
