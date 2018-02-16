@@ -75,5 +75,4 @@ describe( 'mi2.js Base library', function () {
 		expect(comp.el.innerHTML).toEqual('<div><label>Name:</label>Jane</div>')
 	});
 
-
 });
