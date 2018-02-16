@@ -294,8 +294,16 @@ mi2.fixEvent = function(evt){
 	return evt;
 };
 
+mi2.TagDef = function(tag,attr, children){
+	this.tag = tag;
+	this.attr = attr;
+	this.children = children;
+}
+
 mi2.h = function(tag,attr){
-  return {tag:tag, attr:attr, children:Array.prototype.slice.call(arguments,2)};
+	// using mi2.TagDef class for security (if needed)
+	// user input that looks like tag definition will not pass "instanceof mi2.TagDef" test
+	return new mi2.TagDef(tag, attr, Array.prototype.slice.call(arguments,2) );
 }
 
 mi2.t = function(code){	return code; }
