@@ -1,0 +1,86 @@
+(function(){
+
+	mi2JS.vdiffNode = function(node, def){
+		mi2JS.vdifAttr(node, def.attr);
+		mi2JS.vdiffChildren(node, def.children);
+	}
+
+	mi2JS.vdiffChildren = function(node, children){
+		children = children || [];
+		var def, remove, newNode, tag, tmp;
+		
+		var next = node.firstChild;
+
+		var count = children.length;
+		for(var i=0; i<count; i++){
+		
+			def = children[i];
+		
+			if(typeof(def) == 'string'){
+
+				if(next && next.nodeType == 3){
+					if(next.textContent != def){
+						// console.log('change text', next.textContent, def);
+						next.textContent = def;
+					}
+					next = next.nextSibling;
+				}else{
+					// console.log('insert text', def);
+					node.insertBefore(document.createTextNode(def), next);
+				}
+
+			}else{
+
+				tag = def.tag.toUpperCase();
+
+				if(next && next.tagName == tag){
+					// console.log('update tag', tag);
+					newNode = next;
+					next = next.nextSibling;
+				}else{
+					// console.log('add tag', tag);
+					newNode = document.createElement(tag);
+					node.insertBefore(newNode, next);
+				}
+				mi2JS.vdiffNode(newNode, def);
+			}
+		}
+		while(next){
+			tmp = next;
+			next = next.nextSibling;
+			node.removeChild(tmp);
+		}
+	}
+
+	mi2JS.vdifAttr = function(node, newAttr){
+		var list = node.attributes;
+		var count = list.length;
+		var toRemove = [];
+		var attr, name, newValue;
+		for(var i=0; i<count; i++){
+			attr = list[i];
+			name = attr.name;
+			newValue = newAttr ? newAttr[name] : void 0;
+			if(newValue == void 0 || newValue === null || newValue === false){
+				toRemove.push(name);
+			}
+		}
+
+		count = toRemove.length;
+		for(var i=0; i<count; i++){
+			node.removeAttribute(toRemove[i]);
+		}
+		if(newAttr){
+			for(var p in newAttr){
+				newValue = newAttr[p];
+				if(newValue != void 0 && newValue !== null && newValue !== false){
+					if(newValue === true) newValue = '';
+	 				if(typeof(newValue) != 'string') newValue = '' + newValue;
+
+	 				if(!node.hasAttribute(p) || node.getAttribute(p) != newValue)
+						node.setAttribute(p, newValue);
+				}
+			}			
+		}
+	}
+}());
