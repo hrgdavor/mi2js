@@ -40,7 +40,7 @@
 
 		if(typeof tpl == 'string') tpl = {tag:tpl};
 
-		return mi2.insertHtml(parent, tpl, nextSibling);
+		return mi2.insertHtml(parent, new mi2.TagDef(tpl.tag, tpl.attr, tpl.children || [], tpl.html), nextSibling);
 	};
 
 	/** 

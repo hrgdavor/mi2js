@@ -294,10 +294,11 @@ mi2.fixEvent = function(evt){
 	return evt;
 };
 
-mi2.TagDef = function(tag,attr, children){
+mi2.TagDef = function(tag,attr, children, html){
 	this.tag = tag;
 	this.attr = attr;
 	this.children = children;
+	this.html = html;
 }
 
 mi2.h = function(tag,attr){
@@ -340,7 +341,7 @@ mi2.insertHtml = function(parent, def, before, updaters){
     } else if(def instanceof Array){
         def.forEach(function (c) { mi2.insertHtml(parent, c, null, updaters);} );
 
-    } else {
+    } else if(def instanceof mi2.TagDef){
         var n = document.createElement(def.tag);
 		if(def.html) n.innerHTML = def.html;
         if (def.attr) {
