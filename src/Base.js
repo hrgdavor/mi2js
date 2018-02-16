@@ -66,7 +66,7 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.__init = function(){
 		if(!this.__initialized){
 			this.__initialized = true;
-			var def = this.initTemplate(mi2.h, mi2.t, this.state);
+			var def = this.initTemplate(mi2.h, mi2.t, this.state, this);
 			if(def){ // support for JSX templates
 				this._updaters = [];
 				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
@@ -88,7 +88,7 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.updateContent = function(){
 		if(this._updaters){
 			for(var i =0; i< this._updaters.length; i++){
-				this._updaters[i]();
+				this._updaters[i].apply(this);
 			}
 		}
 	};
