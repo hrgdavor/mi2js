@@ -36,11 +36,14 @@ module.exports = function(config) {
       'src/base/MultiCheck.js',
       'src/base/Table.js',
       'src/base/MultiInput.js',
+      'build/en/base/Pager.js',
+      'build/en/base/RenderTable.js',
 
       // 'spec/loopSpec.js',
-      'spec/*.js',
-      'spec/base/*.js',
-      'spec/jsx/*.js',
+      // 'spec/*.js',
+      // 'spec/base/*.js',
+      // 'spec/jsx/*.js',
+      'spec/jsx/RenderTable-vdiff.js',
 
        {pattern: 'spec/test.json', included: false}
     ],

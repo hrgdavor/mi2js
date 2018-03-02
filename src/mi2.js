@@ -297,7 +297,7 @@ mi2.fixEvent = function(evt){
 mi2.TagDef = function(tag,attr, children, html){
 	this.tag = tag;
 	this.attr = attr;
-	this.children = children;
+	this.children = children || [];
 	this.html = html;
 }
 
@@ -327,7 +327,7 @@ mi2.insertHtml = function(parent, def, before, updaters){
     }
 
     if(parent && parent instanceof mi2) parent = parent.el;
-
+    
     if (typeof def == 'string') {
         var n = document.createTextNode(def);
         parent.insertBefore(n, before);
@@ -339,27 +339,35 @@ mi2.insertHtml = function(parent, def, before, updaters){
         updaters.push(updateText(n,def));
 
     } else if(def instanceof Array){
-        def.forEach(function (c) { mi2.insertHtml(parent, c, null, updaters);} );
+        def.forEach(function (c) { 
+        	mi2.insertHtml(parent, c, before, updaters);
+        });
 
     } else if(def instanceof mi2.TagDef){
-        var n = document.createElement(def.tag);
-		if(def.html) n.innerHTML = def.html;
-        if (def.attr) {
-            for (var a in def.attr) {
-                var value = def.attr[a];
-                if(value && (value instanceof Function)){
-                    // preapre updater for attribute value
-                    updaters.push(updateAttr(n, a, value));
-                }else{
-                    n.setAttribute(a, value);
-                }
-            }
-        }
-        if(parent) parent.insertBefore(n, before);
-        if (def.children && def.children.length) {
-            mi2.insertHtml(n, def.children, null, updaters);
-        }
-        return n;
+    	if(def.tag == 'template' || def.tag == 'frag'){
+    		mi2.insertHtml(parent, def.children, before, updaters);
+    	}else{		
+	        var n = document.createElement(def.tag);
+			if(def.html) n.innerHTML = def.html;
+	        if (def.attr) {
+	            for (var a in def.attr) {
+	                var value = def.attr[a];
+	                if(value && (value instanceof Function)){
+	                    // preapre updater for attribute value
+	                    updaters.push(updateAttr(n, a, value));
+	                }else{
+	                    n.setAttribute(a, value);
+	                }
+	            }
+	        }
+	        if(parent) parent.insertBefore(n, before);
+	        if (def.children && def.children.length) {
+	            mi2.insertHtml(n, def.children, null, updaters);
+	        }
+	        return n;
+    	}
+    }else{
+    	throw new Error('unsupported type for insert '+typeof(def)+JSON.stringify(def));
     }
 }
 

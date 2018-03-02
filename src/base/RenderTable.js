@@ -6,6 +6,8 @@ function(proto, superProto, comp, superComp){
 data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 */
 	var $ = mi2JS;
+	var h = $.h;
+	var t = $.t;
 
 	proto.isTransitive = function(){ return true; };
 
@@ -21,8 +23,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
-
-		this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
+		// if(this.noData)
+			this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
 		
 		this.listen(this.tbody.el,"click",this.rowClick);
 
@@ -38,6 +40,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		td.innerHTML = data[code] === null || typeof(data[code]) == 'undefined' ? '' : data[code];
 	}
 
+	// NOTE: 
+	// different order would be more optimizer friendly based on use
+	// also order in Array forEach is like the first 3 params
+	// function defTitle(value, idx, data, td, tr, table)
 	function defTitle(tr,th,code,table){
 		th.innerHTML = table.opts.title  ? t(table.opts.title) : t(code);
 	}
@@ -186,7 +192,23 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 				var td = $.addTag(tr,{tag:"TD",attr:{'class':'cell_'+code}});
 				td.code = code;
 				var opts = this.cols[code];
-				opts.td(tr,td,code,tr.data,this);
+				var def = opts.td(tr,td,code,tr.data,this);
+
+				if(opts.render){
+					def = opts.render(tr.data[code], code, tr.data, mi2JS.h, mi2JS.t, this);
+					if(typeof(def) == 'string') td.innerHTML = def;
+				}
+				if(def instanceof mi2JS.TagDef){
+					if(def.tag == 'td'){
+						mi2JS.vdiffNode(td, def,true);
+					}else{
+						var chDef = def.children;
+						if(def.tagName != 'frag'){
+							chDef = [def];
+						}
+						mi2JS.vdiffChildren(td, chDef);
+					} 
+				}
 			}
 //			this.tbody ... save list
 		}
@@ -220,15 +242,15 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 
 	proto.rowClick = function(evt, mouseDown){
 		var bt = evt.target;
-		var td = bt.tagName == 'TD' ? bt:$.parent(bt,'TD');
+		var td = bt;
 		var action = null, param = null;
-		while(bt.tagName != 'TD' && !action ){
-			action = bt.getAttribute('action');
-			param = bt.getAttribute('param');
-			bt=bt.parentNode;
+		while(td.tagName != 'TD' && !action ){
+			action = td.getAttribute('action');
+			param = td.getAttribute('param');
+			td=td.parentNode;
 		}
 		if(! action ) action = 'edit';
-		var tr = $.parent(bt,'TR');
+		var tr = td.parentNode;
 		this.fireEvent({
 			name:'rowClick',
 			fireTo:'parent',
@@ -239,7 +261,6 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			action:action, 
 			param:param, 
 			src:this, 
-			button:bt,
 			domEvent: evt
 		});
 	};

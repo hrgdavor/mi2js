@@ -19,8 +19,8 @@ describe( 'mi2.js Base library', function () {
 	function(proto, superProto, comp, superComp){
 
 		proto.initTemplate = function(h,t,state){
-			var $form  = <div><label>[[name]]:</label>{state.name}</div>
-
+			var $form  = <template><div><label>[[name]]:</label>{state.name}</div></template>
+			
 			return <template>{$form}</template>
 		};
 	});
@@ -37,9 +37,9 @@ describe( 'mi2.js Base library', function () {
 		var def = <div title="[[name]]" title2="[[name]] x">[[name]]</div>
 
 		expect(def.tag).toEqual('div');
-		expect(def.children[0]()).toEqual('Name');
-		expect(def.attr.title()).toEqual('Name');
-		expect(def.attr.title2()).toEqual('Name x');
+		expect(def.children[0]).toEqual('Name');
+		expect(def.attr.title).toEqual('Name');
+		expect(def.attr.title2).toEqual('Name x');
 	});
 
 

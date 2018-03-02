@@ -11,7 +11,7 @@ describe( 'mi2.js vdiff', function () {
 		if(!attr) return '';
 		var ret = '';
 		if(attr.getNamedItem){
-			tmp = attr;
+			var tmp = attr;
 			attr = {};
 			for(var i=0; i<tmp.length; i++){
 				attr[tmp[i].name] = tmp[i].value;
@@ -55,6 +55,5 @@ describe( 'mi2.js vdiff', function () {
 		mi2.vdiffNode(node, <div></div>);
 		expect(node.outerHTML).toEqual('<div></div>');
 	});
-
 
 });

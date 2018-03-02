@@ -1,16 +1,20 @@
 (function(){
 	var mi2 = mi2JS;
 
-	mi2.vdiffNode = function(node, def){
-		mi2.vdifAttr(node, def.attr);
+	mi2.vdiffNode = function(node, def, update){
+		mi2.vdifAttr(node, def.attr, update);
 		mi2.vdiffChildren(node, def.children);
 	}
 
 	mi2.vdiffChildren = function(node, children){
+		mi2.vdiffChildrenAt(node, children, node.firstChild);
+	}
+
+	mi2.vdiffChildrenAt = function(node, children, next){
+
 		children = children || [];
 		var def, remove, newNode, tag, tmp;
 		
-		var next = node.firstChild;
 
 		var count = children.length;
 		for(var i=0; i<count; i++){
@@ -26,24 +30,27 @@
 					}
 					next = next.nextSibling;
 				}else{
-					// console.log('insert text', def);
+					// console.log('insert text',node, def, next);
 					node.insertBefore(document.createTextNode(def), next);
 				}
 
 			}else if(def instanceof mi2.TagDef){
+				if(def.tag == 'template1' || def.tag == 'frag'){
+					mi2.vdiffChildrenAt(node, def.children, next);
+				}else{				
+					tag = def.tag.toUpperCase();
 
-				tag = def.tag.toUpperCase();
-
-				if(next && next.tagName == tag){
-					// console.log('update tag', tag);
-					newNode = next;
-					next = next.nextSibling;
-				}else{
-					// console.log('add tag', tag);
-					newNode = document.createElement(tag);
-					node.insertBefore(newNode, next);
+					if(next && next.tagName == tag){
+						// console.log('update tag', tag);
+						newNode = next;
+						next = next.nextSibling;
+					}else{
+						// console.log('add tag', tag);
+						newNode = document.createElement(tag);
+						node.insertBefore(newNode, next);
+					}
+					mi2.vdiffNode(newNode, def);
 				}
-				mi2.vdiffNode(newNode, def);
 			}
 		}
 		while(next){

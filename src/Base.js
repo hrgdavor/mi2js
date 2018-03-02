@@ -497,6 +497,10 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	@param {Object} data
 	*/
     proto.expandVars = function(data){
+    	for(var p in data){
+    		this.state[p] = data[p];
+    	}
+    	this.updateContent();
         if(!this.__expander) this.loadExpander();
 
         this.__expander.setValue(data);
