@@ -500,6 +500,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
     	for(var p in data){
     		this.state[p] = data[p];
     	}
+    	data = this.state;
     	this.updateContent();
         if(!this.__expander) this.loadExpander();
 

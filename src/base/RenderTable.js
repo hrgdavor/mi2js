@@ -67,6 +67,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.setVisible(optsIn.pager != 'hidden');
 		this.pager2.setVisible(optsIn.pager != 'hidden');
 		var i=0;
+		this.thead.el.innerHTML = '';
 		var tr = $.addTag(this.thead.el, "TR");
 		var tr2 = $.addTag(this.thead.el,"TR");
 		var span = 0;
