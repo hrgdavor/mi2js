@@ -18,9 +18,7 @@ describe( 'mi2.js vdiff', function () {
 			}
 		}});
 		// console.log();
-		console.log(1,table.tbody.el.innerHTML);
 		table.update({data:[{name:'John'}, {name:'Jane'}]});
-		console.log(2,table.tbody.el.innerHTML);
 	});
 
 });

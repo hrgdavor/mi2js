@@ -11,14 +11,31 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 	mi2.expandPrefix.filter = function(prop, el, part, comp){
 		var idx = prop.indexOf('|');
 
+		function makeExtractValue(prop){
+			if(prop === '') return function(data){
+				return data;
+			}
+			var keys = prop.split('.');
+			var count = keys.length;
+			return function(data){
+				var val = data;
+				for(var i=0; i<count; i++){
+					if(val !== void 0 && val !== null) val = val[keys[i]];
+				}
+				return val;
+			}
+		}
+
 		// simple value extract
-		if(idx == -1) return function(data){ return prop === '' ? data:data[prop]; };
+		if(idx == -1) return makeExtractValue(prop);
 
 		// filter extracted value
 		var filter = mi2.parseFilter(prop.substring(idx+1));
 		prop = prop.substring(0,idx);
+		var getter = makeExtractValue(prop);
+
 		return function(data){
-			return mi2.filter( prop === '' ? data:data[prop], filter, prop, data); 
+			return mi2.filter( getter(data), filter, prop, data); 
 		};
 	}
 

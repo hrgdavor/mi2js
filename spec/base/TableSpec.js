@@ -12,9 +12,9 @@ describe( 'base/Table.js', function () {
         node = mi2.addTag(null, { tag: 'TABLE', attr:{as:'base/Table'},
             html:
     '<tr>'+
-        '<th column="first" sort></th><td gender="${gender}">${first}</td>'+
-        '<th column="last" sort></th><td>${last}</td>'+
-        '<th column="age" as="Base"></th><td>${age}</td>'+
+        '<th column="first" sort></th><td gender="${value.gender}">${value.first}</td>'+
+        '<th column="last" sort></th><td>${value.last}</td>'+
+        '<th column="age" as="Base"></th><td>${value.age}</td>'+
     '</tr>'
             });
     });
@@ -37,7 +37,7 @@ describe( 'base/Table.js', function () {
 '</tr></thead>'
         );
 
-        expect(comp.itemTpl.html).toEqual('<td gender="${gender}">${first}</td><td>${last}</td><td>${age}</td>');
+        expect(comp.itemTpl.html).toEqual('<td gender="${value.gender}">${value.first}</td><td>${value.last}</td><td>${value.age}</td>');
 
         //after setting data
         comp.setValue(data);

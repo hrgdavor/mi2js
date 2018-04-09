@@ -519,7 +519,9 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	@memberof mi2JS(comp).Base
 	@param {Object} data
 	*/
-    proto.setValue = proto.expandVars;
+    proto.setValue = function(value){
+    	this.expandVars({value:value});
+    }
 
 	/** Expand data expressions in the component and the children.
 	If you need to hide the expressions before the data is set first time
