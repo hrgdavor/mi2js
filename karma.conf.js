@@ -39,11 +39,11 @@ module.exports = function(config) {
       'build/en/base/Pager.js',
       'build/en/base/RenderTable.js',
 
-      // 'spec/loopSpec.js',
-      // 'spec/*.js',
-      // 'spec/base/*.js',
-      // 'spec/jsx/*.js',
-      'spec/jsx/RenderTable-vdiff.js',
+        // 'spec/expanderSpec.js',
+       'spec/*.js',
+       'spec/base/*.js',
+       'spec/jsx/*.js',
+      //'spec/jsx/RenderTable-vdiff.js',
 
        {pattern: 'spec/test.json', included: false}
     ],
