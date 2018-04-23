@@ -29,12 +29,12 @@ function(proto, superProto, comp, superComp){
 
 		this.idInput.attr("name", this.attr('name'));
 
-		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button'));
 		this.noEmpty = this.attrBoolean('no_empty');
 		this.freeText = this.attrBoolean('free_text');
 		this.allowNew = this.attrBoolean('allow_new');
 		
 		this.emptyText = this.attrDef('empty_text', '') ;
+		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button') && (this.textInput.el.value || '') != this.emptyText);
 
 		if(this.emptyText) this.setText(this.emptyText);
 		this.list = [];
@@ -291,7 +291,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setReadOnly = function(readOnly){
-		this.clearBt.setVisible(!readOnly && !this.attr("disable_clear_button"));
+		this.clearBt.setVisible(!readOnly && !this.attr("disable_clear_button") && (this.textInput.el.value || '') != this.emptyText);
 		this.textInput.el.readOnly = readOnly;
 	};
 
@@ -318,7 +318,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setText = function(str){
-		return (this.textInput.el.value = str || '');
+		var newText = this.textInput.el.value = str || this.emptyText;
+		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button') && (this.textInput.el.value || '') != this.emptyText);
 	};
 
 	proto.validate = function(defReq){
