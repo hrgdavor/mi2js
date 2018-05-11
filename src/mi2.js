@@ -315,7 +315,12 @@ mi2.insertHtml = function(parent, def, before, updaters){
     function updateAttr(node, attr, func){
         return function(){
             var newValue = func();
-            if(node.getAttribute(attr) != newValue) node.setAttribute(attr, newValue);        
+            if(node.getAttribute(attr) != newValue){
+            	if(newValue === false)
+            		node.removeAttribute(attr);
+            	else
+	            	node.setAttribute(attr, newValue);       
+            } 
         }
     }
 

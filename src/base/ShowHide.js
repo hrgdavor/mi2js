@@ -49,8 +49,8 @@ function(proto, superProto, comp, superComp){
 	}
 
 	proto.on_click = function(sel){
-		this.updateButton();
 		this.setValue(!this.getValue());
+		this.updateButton();
 		this.fireEvent({name:'change', value:this.panel.isVisible()});
 	};
 });
