@@ -72,10 +72,21 @@ relationship. Also adding other functionalities needed for component based compo
 				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
 				mi2.insertHtml(this.el, def, null, this._updaters);
 			}
+			this.initUpdaters();
 			this.parseChildren();
 			this.initChildren();
 			this.fireEvent('init');
 		}
+	};
+
+	proto.initUpdaters = function(){
+		if(this._updaters) for(var i=this._updaters.length-1; i>=0; i--){
+			var upd = this._updaters[i];
+			if(upd.attr && upd.attr.indexOf('on') === 0){
+				this.listen(upd.node, upd.attr.substring(2), upd.func);
+				this._updaters.splice(i,1);
+			}
+		}		
 	};
 
 	/** Update component content by calling all collected updaters. in case initTemplate returns
