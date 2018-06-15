@@ -28,7 +28,7 @@ function(proto, superProto, comp, superComp){
 		superProto.parseChildren.call(this);
 
 		this.idInput.attr("name", this.attr('name'));
-
+		
 		this.noEmpty = this.attrBoolean('no_empty');
 		this.freeText = this.attrBoolean('free_text');
 		this.allowNew = this.attrBoolean('allow_new');
@@ -47,6 +47,7 @@ function(proto, superProto, comp, superComp){
 			this.hasFocus = true;
             this.firstKey = true;
 			this.selectFirst = false;
+			this.lastTextValue = this.textInput.el.value;
 			this.textInput.el.select();
 			this.callLoad(true);
 		});
@@ -54,12 +55,14 @@ function(proto, superProto, comp, superComp){
 		this.listen(this.textInput.el, "blur", function(evt){
 			if(this.isReadOnly()) return;
 			this.hasFocus = false;
-			if(this.freeText){
-                this.idInput.el.value = this.textInput.el.value;
-                this.fireIfChanged();
-            }else{
-               	this.applySelection(this.allowNew);
-            }
+			if(this.lastTextValue !== this.textInput.el.value){
+				if(this.freeText){
+					this.idInput.el.value = this.textInput.el.value;
+					this.fireIfChanged();
+				}else{
+					this.applySelection(this.allowNew);
+				}
+			}
             this.hide();
         });
 
