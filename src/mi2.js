@@ -313,7 +313,7 @@ mi2.insertHtml = function(parent, def, before, updaters){
 	updaters = updaters || [];
 
     function updateAttr(node, attr, func){
-        return function(){
+        var ret = function(){
             var newValue = func();
             if(node.getAttribute(attr) != newValue){
             	if(newValue === false)
@@ -322,13 +322,19 @@ mi2.insertHtml = function(parent, def, before, updaters){
 	            	node.setAttribute(attr, newValue);       
             } 
         }
+        ret.node = node;
+        ret.attr = attr;
+        ret.func = func;
+        return ret;
     }
 
     function updateText(node, func){
-        return function(){
+        var ret = function(){
             var newValue = func();
             if(node.textContent != newValue) node.textContent = newValue;
         }
+        ret.node = node;
+        return ret;
     }
 
     if(parent && parent instanceof mi2) parent = parent.el;
