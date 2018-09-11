@@ -50,17 +50,19 @@ function(proto, superProto, comp, superComp){
 		if(buttons.length > 0){
 			this.setTimeout(function(){
 				var button = this.buttons.getItem(0);
-				console.log('button.el.focus', button.el.focus);
 				button.el.focus();
-			},100);
+			},10);
 
 		} 
 	};
 
 	proto.on_close = function(evt){
-		this.setVisible(false);
 		if(this.callback){
-			this.callback(evt.action);
+			if(this.callback(evt.action) !== false){
+				this.setVisible(false);
+			}
+		}else{
+			this.setVisible(false);			
 		}
 	};
 
