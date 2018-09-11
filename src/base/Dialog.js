@@ -8,6 +8,12 @@ function(proto, superProto, comp, superComp){
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
+		
+		this.listen(document.body,'keyup', function(evt){
+			if(evt.keyCode == 27){
+				if(this.isVisible() && this.hasCancel) this.on_close({action:'cancel'});
+			}
+		});
 	};
 
 	proto.show = function(params){
@@ -29,16 +35,26 @@ function(proto, superProto, comp, superComp){
 		}
 
 		this.buttons.setValue([]);
-
+		this.hasCancel = false;
 		for(var i=0; i< buttons.length; i++){
 			var text = buttons[i].text || mi2.t(buttons[i].action);
 			this.buttons.push(text);
 			var button = this.buttons.getItem(i);
+			if(buttons[i].action == 'cancel') this.hasCancel = true;
 			button.setText(text);
 			button.attr('action', buttons[i].action);
 			button.attr('class',  buttons[i]['class'] || buttonClass);
 		}
 		this.setVisible(true);
+
+		if(buttons.length > 0){
+			this.setTimeout(function(){
+				var button = this.buttons.getItem(0);
+				console.log('button.el.focus', button.el.focus);
+				button.el.focus();
+			},100);
+
+		} 
 	};
 
 	proto.on_close = function(evt){
