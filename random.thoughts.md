@@ -1,6 +1,17 @@
 # general
  - avoid programming inside templates (no code evaluation or property expansion)
 
+# forms CSS
+ - https://v4-alpha.getbootstrap.com/components/forms/#form-groups
+ - .form-group .form-control .form-inline
+
+# Use case for `base/Button` 
+ - fires action event to parent directly
+ - parent does not have to add listener to each button, just add `on_actionName` method
+ - transient component should forward the event to the parent
+ - simple directive as button needs not even be a component45
+ - navigation button that uses `<a href` and thus even enables link copy and open in new window 
+
 # component initialization
   - component is contructed ( `construct` )
     - define
@@ -12,6 +23,14 @@
   - `afterInitTemplate`
   - `initChildren` ( initTemplate for each child that is "not lazyInit and hidden" )
 
+# useful boolean attributes in html
+  - disabled
+  - required
+  - selected
+  - checked
+  - readOnly
+  - open
+
 initializing component template has few use cases.
  - a node without children and component that has html defined to put inside
 
@@ -21,13 +40,6 @@ initializing component template has few use cases.
    - abandon `<form>` element as it fails for nested forms (editing object graph)
  - rethink if distinction between augmented html node and real component is needed
    - augmented node has no other information except the node reference
- - rethink form validation
-   - ? remove label reference and info box reference
- - rethink validation error filter
-   - for combining form default validation and custom validation after
-   - filter for getting validation error from server
-   - for easier adding validation errors
-   - ? validation object with some utiliy metohds
  - refactor Table, remove onclick handler and move it to base/ClickableRow maybe
 
 # event (and direction for fire)
@@ -45,11 +57,6 @@ initializing component template has few use cases.
  - if multiple functionalities can have different behavior for transitive component
   - ? how to handle situation when you want to have partial transitive behavior
 
-Use case for `base/Button` 
- - fires action event to parent directly
- - parent does not have to add listener to each button, just add `on_actionName` method
- - transient component should forward the event to the parent
-
 ## components firing events down to parent
  - should have event="xxx" attribute to change event name
  - should have action="xxx" attribute to enable one event handler handlig similar actions
@@ -57,13 +64,12 @@ Use case for `base/Button`
    - example: event="delete" action="archive"
    - example: event="rowClick" action="preview"
 
-# useful boolean attributes in html
-  - disabled
-  - required
-  - selected
-  - checked
-  - readOnly
-  - open
+# component control directly in template (binding/observable)
+ - simple situations like enable, disable
+ - if nothing else is needed except those simple tasks do it via template
+ - revisit component reference approach versus template defined control
+
+
 
 ## show/hide event
  - [x] parent show:
@@ -184,6 +190,13 @@ parameters inside template
  - validate input values
  - custom validation for values
  - async validation for values
+ - rethink form validation
+   - ? remove label reference and info box reference
+ - rethink validation error filter
+   - for combining form default validation and custom validation after
+   - filter for getting validation error from server
+   - for easier adding validation errors
+   - ? validation object with some utiliy metohds
 
 
 # AutoComplete
