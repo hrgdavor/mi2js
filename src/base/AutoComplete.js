@@ -54,27 +54,14 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(this.textInput.el, "blur", function(evt){
 			if(this.isReadOnly()) return;
-			this.hasFocus = false;
-			if(this.lastTextValue !== this.textInput.el.value){
-				if(this.freeText){
-					this.idInput.el.value = this.textInput.el.value;
-					this.fireIfChanged();
-				}else{
-					this.applySelection(this.allowNew);
-				}
-			}
+			this.on_blur();
             this.hide();
         });
 
         this.listen(this.textInput.el, "keydown", function(evt){
             if(this.isReadOnly()) return;
-            if(evt.keyCode == 9){ // TAB
-                if(this.freeText){
-                    this.idInput.el.value = this.textInput.el.value;
-                    this.fireIfChanged();
-                }else{
-                	this.applySelection(this.allowNew);
-                }
+			if(evt.keyCode == 9){ // TAB
+				this.on_blur();
 			}else if(evt.keyCode == 13){ // ENTER
 				this.applySelection();
 				evt.stop();
@@ -115,6 +102,18 @@ function(proto, superProto, comp, superComp){
 		});
 	};
 
+
+	proto.on_blur = function(){
+		this.hasFocus = false;
+		if(this.lastTextValue !== this.textInput.el.value){
+			if(this.freeText){
+				this.idInput.el.value = this.textInput.el.value;
+				this.fireIfChanged();
+			}else{
+				this.applySelection(this.allowNew);
+			}
+		}
+	};
 	
 	proto.on_clear = function(){
 		if(this.isReadOnly()) return;
