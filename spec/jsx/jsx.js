@@ -5,7 +5,6 @@ describe( 'mi2.js Base library', function () {
 	// translation implementation
 	var TRANS = {name:'Name'};
 	function t(code){ return TRANS[code] ||code;}
-    mi2.t = t;
 
 	mi2JS.addCompClass('test/JsxTest', 'Base', '',
 	function(proto, superProto, comp, superComp){

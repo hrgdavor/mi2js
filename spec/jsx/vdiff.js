@@ -5,7 +5,6 @@ describe( 'mi2.js vdiff', function () {
 	// translation implementation
 	var TRANS = {name:'Name'};
 	function t(code){ return TRANS[code] ||code;}
-    mi2.t = t;
 
 	function attrStr(attr){
 		if(!attr) return '';

@@ -1,4 +1,4 @@
-describe( 'mi2.js vdiff', function () { 
+describe( 'RenderTable.js vdiff', function () { 
 	var $ = mi2= mi2JS;
 	var h = mi2.h;
 	
@@ -15,10 +15,19 @@ describe( 'mi2.js vdiff', function () {
 				td:function(tr,td,code,data){
 					return <td>{data.name}</td>;
 				}
+			},
+			age:{
+				td:function(tr,td,code,data){
+					return <td>{data.age}</td>;
+				}
 			}
 		}});
-		// console.log();
-		table.update({data:[{name:'John'}, {name:'Jane'}]});
+		table.update({data:[{name:'John', age:12}, {name:'Jane', age:0}]});
+
+		expect(table.tbody.el.innerHTML).toEqual('<tr class="high"><td class="cell_name">John</td><td class="cell_age">12</td></tr><tr class="high"><td class="cell_name">Jane</td><td class="cell_age">0</td></tr>');
+
+		table.update({data:[{name:'John', age:12}, { age:0}]});
+		expect(table.tbody.el.innerHTML).toEqual('<tr class="high"><td class="cell_name">John</td><td class="cell_age">12</td></tr><tr class="high"><td class="cell_name"></td><td class="cell_age">0</td></tr>');
 	});
 
 });

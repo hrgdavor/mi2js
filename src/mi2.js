@@ -301,6 +301,11 @@ mi2.TagDef = function(tag,attr, children, html){
 	this.html = html;
 }
 
+mi2.NodeUpdater = function(){}
+mi2.NodeUpdater.prototype.update = function(){ }
+mi2.NodeUpdater.prototype.init = function(node){ this.node = node; }
+
+
 mi2.h = function(tag,attr){
 	// using mi2.TagDef class for security (if needed)
 	// user input that looks like tag definition will not pass "instanceof mi2.TagDef" test
@@ -331,23 +336,38 @@ mi2.insertHtml = function(parent, def, before, updaters){
     function updateText(node, func){
         var ret = function(){
             var newValue = func();
+            // TODO join text node updating and value handling
+			if(newValue === null || newValue === void 0) newValue = '';		
+			if(typeof(newValue) != 'string') newValue = ''+newValue;
+
             if(node.textContent != newValue) node.textContent = newValue;
         }
         ret.node = node;
         return ret;
     }
 
+    function updater(nodeUpdater){
+        var ret = function(){
+	    	nodeUpdater.update();
+	    };
+	    ret.node = nodeUpdater.node;
+	    return ret;
+    }
+
     if(parent && parent instanceof mi2) parent = parent.el;
     
-    if (typeof def == 'string') {
-        var n = document.createTextNode(def);
-        parent.insertBefore(n, before);
-
-    } else if(def && def instanceof Function){
+    if(def && def instanceof Function){
         var n = document.createTextNode('');
         parent.insertBefore(n, before);
         // prepare text updater
         updaters.push(updateText(n,def));
+
+    } else if(def instanceof mi2.NodeUpdater){
+        var n = document.createTextNode('');
+        parent.insertBefore(n, before);
+        var upd = new mi2.NodeUpdater();
+        upd.init(n);
+        updaters.push(updater(upd));
 
     } else if(def instanceof Array){
         def.forEach(function (c) { 
@@ -378,7 +398,12 @@ mi2.insertHtml = function(parent, def, before, updaters){
 	        return n;
     	}
     }else{
-    	throw new Error('unsupported type for insert '+typeof(def)+JSON.stringify(def));
+    	// TODO join text node updating and value handling
+		if(def === null || def === void 0) def = '';		
+		if(typeof(def) != 'string') def = ''+def;
+
+        var n = document.createTextNode(def);
+        parent.insertBefore(n, before);
     }
 }
 

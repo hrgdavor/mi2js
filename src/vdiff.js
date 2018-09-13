@@ -21,20 +21,7 @@
 		
 			def = children[i];
 		
-			if(typeof(def) == 'string'){
-
-				if(next && next.nodeType == 3){
-					if(next.textContent != def){
-						// console.log('change text', next.textContent, def);
-						next.textContent = def;
-					}
-					next = next.nextSibling;
-				}else{
-					// console.log('insert text',node, def, next);
-					node.insertBefore(document.createTextNode(def), next);
-				}
-
-			}else if(def instanceof mi2.TagDef){
+			if(def instanceof mi2.TagDef){
 				if(def.tag == 'template1' || def.tag == 'frag'){
 					mi2.vdiffChildrenAt(node, def.children, next);
 				}else{				
@@ -51,6 +38,24 @@
 					}
 					mi2.vdiffNode(newNode, def);
 				}
+			}else {
+				// for now, all other are textual
+
+				// TODO join text node updating and value handling
+				if(def === null || def === void 0) def = '';				
+				if(typeof(def) != 'string') def = ''+def;
+
+				if(next && next.nodeType == 3){
+					if(next.textContent != def){
+						// console.log('change text', next.textContent, def);
+						next.textContent = def;
+					}
+					next = next.nextSibling;
+				}else{
+					// console.log('insert text',node, def, next);
+					node.insertBefore(document.createTextNode(def), next);
+				}
+
 			}
 		}
 		while(next){
