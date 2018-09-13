@@ -303,7 +303,10 @@ mi2.TagDef = function(tag,attr, children, html){
 
 mi2.NodeUpdater = function(){}
 mi2.NodeUpdater.prototype.update = function(){ }
-mi2.NodeUpdater.prototype.init = function(node){ this.node = node; }
+mi2.NodeUpdater.prototype.makeNode = function(parent, before){ 
+	this.node = document.createTextNode(''); 
+	parent.insertBefore(this.node, before);
+}
 
 
 mi2.h = function(tag,attr){
@@ -363,11 +366,8 @@ mi2.insertHtml = function(parent, def, before, updaters){
         updaters.push(updateText(n,def));
 
     } else if(def instanceof mi2.NodeUpdater){
-        var n = document.createTextNode('');
-        parent.insertBefore(n, before);
-        var upd = new mi2.NodeUpdater();
-        upd.init(n);
-        updaters.push(updater(upd));
+        def.makeNode(parent, before);
+        updaters.push(updater(def));
 
     } else if(def instanceof Array){
         def.forEach(function (c) { 
