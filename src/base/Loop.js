@@ -46,6 +46,22 @@ function(proto, superProto, comp, superComp){
 		this.itemMixin = function(tm,tmProto,tmSuper){};
 	};
 
+	proto.initUpdaters = function(){
+		//console.log(this.el,this.parent._updaters);
+
+		var list = this.parent ? this.parent._updaters : null;
+		if(list){
+			for(var i=list.length-1; i>=0; i--){
+				var upd = list[i];
+				if(upd.node == this.el && upd.attr == 'tpl') {
+					list.splice(i,1);
+					this.itemTpl = upd.func();
+				}
+			}
+		} 
+		superProto.initUpdaters.call(this);
+	};
+
 /**
 @function findItemTpl
 @instance
@@ -148,11 +164,35 @@ function(proto, superProto, comp, superComp){
 	function defSetValue(){  }
 
 	proto.makeItem = function(newData,i){
-		var node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
-		if(this.itemTpl.attr.as){
+		var node, compName;
+		var jsxInline = typeof this.itemTpl == 'function';
+		var state = {};
+		var updaters = [];
+		if(jsxInline){
+			// state object needs to be present during call to template definition from jsx
+			// it will be later put into component, as otherwise state changes would not be seen
+			// by the generated template
+			var def = this.itemTpl(state);
+			compName = def.attr.as = def.attr.as || 'Base';
+			// updaters will be generated during this step, and will be later injected into the new component
+			node = mi2.insertHtml(this.itemsArea, def, this.itemNextSibling, updaters);
+		}else{
+			compName = this.itemTpl.attr.as;
+			node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
+		}
+
+		if(compName){
 			var comp = mi2.makeComp(node, null, this);
 			var compClass = mi2.getComp(comp.getCompName());
 			var superClass = compClass.superClass;
+
+			if(jsxInline){
+				comp.state = state;
+				comp._updaters = updaters;
+				comp.setValue = function(val){
+					this.expandVars(val || {});
+				}
+			}
 
 			this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);			
 		}else{

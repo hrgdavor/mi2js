@@ -315,7 +315,8 @@ mi2.h = function(tag,attr){
 	return new mi2.TagDef(tag, attr, Array.prototype.slice.call(arguments,2) );
 }
 
-mi2.t = function(code){	return code; }
+mi2.TRANS = {}
+mi2.t = function(code){	return this.TRANS[code] || code; }
 
 mi2.insertHtml = function(parent, def, before, updaters){
 	updaters = updaters || [];
