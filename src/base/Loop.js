@@ -55,7 +55,9 @@ function(proto, superProto, comp, superComp){
 				var upd = list[i];
 				if(upd.node == this.el && upd.attr == 'tpl') {
 					list.splice(i,1);
+					// if the desired function is wrapped in an extra function
 					this.itemTpl = upd.func();
+					if(typeof this.itemTpl != 'function') this.itemTpl = upd.func;
 				}
 			}
 		} 
@@ -173,11 +175,12 @@ function(proto, superProto, comp, superComp){
 			// it will be later put into component, as otherwise state changes would not be seen
 			// by the generated template
 			var def = this.itemTpl(state);
+			def.attr = def.attr || {};
 			compName = def.attr.as = def.attr.as || 'Base';
 			// updaters will be generated during this step, and will be later injected into the new component
 			node = mi2.insertHtml(this.itemsArea, def, this.itemNextSibling, updaters);
 		}else{
-			compName = this.itemTpl.attr.as;
+			compName = this.itemTpl.attr ? this.itemTpl.attr.as:null;
 			node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
 		}
 
