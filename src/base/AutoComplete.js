@@ -215,28 +215,32 @@ function(proto, superProto, comp, superComp){
 		var data = [];
 		srch = srch ? srch.toLowerCase() : '';
 		var firstIndex = -1;
+		var firstIndexAll = -1;
+		
 		for(var i=0; i<allData.length; i++){
 			if(allData[i].text.toLowerCase().indexOf(srch) != -1){
+				console.log(allData[i].text.toLowerCase());
+				firstIndexAll = i;
 				if(this.selectFirst && firstIndex == -1) firstIndex = data.length;
 				data.push(allData[i]);
 			} 
 			if(data.length >= this.displayLimit) break;
 		}
+		
 		var showall = this.showall || this.firstKey;
 		if(data.length > 1 || !this.noEmpty || showall){
-			if(showall) {
+			if(showall && allData.length < this.displayLimit) {
 				data = allData;
-				if(data.length > this.displayLimit){
-					data = data.slice(0,this.displayLimit);
-				}
-			   this.showResults(data, data.length > 0 ? data[0].id : null);
+				firstIndex = firstIndexAll;
 			}else{
-				this.showResults(data);
 				if(this.selectFirst && this.list.length) firstIndex = 0;
 			}
         }
-	   if(firstIndex != -1 ) this.selectElem(this.list[firstIndex].el); 
-       else this.selectElem(null);
+		this.showResults(data);
+		if(firstIndex != -1 ) 
+			this.selectElem(this.list[firstIndex].el); 
+    	else 
+    		this.selectElem(null);
 	};
 
 	proto.showResults = function(data){

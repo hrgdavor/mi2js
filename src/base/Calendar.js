@@ -111,10 +111,6 @@ function(proto, superProto, comp, superComp){
 		}
 
 		return null;
-	};	
-
-	proto.markValidate = function(data, info){
-		this.input.markValidate(data, info);
 	};
 
 	proto.updateInput = function(){

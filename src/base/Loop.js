@@ -148,7 +148,7 @@ function(proto, superProto, comp, superComp){
 		this.count = arr.length;
 		if(this.noData) this.noData.setVisible(!this.count);
 
-		this._fixItemList();
+		this._fixItemList(true);
 
 		this.fireEvent('afterSetConfig');
 	};
@@ -192,8 +192,12 @@ function(proto, superProto, comp, superComp){
 			if(jsxInline){
 				comp.state = state;
 				comp._updaters = updaters;
+				comp.initUpdaters();
 				comp.setValue = function(val){
-					this.expandVars(val || {});
+					if(typeof val == 'object')
+						this.expandVars(val || {});
+					else
+						this.expandVars({value:val});
 				}
 			}
 
