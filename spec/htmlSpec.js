@@ -2,23 +2,22 @@ describe( 'html.js', function () {
 	var mi2 = mi2JS;
 
 	it('/ addTag', function () { 
-		var tpl = {tag:'DIV', attr:{as:'Base', 'class':'test'}, html:'<b p="b1"></b>'};
+		var tpl = {tag:'DIV', attr:{'class':'test'}, html:'<b p="b1"></b>'};
 		var node = mi2.addTag(null, tpl);
 
-		expect(node.getAttribute('as')).toEqual('Base');
 		expect(node.innerHTML).toEqual('<b p="b1"></b>');
 		expect(node.className).toEqual('test');
 	});
 
 	it('/ toTemplate', function () { 
-		var tpl = {tag:'DIV', attr:{as:'Base', 'class':'test'}, html:'<b p="b1"></b>'};
+		var tpl = {tag:'DIV', attr:{'class':'test'}, html:'<b p="b1"></b>'};
 		var node = mi2.addTag(null, tpl);
 
 		expect(mi2.toTemplate(node)).toEqual(tpl);
 	});
 
 	it('/ attr', function () { 
-		var tpl = {tag:'DIV', attr:{as:'Base', 'my-attr':'test'}, html:''};
+		var tpl = {tag:'DIV', attr:{'my-attr':'test'}, html:''};
 		var div = mi2.add(null, tpl);
 
 		expect(div.attr('my-attr')).toEqual('test');
@@ -59,7 +58,7 @@ describe( 'html.js', function () {
 	});
 
 	it('/ attrBoolean', function () { 
-		var tpl = {tag:'DIV', attr:{as:'Base', 'required':''}, html:'<b p="b1"></b>'};
+		var tpl = {tag:'DIV', attr:{'required':''}, html:'<b p="b1"></b>'};
 		var node = mi2.addTag(null, tpl);
 		var nw = new mi2(node);
 

@@ -67,17 +67,22 @@ relationship. Also adding other functionalities needed for component based compo
 		if(!this.__initialized){
 			this.__initialized = true;
 			var def = this.initTemplate(mi2.h, mi2.t, this.state, this);
+			this._updaters = [];
 			if(def){ // support for JSX templates
-				this._updaters = [];
 				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
-				mi2.insertHtml(this.el, def, null, this._updaters);
+				def = this.initChildrenJsx(def);
+				if(def)	mi2.insertHtml(this.el, def, null, this._updaters);
 			}
-			this.initUpdaters();
 			this.parseChildren();
+			this.initUpdaters();
 			this.initChildren();
 			this.fireEvent('init');
 		}
 	};
+
+	proto.initChildrenJsx = function(jsx){return jsx; };
+	
+	proto.initAttr = function(attr, updaters){ mi2.insertAttr(this.el,attr,updaters); };
 
 	proto.initUpdaters = function(){
 		if(this._updaters) for(var i=this._updaters.length-1; i>=0; i--){

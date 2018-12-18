@@ -318,9 +318,7 @@ mi2.h = function(tag,attr){
 mi2.TRANS = {}
 mi2.t = function(code){	return this.TRANS[code] || code; }
 
-mi2.insertHtml = function(parent, def, before, updaters){
-	updaters = updaters || [];
-
+mi2.insertAttr = function(n, def_attr, updaters){
     function updateAttr(node, attr, func){
         var ret = function(){
             var newValue = func();
@@ -336,6 +334,21 @@ mi2.insertHtml = function(parent, def, before, updaters){
         ret.func = func;
         return ret;
     }
+
+    for (var a in def_attr) {
+        var value = def_attr[a];
+        if(value && (value instanceof Function)){
+            // preapre updater for attribute value
+            updaters.push(updateAttr(n, a, value));
+        }else{
+            n.setAttribute(a, value);
+        }
+    }
+};
+
+mi2.insertHtml = function(parent, def, before, updaters){
+	updaters = updaters || [];
+
 
     function updateText(node, func){
         var ret = function(){
@@ -382,15 +395,12 @@ mi2.insertHtml = function(parent, def, before, updaters){
 	        var n = document.createElement(def.tag);
 			if(def.html) n.innerHTML = def.html;
 	        if (def.attr) {
-	            for (var a in def.attr) {
-	                var value = def.attr[a];
-	                if(value && (value instanceof Function)){
-	                    // preapre updater for attribute value
-	                    updaters.push(updateAttr(n, a, value));
-	                }else{
-	                    n.setAttribute(a, value);
-	                }
-	            }
+	        	var compName = def.attr.as || mi2.compData.tags[def.tag];
+	        	if(compName && !def.attr.template){
+	        		n.jsxAttr = def.attr;
+	        		if(def.attr.as) n.setAttribute('as',def.attr.as);
+	        	}else
+		        	mi2.insertAttr(n,def.attr,updaters);
 	        }
 	        if(parent) parent.insertBefore(n, before);
 	        if (def.children && def.children.length) {

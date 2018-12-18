@@ -185,7 +185,9 @@ function(proto, superProto, comp, superComp){
 		}
 
 		if(compName){
-			var comp = mi2.makeComp(node, null, this);
+			var comp = mi2.constructComp(node, null, this, updaters);
+			if(!comp.lazyInit) comp.__init();
+
 			var compClass = mi2.getComp(comp.getCompName());
 			var superClass = compClass.superClass;
 

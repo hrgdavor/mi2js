@@ -12,11 +12,14 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, parent){
 		this.items = {};
 		superProto.construct.call(this, el, parent);
-
-		this.listen(el,'click');
-		this.mapItems(el.children);
-		if(this.isReadOnly()) this.setReadOnly(true);
 	};
+
+	proto.initChildren = function(){
+		this.listen(this.el,'click');
+		superProto.initChildren.call(this);
+		this.mapItems(this.el.children);
+		if(this.isReadOnly()) this.setReadOnly(true);
+	}
 
 	proto.mapItems = function(it){
 		var id, nw;

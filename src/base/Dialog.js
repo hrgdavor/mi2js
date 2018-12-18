@@ -37,6 +37,7 @@ function(proto, superProto, comp, superComp){
 		this.buttons.setValue([]);
 		this.hasCancel = false;
 		for(var i=0; i< buttons.length; i++){
+			if(typeof buttons[i] == 'string') buttons[i] = {action:buttons[i]};
 			var text = buttons[i].text || mi2.t(buttons[i].action);
 			this.buttons.push(text);
 			var button = this.buttons.getItem(i);

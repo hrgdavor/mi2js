@@ -28,7 +28,7 @@ to be live after created
 
 */
 	mi2.makeComp = function(el, compName, parent, parNode){
-		var c = mi2.constructComp(el, compName, parent, parNode);
+		var c = mi2.constructComp(el, compName, parent);
 		if(!c.lazyInit) c.__init();
 		return c;
 	};
@@ -41,7 +41,7 @@ automatic component template parsing (parseChildren) and initialization is done
 @function constructComp
 @memberof mi2JS(comp)
  */
-	mi2.constructComp = function(el, compName, parent){
+	mi2.constructComp = function(el, compName, parent, updaters){
 		try{
 
 			// sanitize, to allow === null check to work later
@@ -60,6 +60,10 @@ automatic component template parsing (parseChildren) and initialization is done
 			c.__template = this.getCompCompTpl(compName);
 			c.construct(el, parent);
 			c.setParent(parent);
+			if(el.jsxAttr){
+				c.initAttr(el.jsxAttr, updaters ||(parent ? parent._updaters : []) );
+				delete el.jsxAttr;
+			}
 
 			return c;
 
