@@ -13,10 +13,14 @@ function(proto, superProto, comp, superComp){
 		this.items = {};
 		superProto.construct.call(this, el, parent);
 
+	};
+
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 		this.useValue = this.attrDef('value',true);
 		this.unchecked = this.attrDef('unchecked',false);
 
-		this.listen(el,'click');
+		this.listen(this.el,'click');
 	};
 
 	proto.on_click = function(evt){

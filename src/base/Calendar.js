@@ -9,6 +9,10 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
 		superProto.construct.call(this, el, parent);
+	};
+
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
@@ -17,10 +21,6 @@ function(proto, superProto, comp, superComp){
         this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
 
 		this.addClass('Calendar');
-	};
-
-	proto.initChildren = function(){
-		superProto.initChildren.call(this);
 
 		if(this.el.tagName != 'INPUT'){
 			this.input.attr('name',this.attr('name'));

@@ -17,15 +17,14 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, parent){
 		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
 		superProto.construct.call(this, el, parent);
-
 		this.data = [];
-
-		this.addClass("AutoComplete");
 
 	};
 
 	proto.parseChildren = function(){
 		superProto.parseChildren.call(this);
+
+		this.addClass("AutoComplete");
 
 		this.idInput.attr("name", this.attr('name'));
 		

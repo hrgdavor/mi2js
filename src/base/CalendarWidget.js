@@ -11,11 +11,12 @@ function(proto, superProto, comp, superComp){
 		superProto.construct.call(this, el, parent);
 		this.dayOffset = 1;
 
-		this.addClass('CalendarWidget');
 	};
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
+
+		this.addClass('CalendarWidget');
 
 		this.listen(this.dayGrid.el,'mousedown','on_dayClick');
 

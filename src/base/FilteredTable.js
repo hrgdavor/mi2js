@@ -6,8 +6,8 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS;
 
-	proto.construct = function(el, parent){
-		superProto.construct.call(this, el, parent);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 		this.columns = (this.attr('search-columns') || 'name').split(',');
 	};
 

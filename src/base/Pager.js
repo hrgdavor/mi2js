@@ -6,10 +6,6 @@ function(proto, superProto, comp, superComp){
 
 	var mi2 = mi2JS;
 
-	proto.construct = function(el, parent){
-		superProto.construct.call(this, el, parent);
-	};
-
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
 		this.pages = [];
@@ -36,6 +32,7 @@ function(proto, superProto, comp, superComp){
 		this.offset = table.offset || 0;
 		this.rowCount = table.rowcount || 0;
 		this.pagesCount = table.limit ? Math.ceil(table.rowcount / table.limit) : 0;
+		this.attr('pages-count',this.pagesCount);
 		this.curPage = table.limit ? Math.ceil(table.offset / table.limit) : 0;
 		var offset = this.curPage - this.opts.pagesAbout;
 		if((offset + this.opts.pagesAbout * 2) > this.pageCount) offset = this.pagesCount - this.opts.pagesAbout * 2;
