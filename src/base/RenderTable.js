@@ -13,16 +13,17 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 
 	proto.construct = function(el, parent){
 		superProto.construct.call(this, el, parent);
+	};
+
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 
 		this.hideHeader = this.attr("hide_header");
 		this.showPager = this.attr('show_pager') || 'when_needed';// when_neede / always
 		this.opts = {};
 		this.sortInline = true;
 
-	};
 
-	proto.initChildren = function(){
-		superProto.initChildren.call(this);
 		// if(this.noData)
 			this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
 		
