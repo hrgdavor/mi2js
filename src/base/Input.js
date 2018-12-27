@@ -21,6 +21,11 @@ function(proto, superProto, comp, superComp){
 			throw new Error(msg);
 		}
 
+	};
+
+	proto.parseChildren = function(){
+		superProto.parseChildren.call(this);
+
 		// type=checkbox support
 		this.useValue = this.attrDef('value',true);
 		this.unchecked = this.attrDef('unchecked',false);
@@ -29,10 +34,7 @@ function(proto, superProto, comp, superComp){
 		this.def     = this.attrDef('default','');
 
         this.typingFilter = this.attrDef('typing-filter', this.typingFilter);
-	};
 
-	proto.parseChildren = function(){
-		superProto.parseChildren.call(this);
 		var el = this.el;
 		// input html node
 		if(!this.input) this.input = this;
