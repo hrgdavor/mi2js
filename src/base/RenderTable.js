@@ -69,11 +69,11 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager2.setVisible(optsIn.pager != 'hidden');
 		var i=0;
 		this.thead.el.innerHTML = '';
-		var tr = $.addTag(this.thead.el, "TR");
-		var tr2 = $.addTag(this.thead.el,"TR");
+		var tr = $.addTag(this.thead.el, "TR", null, this);
+		var tr2 = $.addTag(this.thead.el,"TR", null, this);
 		var span = 0;
 		for(var code in this.cols){
-			var th = $.addTag(tr,"TH");
+			var th = $.addTag(tr,"TH", null, this);
 			var opts = this.cols[code];
 			th.code = code;
 			if(opts.compareFunc) opts.sortable = 1;
@@ -188,10 +188,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.tbody.setHtml('');
 		for(var i=0; i<tData.data.length; i++){
 			var row = tData.data[i];
-			var tr = $.addTag(this.tbody.el,{tag:"TR",attr:{'class':"high"}});
+			var tr = $.addTag(this.tbody.el,{tag:"TR",attr:{'class':"high"}}, null, this);
 			tr.data = tData.data[i];
 			for(var code in this.cols){
-				var td = $.addTag(tr,{tag:"TD",attr:{'class':'cell_'+code}});
+				var td = $.addTag(tr,{tag:"TD",attr:{'class':'cell_'+code}}, null, this);
 				td.code = code;
 				var opts = this.cols[code];
 				var def = opts.td(tr,td,code,tr.data,this);

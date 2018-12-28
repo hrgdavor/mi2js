@@ -346,9 +346,8 @@ mi2.insertAttr = function(n, def_attr, updaters){
     }
 };
 
-mi2.insertHtml = function(parent, def, before, updaters){
+mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 	updaters = updaters || [];
-
 
     function updateText(node, func){
         var ret = function(){
@@ -371,7 +370,10 @@ mi2.insertHtml = function(parent, def, before, updaters){
 	    return ret;
     }
 
-    if(parent && parent instanceof mi2) parent = parent.el;
+    if(parent && parent instanceof mi2){
+    	if(!parentComp && parent.__init) parentComp = parent;
+    	parent = parent.el;
+    } 
     
     if(def && def instanceof Function){
         var n = document.createTextNode('');
@@ -385,26 +387,33 @@ mi2.insertHtml = function(parent, def, before, updaters){
 
     } else if(def instanceof Array){
         def.forEach(function (c) { 
-        	mi2.insertHtml(parent, c, before, updaters);
+        	mi2.insertHtml(parent, c, before, updaters, parentComp);
         });
 
     } else if(def instanceof mi2.TagDef){
     	if(def.tag == 'template' || def.tag == 'frag'){
-    		mi2.insertHtml(parent, def.children, before, updaters);
+    		mi2.insertHtml(parent, def.children, before, updaters, parentComp);
     	}else{		
 	        var n = document.createElement(def.tag);
 			if(def.html) n.innerHTML = def.html;
+			var compName = null;
 	        if (def.attr) {
-	        	var compName = def.attr.as || mi2.compData.tags[def.tag];
+	        	compName = def.attr.as || mi2.compData.tags[def.tag];
 	        	if(compName && !def.attr.template){
 	        		n.jsxAttr = def.attr;
 	        		if(def.attr.as) n.setAttribute('as',def.attr.as);
-	        	}else
+	        	}else{
+	        		if(parentComp) parentComp.initNodeAttr(n,def.attr);
 		        	mi2.insertAttr(n,def.attr,updaters);
+	        	}
 	        }
 	        if(parent) parent.insertBefore(n, before);
 	        if (def.children && def.children.length) {
-	            mi2.insertHtml(n, def.children, null, updaters);
+	        	if(compName && !def.attr.template){
+	        		n.jsxChildren = def.children;
+	        	}else{
+		            mi2.insertHtml(n, def.children, null, updaters, parentComp);
+	        	}
 	        }
 	        return n;
     	}
@@ -417,5 +426,84 @@ mi2.insertHtml = function(parent, def, before, updaters){
         parent.insertBefore(n, before);
     }
 }
+
+mi2.directives = { };
+
+mi2.extractDirectives  = function(attr){
+	if(!attr) return;
+	var out = {};
+	var keys = Object.keys(attr);
+	var count = 0;
+	for(var i in keys){
+		var p = keys[i];
+		var nameArr = p.split('-');
+		if(nameArr.length < 2) continue;
+
+		if(mi2.directives[nameArr[0]]){
+			var val = attr[p];
+			delete attr[p];
+			function add(obj,idx, nameArr){
+				if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
+				if(idx < nameArr.length -1){
+					add(obj[nameArr[idx]], idx+1, nameArr);
+				}else{
+					obj[nameArr[idx]]._ = val;
+				}
+			}
+			count++;
+			add(out, 0, nameArr);
+		}
+	}
+	if(count) return out;
+}
+
+// <div x-click=
+
+mi2.registerDirective = function(name, dir){
+	var nameArr = name.split('-');
+
+	function addErr(fname, where){
+		var msg = 'directive does not support '+fname+' and can not be used for '+where;
+		if(!dir[fname]) dir[fname] = function(o,options){ 
+			console.log(msg, o, 'options:', options);
+			throw Error(msg);
+		};
+	}
+
+	addErr('initNodeAttr','simple DOM node');
+	addErr('initChildAttr','component');
+
+	function add(obj,idx){
+		if(idx < nameArr.length -1){
+			if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
+			add(obj[nameArr[idx]], idx+1); 
+		}else{
+			obj[nameArr[idx]] = dir;
+		}
+	}
+	add(mi2.directives, 0);
+}
+
+mi2.runAttrDirective = function(context, options, updaters, parentComp, src, fname){
+	if(!options) return;
+	for(var p in options){
+		if(src[p]){
+			var func = src[p][fname];
+			if(func) func(context, options[p], updaters, parentComp);
+		}
+	}
+};
+
+mi2.registerDirective('x', {
+	initNodeAttr: function(n, options, updaters, parentComp){
+		if(!options) return;
+		mi2.runAttrDirective(n, options, updaters, parentComp, mi2.directives.x, 'initNodeAttr');
+	},
+	initChildAttr: function(c, options, updaters, parentComp){
+		if(!options) return;
+		mi2.runAttrDirective(c, options, updaters, parentComp, mi2.directives.x, 'initChildAttr');
+	}
+});
+
 
 }());

@@ -102,4 +102,14 @@ describe( 'mi2.js Base library', function () {
 
 	});
 
+	it(' / extractDirectives', function () {
+		// console.log('mi2.directives',mi2.directives);
+
+		var dirs = mi2.extractDirectives({'x-click':'test1', x:'test2'});
+
+		expect(dirs.x.click._).toEqual('test1');
+		expect(dirs.x._).toEqual(void 0);
+
+	});
+
 });

@@ -70,8 +70,7 @@ relationship. Also adding other functionalities needed for component based compo
 			this._updaters = [];
 			if(def){ // support for JSX templates
 				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
-				def = this.initChildrenJsx(def);
-				if(def)	mi2.insertHtml(this.el, def, null, this._updaters);
+				if(def)	mi2.insertHtml(this.el, def, null, this._updaters, this);
 			}
 			this.parseChildren();
 			this.initUpdaters();
@@ -81,6 +80,20 @@ relationship. Also adding other functionalities needed for component based compo
 	};
 
 	proto.initChildrenJsx = function(jsx){return jsx; };
+	
+	proto.initNodeAttr = function(n, attr, updaters){
+		var options = mi2.extractDirectives(attr);
+		if(options){
+			mi2.runAttrDirective(n, options, updaters, this, mi2.directives, 'initNodeAttr');
+		}
+	};
+
+	proto.initChildAttr = function(c,attr, updaters){
+		var options = mi2.extractDirectives(attr);
+		if(options){
+			mi2.runAttrDirective(c, options, updaters, this, mi2.directives, 'initChildAttr');
+		}
+	};
 	
 	proto.initAttr = function(attr, updaters){ mi2.insertAttr(this.el,attr,updaters); };
 
@@ -290,6 +303,10 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 			evt = {name:evt};
 		}
 		var evtName = evt.name;
+		var fired = false;
+
+		var required = evt.required;
+		if(evt.required) delete evt.required;
 
 		if(evtName == 'show'){
 			// if not initialized yet, fire init event first
@@ -299,47 +316,60 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		if(!evt) evt = {};
 		evt.target = this;
 
+		// TODO fix base/button and x-click to somplify this
 		var initialFire = !evt.__src;
 		if(initialFire) evt.src = evt.__src = this;
 		
-		if(evt.fireTo == 'parent'){
+		var continueFire = true;
+		if(evt.fireTo == 'parent' || evt.direction == 'parent'){
 			if((this.isTransitive(evt)) || initialFire){
-				if(this.parent) this.parent.fireEvent(evt);
-				return;
+				if(this.parent) fired = this.parent.fireEvent(evt);
+				continueFire = false;
 			}
 		}
 
-		if(typeof(this['on_'+evtName]) == 'function'){
-			try{
-				this['on_'+evtName](evt);
-			}catch(e){
-				console.log('Error calling event handler function ','on_'+evtName, evt, 'component', this , 'error', e);
-				console.error(e.message);
+		if(continueFire){
+
+			if(typeof(this['on_'+evtName]) == 'function'){
+				try{
+					this['on_'+evtName](evt);
+					fired = true;
+				}catch(e){
+					console.log('Error calling event handler function ','on_'+evtName, evt, 'component', this , 'error', e);
+					console.error(e.message);
+				}
+
+			}
+
+			var l;
+			if(this.__listeners) l=this.__listeners[evtName];
+			if(l) for(var i=0; i<l.length; i++){
+				try{
+					l[i].callback(evt);
+					fired = true;
+				}catch(e){
+					console.log('Error firing event ',evtName, evt, 'listener', l[i].scope, 'error', e);
+					console.error(e.message);
+				}
+			}
+
+			var child;
+			if(evt.fireTo == 'children' && this.children){
+				for(var i=0; i<this.children.length; i++){
+					child = this.children[i];
+					// if hidden no need for hide/show event to propagate
+					if(!child.isVisible() && (evtName == 'hide' || evtName == 'show' )) continue; 
+					
+					if(child.fireEvent(evt)) fired=true;;
+				}
 			}
 
 		}
 
-		var l;
-		if(this.__listeners) l=this.__listeners[evtName];
-		if(l) for(var i=0; i<l.length; i++){
-			try{
-				l[i].callback(evt);
-			}catch(e){
-				console.log('Error firing event ',evtName, evt, 'listener', l[i].scope, 'error', e);
-				console.error(e.message);
-			}
+		if(required && !fired){
+			console.log('WARNING: event requred but not caught ', evt.name, evt, this.el, this);
 		}
-
-		var child;
-		if(evt.fireTo == 'children' && this.children){
-			for(var i=0; i<this.children.length; i++){
-				child = this.children[i];
-				// if hidden no need for hide/show event to propagate
-				if(!child.isVisible() && (evtName == 'hide' || evtName == 'show' )) continue; 
-				
-				child.fireEvent(evt);
-			}
-		}
+		return fired;
 	};
 
 	/** 

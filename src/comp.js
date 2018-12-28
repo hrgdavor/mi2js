@@ -15,7 +15,7 @@
 @memberof mi2JS(comp)
 */
 	mi2.addComp = function(parent, tag, parNode){
-		var node = mi2.addTag(parNode || parent, tag);
+		var node = mi2.addTag(parNode || parent, tag, null, parent);
 		return mi2.makeComp(node, null, parent, parNode);
 	}
 
@@ -60,9 +60,18 @@ automatic component template parsing (parseChildren) and initialization is done
 			c.__template = this.getCompCompTpl(compName);
 			c.construct(el, parent);
 			c.setParent(parent);
+			updaters = updaters || (parent ? parent._updaters : []);
+
 			if(el.jsxAttr){
-				c.initAttr(el.jsxAttr, updaters ||(parent ? parent._updaters : []) );
+				if(parent) parent.initChildAttr(c, el.jsxAttr, updaters);
+				c.initAttr(el.jsxAttr, updaters );
 				delete el.jsxAttr;
+			}
+
+			if(el.jsxChildren){
+				el.jsxChildren = c.initChildrenJsx(el.jsxChildren);
+				mi2.insertHtml(el, el.jsxChildren, null, updaters);
+				delete el.jsxChildren;
 			}
 
 			return c;
