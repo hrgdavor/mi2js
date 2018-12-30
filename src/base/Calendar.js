@@ -24,6 +24,7 @@ function(proto, superProto, comp, superComp){
 
 		if(this.el.tagName != 'INPUT'){
 			this.input.attr('name',this.attr('name'));
+			this.input.attr('placeholder',this.attr('placeholder'));
 			this.input.attr('value',this.attr('value'));
 		} 
 
