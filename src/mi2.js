@@ -318,28 +318,29 @@ mi2.h = function(tag,attr){
 mi2.TRANS = {}
 mi2.t = function(code){	return this.TRANS[code] || code; }
 
-mi2.insertAttr = function(n, def_attr, updaters){
-    function updateAttr(node, attr, func){
-        var ret = function(){
-            var newValue = func();
-            if(node.getAttribute(attr) != newValue){
-            	if(newValue === false)
-            		node.removeAttribute(attr);
-            	else
-	            	node.setAttribute(attr, newValue);       
-            } 
-        }
-        ret.node = node;
-        ret.attr = attr;
-        ret.func = func;
-        return ret;
+mi2.makeAttrUpdater = function(node, attr, func){
+    var ret = function(){
+        var newValue = func();
+        if(node.getAttribute(attr) != newValue){
+        	if(newValue === false)
+        		node.removeAttribute(attr);
+        	else
+            	node.setAttribute(attr, newValue);       
+        } 
     }
+    ret.node = node;
+    ret.attr = attr;
+    ret.func = func;
+    return ret;
+};
+
+mi2.insertAttr = function(n, def_attr, updaters){
 
     for (var a in def_attr) {
         var value = def_attr[a];
         if(value && (value instanceof Function)){
             // preapre updater for attribute value
-            updaters.push(updateAttr(n, a, value));
+            updaters.push(mi2.makeAttrUpdater(n, a, value));
         }else{
             n.setAttribute(a, value);
         }
@@ -484,12 +485,23 @@ mi2.registerDirective = function(name, dir){
 	add(mi2.directives, 0);
 }
 
-mi2.runAttrDirective = function(context, options, updaters, parentComp, src, fname){
+mi2.runAttrDirective = function(context, options, updaters, parentComp, src, fname, prefix){
 	if(!options) return;
 	for(var p in options){
 		if(src[p]){
 			var func = src[p][fname];
 			if(func) func(context, options[p], updaters, parentComp);
+		}else{
+			// restore the attribute value if no directive present
+			var attName = prefix+p;
+			var val = options[p]._;
+	        if(val && val instanceof Function){
+	        	if(context instanceof mi2) context = context.el;
+	            updaters.push(mi2.makeAttrUpdater(context,attName, val));        
+	        }else{
+	        	if(!(context instanceof mi2)) context = new mi2(context);
+	            context.attr(attName,val);
+	        }
 		}
 	}
 };
@@ -497,11 +509,11 @@ mi2.runAttrDirective = function(context, options, updaters, parentComp, src, fna
 mi2.registerDirective('x', {
 	initNodeAttr: function(n, options, updaters, parentComp){
 		if(!options) return;
-		mi2.runAttrDirective(n, options, updaters, parentComp, mi2.directives.x, 'initNodeAttr');
+		mi2.runAttrDirective(n, options, updaters, parentComp, mi2.directives.x, 'initNodeAttr', 'x-');
 	},
 	initChildAttr: function(c, options, updaters, parentComp){
 		if(!options) return;
-		mi2.runAttrDirective(c, options, updaters, parentComp, mi2.directives.x, 'initChildAttr');
+		mi2.runAttrDirective(c, options, updaters, parentComp, mi2.directives.x, 'initChildAttr', 'x-');
 	}
 });
 
