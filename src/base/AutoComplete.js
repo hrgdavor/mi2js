@@ -101,6 +101,10 @@ function(proto, superProto, comp, superComp){
 		});
 	};
 
+	proto.on_init = function(){
+		superProto.on_init.apply(this, arguments);
+		this.textInput.attr('placeholder',this.attr('placeholder'));
+	};
 
 	proto.on_blur = function(){
 		this.hasFocus = false;

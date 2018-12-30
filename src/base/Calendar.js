@@ -22,12 +22,6 @@ function(proto, superProto, comp, superComp){
 
 		this.addClass('Calendar');
 
-		if(this.el.tagName != 'INPUT'){
-			this.input.attr('name',this.attr('name'));
-			this.input.attr('placeholder',this.attr('placeholder'));
-			this.input.attr('value',this.attr('value'));
-		} 
-
 		this.widget = mi2.addComp(this,{tag:'DIV', attr:{as:'base/CalendarWidget'}});
 		this.widget.setVisible(false);
 		
@@ -41,6 +35,15 @@ function(proto, superProto, comp, superComp){
 
 		this.input.trackChanges();
 		this.listen(this.input, 'change', 'on_change');
+	};
+
+	proto.on_init = function(){
+		superProto.on_init.apply(this, arguments);
+		if(this.el.tagName != 'INPUT'){
+			this.input.attr('name',this.attr('name'));
+			this.input.attr('placeholder',this.attr('placeholder'));
+			this.input.attr('value',this.attr('value'));
+		}		
 	};
 
 	proto.insertBefore = function(before,elem){
