@@ -14,6 +14,15 @@ describe( 'mi2.js Base library', function () {
 		};
 	});
 
+	mi2JS.addCompClass('test/JsxTest2', 'Base', '',
+	function(proto, superProto, comp, superComp){
+
+		proto.initTemplate = function(h,t,state){
+			return <template>action:<b as="base/Button">{t('name')}</b></template>
+		};
+	});
+
+
 	mi2JS.addCompClass('test/JsxTestRef', 'Base', '',
 	function(proto, superProto, comp, superComp){
 
@@ -60,18 +69,11 @@ describe( 'mi2.js Base library', function () {
 		expect(comp.el.innerHTML).toEqual('2')
 	});
 
-	it(' / jsx template ref', function () {
-		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/JsxTestRef'}, html:''});
-
-		expect(comp.el.innerHTML).toEqual('<div><label>Name:</label></div>')
-
-		comp.state.name = 'John';
-		comp.updateContent();
-		expect(comp.el.innerHTML).toEqual('<div><label>Name:</label>John</div>')
-
-		comp.state.name = 'Jane';
-		comp.updateContent();
-		expect(comp.el.innerHTML).toEqual('<div><label>Name:</label>Jane</div>')
+	it(' / jsx children', function () {
+		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/JsxTest2'}, html:''});
+		expect(comp.el.innerHTML).toEqual('action:<b as="base/Button">Name</b>')
 	});
+
+
 
 });
