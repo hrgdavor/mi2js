@@ -458,7 +458,6 @@ mi2.extractDirectives  = function(attr){
 	if(count) return out;
 }
 
-// <div x-click=
 
 mi2.registerDirective = function(name, dir){
 	var nameArr = name.split('-');
