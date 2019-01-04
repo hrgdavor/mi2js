@@ -46,22 +46,12 @@ function(proto, superProto, comp, superComp){
 		this.itemMixin = function(tm,tmProto,tmSuper){};
 	};
 
-	proto.initUpdaters = function(){
-		//console.log(this.el,this.parent._updaters);
-
-		var list = this.parent ? this.parent._updaters : null;
-		if(list){
-			for(var i=list.length-1; i>=0; i--){
-				var upd = list[i];
-				if(upd.node == this.el && upd.attr == 'tpl') {
-					list.splice(i,1);
-					// if the desired function is wrapped in an extra function
-					this.itemTpl = upd.func();
-					if(typeof this.itemTpl != 'function') this.itemTpl = upd.func;
-				}
-			}
-		} 
-		superProto.initUpdaters.call(this);
+	proto.initAttr = function(attr, updaters){ 
+		if(attr.tpl){
+			this.itemTpl = attr.tpl;
+			delete attr.tpl;
+		}
+		superProto.initAttr.apply(this, arguments);
 	};
 
 /**
