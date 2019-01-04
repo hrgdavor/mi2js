@@ -15,7 +15,6 @@ function(proto, superProto, comp, superComp){
 	proto.loadDelay = 100;
 
 	proto.construct = function(el, parent){
-		if(el.tagName == 'INPUT') el = this.replaceTag(el,'DIV');
 		superProto.construct.call(this, el, parent);
 		this.data = [];
 
@@ -23,6 +22,8 @@ function(proto, superProto, comp, superComp){
 
 	proto.parseChildren = function(){
 		superProto.parseChildren.call(this);
+
+		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
 
 		this.addClass("AutoComplete");
 

@@ -7,12 +7,13 @@ function(proto, superProto, comp, superComp){
 	var mi2 = mi2JS; // minimizer friendly 
 
 	proto.construct = function(el, parent){
-		if(el.tagName == 'INPUT') el = this.replaceTag(el,'SPAN');
 		superProto.construct.call(this, el, parent);
 	};
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
+
+		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';
