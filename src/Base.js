@@ -107,21 +107,6 @@ relationship. Also adding other functionalities needed for component based compo
 		}		
 	};
 
-	/** Update component content by calling all collected updaters. in case initTemplate returns
-	    definitions for HTML that contain updaters.
-	@instance
-	@function updateContent
-	@memberof mi2JS(comp).Base
-	@param {Object} object
-	*/
-	proto.updateContent = function(){
-		if(this._updaters){
-			for(var i =0; i< this._updaters.length; i++){
-				this._updaters[i].apply(this);
-			}
-		}
-	};
-
 	/** 
 	@instance
 	@function initTemplate
@@ -171,6 +156,22 @@ relationship. Also adding other functionalities needed for component based compo
 	*/
 	proto.on_init = function(evt){ 
 		this.updateContent();// initial state values
+	};
+
+
+	/** Update component content by calling all collected updaters. in case initTemplate returns
+	    definitions for HTML that contain updaters.
+	@instance
+	@function updateContent
+	@memberof mi2JS(comp).Base
+	@param {Object} object
+	*/
+	proto.updateContent = function(){
+		if(this._updaters){
+			for(var i =0; i< this._updaters.length; i++){
+				this._updaters[i].apply(this);
+			}
+		}
 	};
 
 	/** 
