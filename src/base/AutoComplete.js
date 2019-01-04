@@ -228,12 +228,12 @@ function(proto, superProto, comp, superComp){
 				if(this.selectFirst && firstIndex == -1) firstIndex = data.length;
 				data.push(allData[i]);
 			} 
-			if(data.length >= this.displayLimit) break;
+			if(this.displayLimit > 0 && data.length >= this.displayLimit) break;
 		}
 		
 		var showall = this.showall || this.firstKey;
 		if(data.length > 1 || !this.noEmpty || showall){
-			if(showall && allData.length < this.displayLimit) {
+			if(showall && this.displayLimit > 0 && allData.length < this.displayLimit) {
 				data = allData;
 				firstIndex = firstIndexAll;
 			}else{
