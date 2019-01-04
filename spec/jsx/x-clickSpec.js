@@ -17,6 +17,7 @@ describe( 'x-click', function () {
 				<div x-click="save">
 					<button action="b1">b1</button>
 					<button action="b2">b2</button>
+					<button action="b3" disabled>b3</button>
 				</div>
 			</template>;
 		};
@@ -46,6 +47,11 @@ describe( 'x-click', function () {
 
 		var bt2 = bt1.nextSibling;
 		bt2.click();
+		expect(comp.saveAction).toEqual('b2');
+
+		var bt3 = bt2.nextSibling;
+		bt3.click();
+		// no change as b3 is disabled
 		expect(comp.saveAction).toEqual('b2');
 
 	});
