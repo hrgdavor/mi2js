@@ -335,7 +335,6 @@ mi2.makeAttrUpdater = function(node, attr, func){
 };
 
 mi2.insertAttr = function(n, def_attr, updaters){
-
     for (var a in def_attr) {
         var value = def_attr[a];
         if(value && (value instanceof Function)){
