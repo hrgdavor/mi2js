@@ -86,15 +86,28 @@
 		return tpl;
 	}
 
+	mi2.dom_register = function(name, returnValue, func){
+
+		var staticName = 'h_'+name;
+		
+		mi2[staticName] = func;
+
+		mi2Proto[name] = function(){
+			var newArgs = Array.prototype.slice.call(arguments,0);
+			newArgs.unshift(this.el);
+			return func.apply(this, newArgs);
+		};
+	}
+
 	/** Check if node har a specified attribute defined (regardless of value, null or other)
 
 	@instance
 	@method hasAttr
 	@memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.hasAttr = function(name){
-		return this.el.hasAttribute(name);
-	};
+	mi2.dom_register('hasAttr', true, function(node, name, val){
+		return node.hasAttribute(name);
+	});
 
 	/** get/set attribute on the wrapped node. Setting attribute to null or undefined
 	will remove the attribute.
@@ -106,18 +119,18 @@
 	@param {String} name attribute name
 	@param {String} value optionaly if sent sets the attribute
 	*/
-	mi2Proto.attr = function(name, val){
-		if(arguments.length > 1){
+	mi2.dom_register('attr', true, function(node, name, val){
+		if(arguments.length > 2){
 			if(val === null || val === void 0){
-				if(this.el.hasAttribute(name)) this.el.removeAttribute(name);
+				if(node.hasAttribute(name)) node.removeAttribute(name);
 			}else{
-				if(val !== this.el.getAttribute(name)) 
-					this.el.setAttribute(name,val);
+				if(val !== node.getAttribute(name)) 
+					node.setAttribute(name,val);
 			}
 		}else{
-			return this.el.getAttribute(name);
+			return node.getAttribute(name);
 		}
-	};
+	});
 
 	/** Get attribute, but return default value if not defined
 
@@ -127,11 +140,9 @@
 	@param {string} name attribute name
 	@param {object} def default value if attribute is not present
 	*/
-	mi2Proto.attrDef = function(name, def){
-		var val = this.el.getAttribute(name);
-		if(val === null) return def;
-		return val;
-	};
+	mi2.dom_register('attrDef', true, function(node, name, def){
+		return node.hasAttribute(name) ? node.getAttribute(name) : def;
+	});
 
 	/** Get attribute, but convert frist using {@link mi2JS(core).num}. Returns 0 when value not a number or
 	if attribute is not present.
@@ -142,9 +153,10 @@
 	@param {string} name attribute name
 	@param {object} def default value if attribute is not present
 	*/
-	mi2Proto.attrNum = function(name, def){
-		return mi2.num( this.attrDef(name, def) );
-	};
+	mi2.dom_register('attrNum', true, function(name, def){
+		return mi2.num( mi2.h_attrDef(name, def) );
+	});
+
 
 	/** Boolean from attribute
 
@@ -161,16 +173,17 @@ value same as name <input required="required">
 value 1,true - <input required="1"> <input required="true">
 
 	*/
-	mi2Proto.attrBoolean = function(name, def){
+	mi2.dom_register('attrBoolean', true, function(node, name, def){
 
-		if(this.hasAttr(name)){
-			var val = this.attr(name);
+		if(node.hasAttribute(name)){
+			var val = node.getAttribute(name);
 			if(val === null || val == '' || val == 'true' || val == name || val == '1') return true;
-		}else
+		}else{
 			return def;
+		}
 
 		return false;
-	};
+	});
 
 /* 
 
@@ -180,14 +193,14 @@ value 1,true - <input required="1"> <input required="true">
 
 no real need to use dataset, and attributes work on more browsers 
 */
-	mi2Proto.dataAttr = function(name, val){
+	mi2.dom_register('dataAttr', true, function(node, name, val){
 		name = 'data-'+name;
-		if(arguments.length > 1){
-			this.attr(name,val);
+		if(arguments.length >2){
+			mi2.h_attr(node,name,val);
 		}else{
-			return this.attr(name);
+			return mi2.h_attr(node,name);
 		}
-	};
+	});
 
 	/** Add class to the element if condition is true, and remove if false. 
 
@@ -197,48 +210,51 @@ no real need to use dataset, and attributes work on more browsers
 		@param toAdd - className to add/remove 
 		@param condition - (true/false) determines if add/remove is executed. Usualy a result of an expression in the caller code. 
 	*/
-	mi2Proto.classIf = function(toAdd, condition){
+	mi2.dom_register('classIf', false, function(node, toAdd, condition){
 		if(condition)
-			this.el.classList.add(toAdd);
+			node.classList.add(toAdd);
 		else
-			this.el.classList.remove(toAdd);
-	};
+			node.classList.remove(toAdd);
+	});
 
 	/*** Same as classIf but reversed condition. 
 @function classUnless
 @instance
 @memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.classUnless = function(toAdd, condition){ 
-		this.classIf(toAdd, !condition); 
-	};
+	mi2.dom_register('classUnless', false, function(node, toAdd, condition){
+		if(condition)
+			node.classList.remove(toAdd);
+		else
+			node.classList.add(toAdd);
+	});
 
 	/** Add a css class to the element. Common function to initiate change defined in css. 
 @function addClass
 @instance
 @memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.addClass = function(toAdd) {
-		this.el.classList.add(toAdd);
-	};
+	mi2.dom_register('addClass', false, function(node, toAdd){
+		node.classList.add(toAdd);
+	});
 
 	/** Check if one of space separated values is in the element's className 
 @function hasClass
 @instance
 @memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.hasClass = function(name) {
-		return this.el.classList.contains(name);
-	};
+	mi2.dom_register('hasClass', true, function(node, name){
+		return node.classList.contains(name);
+	});
 
 /** Check if node has a class and toggle it
 @function hasClass
 @instance
 @memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.toggleClass = function(name) {
-		return this.el.classList.toggle(name);
-	};
+	mi2.dom_register('toggleClass', true, function(node, name){
+		return node.classList.toggle(name);
+	});
 
 
 	/** Remove a css class from the element (leaving others intact) 
@@ -246,10 +262,10 @@ no real need to use dataset, and attributes work on more browsers
 @instance
 @memberof mi2JS(core).NodeWrapper
 	*/
-	mi2Proto.removeClass = function(toRemove) {
-		if(this.el.classList.length)
-			return this.el.classList.remove(toRemove);
-	};
+	mi2.dom_register('removeClass', true, function(node, toRemove){
+		if(node.classList.length)
+			return node.classList.remove(toRemove);
+	});
 
 /*
 @function setHtml
@@ -265,17 +281,17 @@ no real need to use dataset, and attributes work on more browsers
 @instance
 @memberof mi2JS(core).NodeWrapper
 */
-	mi2Proto.setText = function(text){
-		if(this.el.textContent !== text) this.el.textContent = text;	
-	};
+	mi2.dom_register('setText', false, function(node, text){
+		if(node.textContent !== text) node.textContent = text;
+	});
 
 /*
 @function getText
 @instance
 @memberof mi2JS(core).NodeWrapper
 */
-	mi2Proto.getText = function(){
-		return this.el.textContent;	
-	};
+	mi2.dom_register('getText', true, function(node){
+		return node.textContent;
+	});
 
 })(mi2JS);

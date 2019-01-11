@@ -84,14 +84,14 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.initNodeAttr = function(n, attr, updaters){
 		var options = mi2.extractDirectives(attr);
 		if(options){
-			mi2.runAttrDirective(n, options, updaters, this, mi2.directives, 'initNodeAttr');
+			mi2.runAttrDirective(n, null, options, updaters, this, mi2.directives);
 		}
 	};
 
 	proto.initChildAttr = function(c,attr, updaters){
 		var options = mi2.extractDirectives(attr);
 		if(options){
-			mi2.runAttrDirective(c, options, updaters, this, mi2.directives, 'initChildAttr');
+			mi2.runAttrDirective(c.el, c, options, updaters, this, mi2.directives);
 		}
 	};
 	

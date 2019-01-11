@@ -17,13 +17,16 @@ function(proto, superProto, comp, superComp){
 	proto.construct = function(el, parent){
 		superProto.construct.call(this, el, parent);
 		this.data = [];
+	};
 
+	proto.initTemplate = function(){	
+		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
+		superProto.initTemplate.apply(this, arguments);
 	};
 
 	proto.parseChildren = function(){
 		superProto.parseChildren.call(this);
 
-		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
 
 		this.addClass("AutoComplete");
 

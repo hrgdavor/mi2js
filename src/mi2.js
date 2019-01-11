@@ -404,7 +404,7 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 	        		n.jsxAttr = def.attr;
 	        		if(def.attr.as) n.setAttribute('as',def.attr.as);
 	        	}else{
-	        		if(parentComp) parentComp.initNodeAttr(n,def.attr);
+	        		if(parentComp) parentComp.initNodeAttr(n,def.attr, parentComp._updaters);
 		        	mi2.insertAttr(n,def.attr,updaters);
 	        	}
 	        }
@@ -462,17 +462,6 @@ mi2.extractDirectives  = function(attr){
 mi2.registerDirective = function(name, dir){
 	var nameArr = name.split('-');
 
-	function addErr(fname, where){
-		var msg = 'directive does not support '+fname+' and can not be used for '+where;
-		if(!dir[fname]) dir[fname] = function(o,options){ 
-			console.log(msg, o, 'options:', options);
-			throw Error(msg);
-		};
-	}
-
-	addErr('initNodeAttr','simple DOM node');
-	addErr('initChildAttr','component');
-
 	function add(obj,idx){
 		if(idx < nameArr.length -1){
 			if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
@@ -484,36 +473,29 @@ mi2.registerDirective = function(name, dir){
 	add(mi2.directives, 0);
 }
 
-mi2.runAttrDirective = function(context, options, updaters, parentComp, src, fname, prefix){
+mi2.runAttrDirective = function(el, comp, options, updaters, parentComp, src, prefix){
 	if(!options) return;
 	for(var p in options){
 		if(src[p]){
-			var func = src[p][fname];
-			if(func) func(context, options[p], updaters, parentComp);
+			var func = src[p];
+			if(func) func(el, comp, options[p], updaters, parentComp);
 		}else{
 			// restore the attribute value if no directive present
 			var attName = prefix+p;
 			var val = options[p]._;
 	        if(val && val instanceof Function){
-	        	if(context instanceof mi2) context = context.el;
-	            updaters.push(mi2.makeAttrUpdater(context,attName, val));        
+	            updaters.push(mi2.makeAttrUpdater(el, attName, val));
 	        }else{
-	        	if(!(context instanceof mi2)) context = new mi2(context);
-	            context.attr(attName,val);
+	        	if(!comp) comp = new mi2(el);
+	            comp.attr(attName,val);
 	        }
 		}
 	}
 };
 
-mi2.registerDirective('x', {
-	initNodeAttr: function(n, options, updaters, parentComp){
-		if(!options) return;
-		mi2.runAttrDirective(n, options, updaters, parentComp, mi2.directives.x, 'initNodeAttr', 'x-');
-	},
-	initChildAttr: function(c, options, updaters, parentComp){
-		if(!options) return;
-		mi2.runAttrDirective(c, options, updaters, parentComp, mi2.directives.x, 'initChildAttr', 'x-');
-	}
+mi2.registerDirective('x', function(el, comp, options, updaters, parentComp){
+	if(!options) return;
+	mi2.runAttrDirective(el, comp, options, updaters, parentComp, mi2.directives.x, 'x-');
 });
 
 

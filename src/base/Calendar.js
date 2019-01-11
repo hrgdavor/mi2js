@@ -10,10 +10,13 @@ function(proto, superProto, comp, superComp){
 		superProto.construct.call(this, el, parent);
 	};
 
+	proto.initTemplate = function(){	
+		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
+		superProto.initTemplate.apply(this, arguments);
+	};
+
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
-
-		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
 		this.editTime = t == 'time' || t =='datetime';

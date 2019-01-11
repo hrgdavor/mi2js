@@ -14,10 +14,10 @@
 @function makeComp
 @memberof mi2JS(comp)
 */
-	mi2.addComp = function(parent, tag, parNode){
-		var node = mi2.addTag(parNode || parent, tag, null, parent);
-		return mi2.makeComp(node, null, parent, parNode);
-	}
+mi2.addComp = function(parent, tag, parNode){
+	var node = mi2.addTag(parNode || parent, tag, null, parent);
+	return mi2.makeComp(node, null, parent, parNode);
+}
 
 /**
  Construct and initialize component, as most code would ecpect the componet
