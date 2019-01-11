@@ -59,7 +59,7 @@ mi2._xClickListen = function(n, options, updaters, parentComp){
 			// would break base/Button behavior, so this trick is used to make it work along
 			evtData.__src = parentComp;
 
-			if(evtData.name && !evt.cancelClick){
+			if(evtData.name && !evtData.cancelClick){
 				parentComp.fireEvent(evtData);
 			} 
 

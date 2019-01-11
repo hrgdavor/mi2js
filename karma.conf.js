@@ -44,7 +44,7 @@ module.exports = function(config) {
       'spec/base/*.js',
       'spec/jsx/*.js',
 
-      // 'spec/BaseSpec.js',
+      // 'spec/jsx/x-clickSpec.js',
        // 'spec/base/DialogSpec.js', 
       // 'spec/jsx/loopJsx.js',
 

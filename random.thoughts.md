@@ -1,5 +1,27 @@
 # general
- - avoid programming inside templates (no code evaluation or property expansion)
+
+# remove DOM element on hide
+  - simple appendChild and removeChild in case order is not important
+  - use placeholder empty TextNode when removing
+  - parentNode.replaceChild(newChild, oldChild)
+
+# component/node collections
+  - coded(object key/value) / array 
+  - form elements
+  - tab buttons 
+  - tab & navigation content (order not important, can be removed from dom and returned instad of hide)
+
+navigation can have two different components to show versus to forward data,
+and it is usually when there are some extra elements around that component to be shown a well (title, or extra buttons)
+    - use 2 separate collections and assume one is default (this.$content + $this.$area)
+    - or use some marking to signify that show/hide is not same as the navigation component 
+
+forms can also have this dual situation where show/hide differs from getValue/setValue.
+because you want to show hide the whole section with the label (not just the input)
+
+there are some situations where one component should be part of multiple collections
+ -- TODO find example(can't remember right now)
+
 
 # forms CSS
  - https://v4-alpha.getbootstrap.com/components/forms/#form-groups
@@ -133,6 +155,43 @@ initializing component template has few use cases.
   </tr>
 </table>
 
+
+```
+
+# inline loop JSX
+```html
+<table>
+  <tbody as="base/Loop" p="userLoop">
+    {mi2.inline((state)=>(
+      <tr as="Base">
+        <td>
+          {state.tonnage}
+        </td> 
+        <td>
+          {state.name}
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+```
+
+
+# loop without parent
+```html
+{mi2.loop(()=>state.users,
+  (user={})=(
+    <label>{user.name}</label>
+  )
+)}
+
+<Loop src={state.users}>
+{mi2.simple((user={})=>(
+  <label>{user.name}</label>
+))}
+</Loop>
+
+<Loop src={state.users} tpl={(user={})=><label>{user.name}</label>}/>
 
 ```
 
