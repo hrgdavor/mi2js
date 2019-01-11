@@ -42,27 +42,31 @@ mi2._xClickEventData = function(el,evt, end){
 mi2._xClickListen = function(n, options, updaters, parentComp){
 	if(!parentComp) return;
 	parentComp.listen(n,'click',function(evt){
-		var evtData = mi2._xClickEventData(evt.target, evt,n);
-		var context;
-		var attrValue = options._;
-		if(typeof attrValue == 'function'){
-			context = attrValue(evt, evtData.action);
-		}else if(typeof attrValue == 'string'){
-			evtData.name = attrValue;
-		}
+		try{
+			var evtData = mi2._xClickEventData(evt.target, evt,n);
+			var context;
+			var attrValue = options._;
+			if(typeof attrValue == 'function'){
+				context = attrValue(evt, evtData.action);
+			}else if(typeof attrValue == 'string'){
+				evtData.name = attrValue;
+			}
 
-		evtData.context = context;
+			evtData.context = context;
 
-		// WORKAROUND to be compatible with base/Button
-		// changing fireEvent recognitionf of skipping the initiator component
-		// would break base/Button behavior, so this trick is used to make it work along
-		evtData.__src = parentComp;
+			// WORKAROUND to be compatible with base/Button
+			// changing fireEvent recognitionf of skipping the initiator component
+			// would break base/Button behavior, so this trick is used to make it work along
+			evtData.__src = parentComp;
 
-		if(evtData.name && !evt.cancelClick){
-			parentComp.fireEvent(evtData);
-		} 
+			if(evtData.name && !evt.cancelClick){
+				parentComp.fireEvent(evtData);
+			} 
 
-//		parentComp.fireEvent('');
+		}catch(e){
+			console.log('problem activating click on ', '\ntarget',evt.target, '\noptions', options, '\nparent', parentComp, '\nevt',evt);
+			throw e;
+		}	
 	});
 }
 
