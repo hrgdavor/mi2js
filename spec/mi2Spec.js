@@ -107,8 +107,7 @@ describe( 'mi2.js Base library', function () {
 
 		var dirs = mi2.extractDirectives({'x-click':'test1', x:'test2'});
 
-		expect(dirs.x.click._).toEqual('test1');
-		expect(dirs.x._).toEqual(void 0);
+		expect(dirs.x.click).toEqual('test1');
 
 	});
 

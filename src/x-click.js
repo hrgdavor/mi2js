@@ -39,13 +39,12 @@ mi2._xClickEventData = function(el,evt, end){
 		};
 };
 
-mi2._xClickListen = function(n, options, updaters, parentComp){
+mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 	if(!parentComp) return;
 	parentComp.listen(n,'click',function(evt){
 		try{
 			var evtData = mi2._xClickEventData(evt.target, evt,n);
 			var context;
-			var attrValue = options._;
 			if(typeof attrValue == 'function'){
 				context = attrValue(evt, evtData.action);
 			}else if(typeof attrValue == 'string'){
@@ -70,9 +69,9 @@ mi2._xClickListen = function(n, options, updaters, parentComp){
 	});
 }
 
-mi2.registerDirective('x-click', function(el, comp, options, updaters, parentComp){
+mi2.registerDirective('x-click', function(el, comp, value, updaters, parentComp, options){
 	if(comp) throw new Error('x-click not supported on component nodes');
-	mi2._xClickListen(el, options, updaters, parentComp);
+	mi2._xClickListen(el, value, updaters, parentComp);
 });
 
 })();

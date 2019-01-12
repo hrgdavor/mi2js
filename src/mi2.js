@@ -436,22 +436,16 @@ mi2.extractDirectives  = function(attr){
 	var count = 0;
 	for(var i in keys){
 		var p = keys[i];
-		var nameArr = p.split('-');
-		if(nameArr.length < 2) continue;
-
-		if(mi2.directives[nameArr[0]]){
+		var idx = p.indexOf('-');
+		if(idx == -1) continue;
+		var pref = p.substring(0,idx);
+		if(mi2.directives[pref]){
 			var val = attr[p];
 			delete attr[p];
-			function add(obj,idx, nameArr){
-				if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
-				if(idx < nameArr.length -1){
-					add(obj[nameArr[idx]], idx+1, nameArr);
-				}else{
-					obj[nameArr[idx]]._ = val;
-				}
-			}
+			p = p.substring(idx+1);
+			if(!out[pref]) out[pref] = {};
+			out[pref][p] = val;
 			count++;
-			add(out, 0, nameArr);
 		}
 	}
 	if(count) return out;
@@ -462,11 +456,11 @@ mi2.registerDirective = function(name, dir){
 	var nameArr = name.split('-');
 
 	function add(obj,idx){
+		if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
 		if(idx < nameArr.length -1){
-			if(!obj[nameArr[idx]]) obj[nameArr[idx]] = {};
 			add(obj[nameArr[idx]], idx+1); 
 		}else{
-			obj[nameArr[idx]] = dir;
+			obj[nameArr[idx]]._ = dir;
 		}
 	}
 	add(mi2.directives, 0);
@@ -476,12 +470,12 @@ mi2.runAttrDirective = function(el, comp, options, updaters, parentComp, src, pr
 	if(!options) return;
 	for(var p in options){
 		if(src[p]){
-			var func = src[p];
-			if(func) func(el, comp, options[p], updaters, parentComp);
+			var func = src[p]._;
+			if(func) func(el, comp, options[p], updaters, parentComp, options);
 		}else{
 			// restore the attribute value if no directive present
 			var attName = prefix+p;
-			var val = options[p]._;
+			var val = options[p];
 	        if(val && val instanceof Function){
 	            updaters.push(mi2.makeAttrUpdater(el, attName, val));
 	        }else{
@@ -492,7 +486,7 @@ mi2.runAttrDirective = function(el, comp, options, updaters, parentComp, src, pr
 	}
 };
 
-mi2.registerDirective('x', function(el, comp, options, updaters, parentComp){
+mi2.registerDirective('x', function x(el, comp, options, updaters, parentComp, optsBefore){
 	if(!options) return;
 	mi2.runAttrDirective(el, comp, options, updaters, parentComp, mi2.directives.x, 'x-');
 });

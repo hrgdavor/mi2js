@@ -13,7 +13,7 @@ describe( 'x-click', function () {
 
 		proto.initTemplate = function(h,t,state){
 			return <template>
-				<div disabled x-click={(evt,action)=>{return 11;}} action="aaaa" event="save"/>
+				<div x-click={(evt,action)=>{return 11;}} action="aaaa" event="save"/>
 				<div x-click="save">
 					<button action="b1">b1</button>
 					<button action="b2">b2</button>
@@ -25,11 +25,10 @@ describe( 'x-click', function () {
 	});
 
 	it(' / extractDirectives', function () {
-		// console.log('mi2.directives',mi2.directives);
+		//console.log('mi2.directives',mi2.directives);
 
 		var dirs = mi2.extractDirectives({'x-click':'test1', x:'test2'});
-
-		expect(dirs.x.click._).toEqual('test1');
+		expect(dirs.x.click).toEqual('test1');
 
 	});
 
