@@ -24,8 +24,6 @@ mi2._xClickEventData = function(el,evt, end){
 		el = el.parentNode;
 	}
 
-	actions.push('default');
-	
 	return {
 			action:actions[0],
 			actions:actions,
