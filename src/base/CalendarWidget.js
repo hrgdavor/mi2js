@@ -25,11 +25,25 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(this.month,'change','on_selectChange');
 		this.listen(this.year,'change','on_selectChange');
+		this.listen(this.timeInput.el,'blur',function(){
+			this.setDate();
+		});
+		this.listen(this.timeInput.el,'keypress',function(evt){
+			if(evt.keyCode == 13)
+				this.on_done();
+		});
 
 		this.date = new Date();
 
 		this.initElements();
-		var l = [this.done.el, this.year.el, this.month.el, this.today.el, this.done.el, this.clear.el];
+		var l = [
+			this.done.el, 
+			this.year.el, 
+			this.month.el, 
+			this.today.el, 
+			this.done.el, 
+			this.clear.el,
+			this.timeInput.el];
 
 		this.listen(this.el,'mousedown',function(evt){
 			for(var i=0; i<l.length; i++) if(evt.target == l[i]) return;
@@ -69,6 +83,10 @@ function(proto, superProto, comp, superComp){
 
 	};
 
+	proto.setEditTime = function(editTime){
+		this.timeInput.setVisible(editTime);
+	};
+
 	proto.on_selectChange = function(evt){
 		this.setDate(this.year.getValue(), this.month.getValue());
 	};
@@ -76,14 +94,15 @@ function(proto, superProto, comp, superComp){
 	proto.setDate = function(year,month,day){
 		var d = this.date;
 		if(!d) d = new Date(0,0,0,0,0,0,0);
+		var time = this.parseTime(this.timeInput.getValue());
 		this.update(new Date(
 			year || d.getFullYear(),
 			// month can be zero so same trick can not be used like for year
 			typeof(month) !== 'undefined' ? month : d.getMonth(),
 			day || d.getDate(),
-			d.getHours(),
-			d.getMinutes(),
-			d.getSeconds()
+			time[0],
+			time[1],
+			time[2]
 		));
 	};
 
@@ -131,6 +150,22 @@ function(proto, superProto, comp, superComp){
 		this.year.setValue(year);
 		this.month.setValue(date.getMonth());
 
+		this.timeInput.setValue(this.formatTime(date));
+	};
+
+	proto.formatTime = function(date){
+		if(!date) return '00:00';
+		return mi2.num2(date.getHours())+":"+mi2.num2(date.getMinutes());		
+	};
+
+	proto.parseTime = function(str){
+		var ret = [0,0,0];
+		if(!str) return ret;
+		var arr = str.split(':');
+		for(var i=0; i<3 && i < arr.length; i++) {
+			if(arr[i]) ret[i] = mi2.num(arr[i]);
+		}
+		return ret;
 	};
 
 	proto.on_dayClick = function(evt){
@@ -143,6 +178,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_done = function(evt){
+		this.setDate();
 		var date = this.date;
 		if(evt && evt.action == 'clear') date = null;
 		this.fireEvent({name:'dateSelected', widget: this, date:date, fireTo:'parent'});
