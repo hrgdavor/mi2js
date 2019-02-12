@@ -153,7 +153,12 @@ function(proto, superProto, comp, superComp){
 	};
 
 	function defGetValue(){  }
-	function defSetValue(){  }
+	function defSetValue(){
+		if(typeof val == 'object')
+			this.expandVars(val || {});
+		else
+			this.expandVars({value:val});
+	}
 
 	proto.makeItem = function(newData,i){
 		var node, compName;
@@ -176,7 +181,6 @@ function(proto, superProto, comp, superComp){
 
 		if(compName){
 			var comp = mi2.constructComp(node, null, this, updaters);
-			if(!comp.lazyInit) comp.__init();
 
 			var compClass = mi2.getComp(comp.getCompName());
 			var superClass = compClass.superClass;
@@ -185,13 +189,8 @@ function(proto, superProto, comp, superComp){
 				comp.state = state;
 				comp._updaters = updaters;
 				comp.initUpdaters();
-				comp.setValue = function(val){
-					if(typeof val == 'object')
-						this.expandVars(val || {});
-					else
-						this.expandVars({value:val});
-				}
 			}
+			if(!comp.lazyInit) comp.__init();
 
 			this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);			
 		}else{
