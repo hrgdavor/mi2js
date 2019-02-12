@@ -19,6 +19,7 @@ function(proto, superProto, comp, superComp){
 		superProto.initChildren.call(this);
 
 		var t = this.editType = (this.attr('type') || 'date').toLowerCase();
+		if(this.hasAttr('datetime')) t = 'datetime';
 		this.editTime = t == 'time' || t =='datetime';
 		this.editDate = t != 'time';
 
@@ -38,7 +39,7 @@ function(proto, superProto, comp, superComp){
 		this.listen(this.widget,'blur',  'on_blur');
 
 		this.input.trackChanges();
-		this.listen(this.input, 'change', 'on_change');
+		this.listen(this.input, 'change', 'on_changeInput');
 	};
 
 	proto.on_init = function(){
@@ -77,6 +78,7 @@ function(proto, superProto, comp, superComp){
 	};
 	
 	proto.showWidget = function(show){
+		this.widget.setEditTime(this.editTime);
 		this.widget.setVisible(show);
 		this.widgetVisible = show;
 	};
@@ -93,7 +95,7 @@ function(proto, superProto, comp, superComp){
 		},100);
 	};
 
-	proto.on_change = function(evt){
+	proto.on_changeInput = function(evt){
 		if(this.isReadOnly()) return;
 		var val = this.parseValue();
 		if(val && this.widgetVisible) this.widget.update(val);

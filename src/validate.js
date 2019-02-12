@@ -19,8 +19,8 @@
 
 	mi2.markValidate = function(comp,data){
 		data = data || new mi2.Validity();
-		comp.classIf('validation-error', !data.isValid());
-		comp.attr('validation-error',data.isValid() ? null : mi2.validationMessage(data));
+		comp.classIf('validation-error', data.isValid && !data.isValid());
+		comp.attr('validation-error', (data.isValid && data.isValid()) ? null : mi2.validationMessage(data));
 	};
 
 	mi2.patterns = {

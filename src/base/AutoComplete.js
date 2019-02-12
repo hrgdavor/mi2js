@@ -226,7 +226,6 @@ function(proto, superProto, comp, superComp){
 		
 		for(var i=0; i<allData.length; i++){
 			if(allData[i].text.toLowerCase().indexOf(srch) != -1){
-				console.log(allData[i].text.toLowerCase());
 				firstIndexAll = i;
 				if(this.selectFirst && firstIndex == -1) firstIndex = data.length;
 				data.push(allData[i]);
