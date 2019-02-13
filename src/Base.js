@@ -67,7 +67,7 @@ relationship. Also adding other functionalities needed for component based compo
 		if(!this.__initialized){
 			this.__initialized = true;
 			var def = this.initTemplate(mi2.h, mi2.t, this.state, this);
-			this._updaters = [];
+			this._updaters = this._updaters || [];
 			if(def){ // support for JSX templates
 				if(def.tag == 'template' || def.tag == 'frag') def = def.children;
 				if(def)	mi2.insertHtml(this.el, def, null, this._updaters, this);
@@ -566,8 +566,11 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	@memberof mi2JS(comp).Base
 	@param {Object} data
 	*/
-    proto.setValue = function(value){
-    	this.expandVars({value:value});
+    proto.setValue = function(val){
+		if(typeof val == 'object')
+			this.expandVars(val || {});
+		else
+			this.expandVars({value:val});
     }
 
 	/** Expand data expressions in the component and the children.

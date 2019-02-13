@@ -152,13 +152,7 @@ function(proto, superProto, comp, superComp){
 		return this.items[index];
 	};
 
-	function defGetValue(){  }
-	function defSetValue(){
-		if(typeof val == 'object')
-			this.expandVars(val || {});
-		else
-			this.expandVars({value:val});
-	}
+	function defGetValue(){ }
 
 	proto.makeItem = function(newData,i){
 		var node, compName;
@@ -198,7 +192,6 @@ function(proto, superProto, comp, superComp){
 		}
 
 		if(!comp.getValue) comp.getValue = defGetValue;
-		if(!comp.setValue) comp.setValue = defSetValue;
 
 		this.itemCreated(comp, i);
 
