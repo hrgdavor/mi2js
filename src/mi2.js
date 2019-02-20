@@ -207,6 +207,11 @@ mi2.num = function(str){
 	return n;
 };
 
+mi2.logError = function(message, e, data){
+	console.log(message, e, data);
+};
+
+
 /** Check if passed value is empty.
 <ul>
   <li>null
@@ -247,10 +252,21 @@ addEventListener or attachEvent.
 mi2.listen = function ( obj, evt, fnc, self, options ){
 
 //	mi2.nn('mi2.listen', {obj:obj, evt:evt, fnc:fnc} );
+	var test = fnc;
+	if(typeof(fnc) == 'string') test = self[fnc];
+	if(!test || typeof(test) != 'function'){
+		mi2.logError('listener not a function',new Error(), {obj:obj, listener:test,evt:evt, scope:self});
+		return;
+	}
+
 
 	var listener = function(evt){
 		if(typeof(fnc) == 'string') fnc = self[fnc];
-		fnc.call(self || obj, mi2.fixEvent(evt));
+		try{
+			fnc.call(self || obj, mi2.fixEvent(evt));
+		}catch(e){
+			mi2.logError(e.message,e);			
+		}
 	};
 
 	if (obj.addEventListener){

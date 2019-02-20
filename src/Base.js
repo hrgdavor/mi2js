@@ -336,7 +336,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					this['on_'+evtName](evt);
 					fired = true;
 				}catch(e){
-					console.log('Error calling event handler function ','on_'+evtName, evt, 'component', this , 'error', e);
+					mi2.logError('Error calling event handler function  on_'+evtName, e, {'this':this, event:evt});
 					console.error(e.message);
 				}
 
@@ -349,7 +349,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					l[i].callback(evt);
 					fired = true;
 				}catch(e){
-					console.log('Error firing event ',evtName, evt, 'listener', l[i].scope, 'error', e);
+					mi2.logError('Error firing event '+evtName, e, {'listener':l[i].scope, event:evt});
 					console.error(e.message);
 				}
 			}

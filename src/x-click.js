@@ -2,11 +2,14 @@
 
 var mi2 = mi2JS;
 
-mi2._xClickCancel = function(el){
+mi2._xClickCancel = function(el, end){
 	
 	// if disabled at any level 
 	if(el.hasAttribute(mi2JS.disabledAttribute)) return true;
 	
+	// if listen is on the root node of component
+	if(el === end) return false;
+
 	// do not mess with other components
 	comp = el.getAttribute('as');
 	return (comp && el != this.el && !(comp == 'Base' || comp =='Base' )); 
@@ -15,7 +18,7 @@ mi2._xClickCancel = function(el){
 mi2._xClickEventData = function(el,evt, end){
 	var evtNames = [], actions = [], comp, cancelClick = false;
 	while(true){
-		if(mi2._xClickCancel(el)) cancelClick = true;
+		if(mi2._xClickCancel(el, end)) cancelClick = true;
 
 		if(el.hasAttribute('event')) evtNames.push(el.getAttribute('event'));
 		if(el.hasAttribute('action')) actions.push(el.getAttribute('action'));
@@ -36,6 +39,11 @@ mi2._xClickEventData = function(el,evt, end){
 			fireTo: 'parent'
 		};
 };
+
+mi2.xclick = function(comp, attrValue){
+	// udpaters not needed
+	mi2._xClickListen(comp.el,attrValue,null,comp);
+}
 
 mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 	if(!parentComp) return;
@@ -61,7 +69,7 @@ mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 			} 
 
 		}catch(e){
-			console.log('problem activating click on ', '\ntarget',evt.target, '\noptions', options, '\nparent', parentComp, '\nevt',evt);
+			mi2.logError('problem activating click',evt, {target:evt.target,parent:parentComp});
 			throw e;
 		}	
 	});
