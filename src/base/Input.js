@@ -53,6 +53,7 @@ function(proto, superProto, comp, superComp){
 
 		this.listen(this.input.el,'blur',  'on_blur');
 		this.listen(this.input.el,'keypress',this.checkSubmit);
+		if(!this.hasAttr('autocomplete')) this.attr('autocomplete','fu-chrome');
 	};
 
 	proto.on_blur = function(evt){
