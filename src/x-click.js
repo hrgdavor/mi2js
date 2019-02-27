@@ -26,7 +26,7 @@ mi2._xClickEventData = function(el,evt, end){
 		if(el == end) break;
 		el = el.parentNode;
 	}
-
+	
 	return {
 			action:actions[0],
 			actions:actions,
@@ -49,7 +49,7 @@ mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 	if(!parentComp) return;
 	parentComp.listen(n,'click',function(evt){
 		try{
-			var evtData = mi2._xClickEventData(evt.target, evt,n);
+			var evtData = mi2._xClickEventData(evt.target, evt, n);
 			var context;
 			if(typeof attrValue == 'function'){
 				context = attrValue(evt, evtData.action);
