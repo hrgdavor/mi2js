@@ -275,7 +275,7 @@ mi2.listen = function ( obj, evt, fnc, self, options ){
 	} else if(obj.attachEvent){
 		return obj.attachEvent("on"+evt,listener);
 	}else{
-		throw new Error('unable to add listener to '+obj);
+        mi2.logError('object does not have addEventListener ', new Error(), obj);
 	}
 };
 
