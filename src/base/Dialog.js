@@ -17,6 +17,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.show = function(params){
+		this.expandVars({});
 		this.callback = params.callback;
 		var title = params.title || '';
 		var content = params.content || '';
@@ -37,14 +38,16 @@ function(proto, superProto, comp, superComp){
 		this.buttons.setValue([]);
 		this.hasCancel = false;
 		for(var i=0; i< buttons.length; i++){
-			if(typeof buttons[i] == 'string') buttons[i] = {action:buttons[i]};
-			var text = buttons[i].text || mi2.t(buttons[i].action);
+			var button = buttons[i];
+			if(typeof button == 'string') button = {action:button};
+			var text = button.text || mi2.t(button.action);
 			this.buttons.push(text);
-			var button = this.buttons.getItem(i);
-			if(buttons[i].action == 'cancel') this.hasCancel = true;
-			button.setText(text);
-			button.attr('action', buttons[i].action);
-			button.attr('class',  buttons[i]['class'] || buttonClass);
+			if(button.action == 'cancel') this.hasCancel = true;
+
+			var item = this.buttons.getItem(i);
+			item.setText(text);
+			item.attr('action', button.action);
+			item.attr('class',  button['class'] || buttonClass);
 		}
 		this.setVisible(true);
 
