@@ -95,7 +95,14 @@ relationship. Also adding other functionalities needed for component based compo
 		}
 	};
 	
-	proto.initAttr = function(attr, updaters){ mi2.insertAttr(this.el,attr,updaters); };
+	proto.initAttr = function(attr, updaters){
+		if(attr && attr.tpl && typeof(attr.tpl) == 'function') {
+			// used later in initTemplate
+			this.__templateJsx = attr.tpl;
+			delete attr.tpl;
+		}
+		mi2.insertAttr(this.el,attr,updaters); 
+	};
 
 	proto.initUpdaters = function(){
 		if(this._updaters) for(var i=this._updaters.length-1; i>=0; i--){
@@ -113,9 +120,17 @@ relationship. Also adding other functionalities needed for component based compo
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.initTemplate = function(){
+	proto.initTemplate = function(h,t,state, self){
 		if(this.__template){
 			this.el.innerHTML = this.__template;
+		}
+		// we want separeate state that we can update if we use tpl attribute
+		if(this.__templateJsx){
+			var tpl = this.__templateJsx;
+			// if we are putting a template inside, we want the button events
+			this._transitive = true;
+			delete this.__templateJsx;
+			return tpl(state, self);
 		}
 		// if(this.__template || this.el.getAttribute('template') == 'inline'){
 		// 	this.parseChildren();
@@ -268,7 +283,7 @@ relationship. Also adding other functionalities needed for component based compo
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.isTransitive = function(evt){ return false; };
+	proto.isTransitive = function(evt){ return this._transitive || false; };
 
 
 
