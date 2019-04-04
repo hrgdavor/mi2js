@@ -53,7 +53,7 @@ mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 			var context;
 			if(typeof attrValue == 'function'){
 				context = attrValue(evt, evtData.action);
-			}else if(typeof attrValue == 'string'){
+			}else if(typeof attrValue == 'string' && !evtData.name){
 				evtData.name = attrValue;
 			}
 

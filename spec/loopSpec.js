@@ -95,7 +95,7 @@ describe( 'base/Loop.js', function () {
 	it('/ basic ', function (){
 		var node = mi2.addTag(null, {tag:'DIV', 
 				attr: {as:'base/Loop'},
-				html: '<div template as="Base" >Name: ${value.name}, Last: ${value.last}</div>' 
+				html: '<div template as="Base" >Name: ${name}, Last: ${last}</div>' 
 			});
 
 		var comp = mi2.makeComp(node);
@@ -117,7 +117,7 @@ describe( 'base/Loop.js', function () {
 	it('/ not the only child ', function (){
 		var node = mi2.addTag(null, {tag:'DIV', 
 				attr: {as:'base/Loop'},
-				html: '<div template as="Base" >Name: ${value.name}, Last: ${value.last}</div><b>xx</b>' 
+				html: '<div template as="Base" >Name: ${name}, Last: ${last}</div><b>xx</b>' 
 			});
 
 		var comp = mi2.makeComp(node);

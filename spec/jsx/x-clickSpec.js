@@ -11,6 +11,10 @@ describe( 'x-click', function () {
 			this.saveAction = evt.action;
 		};
 
+		proto.on_cancel = function(evt){
+			this.cancelAction = evt.action;
+		};
+
 		proto.initTemplate = function(h,t,state){
 			return <template>
 				<div x-click={(evt,action)=>{return 11;}} action="aaaa" event="save"/>
@@ -19,6 +23,7 @@ describe( 'x-click', function () {
 					<button action="b2">b2</button>
 					<button action="b3" disabled>b3</button>
 					<button>b4</button>
+					<button event="cancel" action="b4">b4</button>
 				</div>
 			</template>;
 		};
@@ -58,6 +63,11 @@ describe( 'x-click', function () {
 		bt4.click();
 		// no change as b3 is disabled
 		expect(comp.saveAction).toEqual(void 0);
+
+		var bt5 = bt4.nextSibling;
+		bt5.click();
+
+		expect(comp.cancelAction).toEqual('b4');
 	});
 
 });
