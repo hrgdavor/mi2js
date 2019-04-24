@@ -1,9 +1,146 @@
 (function(mi2){
 
-	var undef = void 0;
+
+var undef = void 0;
+
+
+function Agregator(){
+	this.computed = [];
+}
+
+mi2.Agregator = Agregator;
+var proto = Agregator.prototype;
+
+proto.withFields = function(fields){
+	this.fields = fields; 
+	return this;
+}
+
+proto.withComputed = function(computed){
+	this.computed = computed; 
+	return this;
+}
+
+proto.forEach = function(func){
+	var items = this.fields;
+	for(var p in items){
+		func(items[p], p, items);
+	}
+}
+
+proto.map = function(func){
+	var ret = {};
+	this.forEach((item,i,src)=>{ ret[i] = func(item,i,src); });	
+	return ret;
+}
+
+proto.filter = function(func){
+	var ret = {};
+	this.forEach((item,i,src)=>{ if(func(item,i,src)) ret[i] = item; });	
+	return new Agregator().withFields(ret);
+}
+
+proto.getValue = function(){
+	return this.map(item=>item.value);
+}
+
+proto.getInitialValue = function(){
+	return this.map(item=>item.initialValue());
+}
+
+/** agregate single row into new object or an existing continuation
+*/
+proto.add = function(row, obj){
+	obj = obj || this.getInitialValue();
+	this.forEach((item,i)=>{
+		if(item.filter(row)) obj[i] = item.visit( obj[i], item.column(row) );
+	});
+	return obj;
+}
+
+proto.groupAdd = function(row, groupKey, groups){
+	groups[groupKey] = this.add(row, groups[groupKey]);
+}
+
+/** agregate rows into new object or an existing continuation
+*/
+proto.agregate = function(arr, obj){
+	obj = obj || {};
+	var val;
+	this.forEach((item,i)=>{
+		val = item.initialValue();
+		arr.forEach(row=>{
+			if(item.filter(row)) val = item.visit( val, item.column(row) );
+		});
+		obj[i] = val;
+	});
+	return obj;
+}
+
+proto.combineAdd = function(old, dataToAdd){
+	this.forEach((item,i)=>{
+		old[i] = item.visit(old[i], dataToAdd[i]);
+	});
+}
+
+/** combine calculated results into one
+*/
+proto.combine = function(arr, obj){
+	obj = obj || {};
+	var val;
+	this.forEach((item,i)=>{
+		val = item.initialValue();
+		arr.forEach(row=>{
+			val = item.visit( val, row[i] );
+		});
+		obj[i] = val;
+	});
+	return obj;
+}
+
+proto.addComputed = function(row, conf){
+	conf = conf || this.computed;
+	conf.forEach(singleConf=>{
+		for(var p in singleConf){
+			row[p] = singleConf[p](row);
+		}
+	});
+}
+
+
+mi2.columnForCount = row=>1;
+
+mi2.agregatorFunc = {
+	sum:   (column, filter)=> mi2.makeFieldAgregator({ 
+		column, filter,
+		visit: (old, val) => val === undef ? old : old+val, 
+		value: 0 
+	}),
+	count: (filter)=> mi2.makeFieldAgregator({
+		filter, column: mi2.columnForCount,
+		visit: (old, val) => val === undef ? old : old+val, 
+		value: 0 
+	}),
+	min:   (column, filter)=> mi2.makeFieldAgregator({
+		column,filter,
+		visit: (old, val) => val === undef || (old !== undef && old <= val) ? old : val, 
+	}),
+	max:   (column, filter)=> mi2.makeFieldAgregator({
+		column,filter, 
+		visit: (old, val) => val === undef || old >= val ? old : val, 
+		value: 0 
+	}),
+	column:(column, filter)=> mi2.makeFieldAgregator({
+		column,filter,
+		visit: (old, val)=>val,
+	}),
+};
+
+
+
 /** utility function to help build agregator definition with plenty of handy defaults.
 */
-mi2.makeAgregator = function(def){
+mi2.makeFieldAgregator = function(def){
 
 	if(def.column){
 		if(typeof def.column == 'string'){
@@ -12,57 +149,33 @@ mi2.makeAgregator = function(def){
 		} 
 
 	}else{
-		def.column = row=>1
+		def.column = mi2.columnForCount;
 	}
 
 	if(!def.visit) def.visit = function(){};
 
-	if(!def.done) def.done = function(){};
-
 	if(!def.filter) def.filter = row=>true;
 
+	if(!def.initialValue){
+		var _initialValue = def.value;
+		def.initialValue = function(){ return _initialValue; }
+	}
+
 	if(!def.reset){
-		var initialValue = def.value;
-		def.reset = function(){ this.value = initialValue; }
+		def.reset = function(){ this.value = this.initialValue(); }
 	}
 
 	return def;
 }
 
-mi2.agregator = {
-	sum:   (column, filter)=> mi2.makeAgregator({ 
-		column,filter,
-		visit: function(val){ if(val !== undef) this.value += val; }, 
-		value: 0 
-	}),
-	count: (filter)=> mi2.makeAgregator({
-		filter,
-		visit: function(val){ if(val !== undef) this.value +=val; }, 
-		value: 0 
-	}),
-	min:   (column, filter)=> mi2.makeAgregator({
-		column,filter,
-		visit: function(val){ if(val !== undef && (this.value === undef || this.value > val) ) this.value = val; }
-	}),
-	max:   (column, filter)=> mi2.makeAgregator({
-		column,filter, 
-		visit: function(val){ if(val !== undef && this.value < val) this.value = val }, 
-		value: 0 
-	}),
-	column:(column, filter)=> mi2.makeAgregator({
-		column,filter,
-		visit: function(val){ this.value = val },
-	}),
-
-};
 
 /** generate grouping key based on columns, by concatenating values into a string
 
 columns example:
-  ['direction','service_id','instance_id','queue_id','user_id']
+  ['groupId','userId']
 
 hardcoded version that would give same key:
-  row.direction+'/'+row.service_id+'/'+row.instance_id+'/'+row.queue_id+'/'+row.user_id+'/'
+  row.groupId+'/'+row.userId+'/'
 */
 mi2.makeGroupKeyFunction = function(columns){
 	return function(row){
@@ -72,81 +185,11 @@ mi2.makeGroupKeyFunction = function(columns){
 	}
 }
 
-mi2.resetAgregate = function(agrDef){
-	for(var p in agrDef) agrDef[p].reset();
-}
-
-mi2.runAgregate = function(agrDef, rows){
-	for(var p in agrDef){
-		var agregator = agrDef[p];
-		agregator.reset();
-		if(rows && rows.length){
-			for(var i=0; i<rows.length; i++){
-				mi2.agregateOne(agregator, rows[i]);
-			}
-		}
-		agregator.done();
-	}
-
-	return agrDef;
-}
-
-/** for arrays just call.
-	<code>agrDefArray.map(agrDef=>mi2.getAgregateResult(agrDef));</code>
-*/
-mi2.getAgregateResult = function(agrDef){
-	var result = {};
-	for(var p in agrDef){
-		result[p] = agrDef[p].value;	
-	}
-	return result;
-}
-
-mi2.agregateOne = function(agregator, row){
-	if(agregator.filter(row)) agregator.visit(agregator.column(row));
-}
-
-/** for arrays just call.
-	<code>groups.map(rows=>mi2.agregate(agrDef, rows));</code>
-	agregators are reusable
-*/
-mi2.agregate = function(agrDef, rows){
-	mi2.runAgregate(agrDef, rows);
-	return mi2.getAgregateResult(agrDef);
-}
-
-mi2.combineResults = function(agrDef, arr){
-	for(var p in agrDef){
-		var agregator = agrDef[p];
-		agregator.reset();
-		if(arr && arr.length){
-			for(var i=0; i<arr.length; i++){
-				agregator.visit(arr[i][p]);
-			}
-		}
-		agregator.done();
-	}
-	return mi2.getAgregateResult(agrDef);
-}
-
-mi2.addComputedColumns = function(conf, row){
-	if(conf){
-		if(conf instanceof Array){
-			conf.forEach(singleConf=>mi2.addComputedColumns(singleConf,row));
-			return;
-		}
-		for(var p in conf){
-			row[p] = conf[p](row);
-		}
-	}
-}
-
 mi2.groupRows = function(groupFunc, arr){
 	return mi2.objToArray(mi2.mapRows(groupFunc, arr));
 }
 
-mi2.mapRow = function(groupFunc, row, groups){
-	var groupKey = groupFunc(row);
+mi2.mapRow = function(groupKey, row, groups){
 	groups[groupKey] = groups[groupKey] || []; 
 	groups[groupKey].push(row);
 	return groupKey;
@@ -154,7 +197,8 @@ mi2.mapRow = function(groupFunc, row, groups){
 
 mi2.mapRows = function(groupFunc, arr, groups){
 	groups = groups || {};
-	arr.forEach( row=>mi2.mapRow(groupFunc, row, groups) );
+	var groupKey = groupFunc(row);
+	arr.forEach( row=>mi2.mapRow(groupKey, row, groups) );
 	return groups;
 }
 
