@@ -45,5 +45,15 @@
 		return '';
 	}
 
+	mi2.filters.str2json = function(value){
+		if(value == null) return null;
+		return JSON.parse(value);
+	}
+
+	mi2.filters.json2str = function(value){
+		if(value == null) return null;
+		return JSON.stringify(value);
+	}
+
 
 }(mi2JS));
