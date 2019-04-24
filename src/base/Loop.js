@@ -39,6 +39,12 @@ function(proto, superProto, comp, superComp){
 
 		superProto.initTemplate.call(this);
 
+		if(this.hasAttr('in-filter'))
+			this.inFilter = mi2.parseFilter(this.attrDef('in-filter'), this.inFilter);
+		
+		if(this.hasAttr('out-filter'))
+			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);		
+
 		this.allItems = [];
 		this.items = [];
 		this.count = 0;
@@ -117,6 +123,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(arr){
+		arr = mi2.filter( arr, this.inFilter);
 		arr = arr || [];
 		for(var i=0; i<arr.length; i++){
 			this.setItem(arr[i],i);
@@ -231,7 +238,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getValue = function(){
-		return this.forEachGet(this.getItemValue.bind(this));
+		return mi2.filter( this.forEachGet(this.getItemValue.bind(this)), this.outFilter);
 	};
 
 	proto.push = function(data){
