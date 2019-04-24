@@ -61,8 +61,13 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_close = function(evt){
+		var resp = evt.action;
 		if(this.callback){
 			if(this.callback(evt.action) !== false){
+				this.setVisible(false);
+			}
+		}else if(this['callback_'+resp]){
+			if(this['callback_'+resp](evt.action) !== false){
 				this.setVisible(false);
 			}
 		}else{
