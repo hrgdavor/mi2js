@@ -24,8 +24,8 @@ function(proto, superProto, comp, superComp){
 		superProto.initTemplate.apply(this, arguments);
 	};
 
-	proto.parseChildren = function(){
-		superProto.parseChildren.call(this);
+	proto.initChildren = function(){
+		superProto.initChildren.call(this);
 
 
 		this.addClass("AutoComplete");
@@ -182,7 +182,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.getTextFor = function(id){
 		var data = this.getDataFor(id);
-		return data ? data.text:null;
+		return data ? (data.name || data.text):null;
 	};
 
 	proto.getDataFor = function(id){
@@ -203,7 +203,7 @@ function(proto, superProto, comp, superComp){
 			this.clearBt.setEnabled(false);
 		}
 		this.selectedData = this.getDataFor(this.getValue());
-		this.setText(this.selectedData ? this.selectedData.text:this.emptyText);
+		this.setText(this.selectedData ?  (this.selectedData.name || this.selectedData.text) :this.emptyText);
 		var val = this.getValue();
 		if(this.noEmpty && allData.length >0 && !this.getText() ){
 			this.selectedData = allData[0];
@@ -225,7 +225,8 @@ function(proto, superProto, comp, superComp){
 		var firstIndexAll = -1;
 		
 		for(var i=0; i<allData.length; i++){
-			if(allData[i].text.toLowerCase().indexOf(srch) != -1){
+			var str = allData[i].name || allData[i].text || '';
+			if(str.toLowerCase().indexOf(srch) != -1){
 				firstIndexAll = i;
 				if(this.selectFirst && firstIndex == -1) firstIndex = data.length;
 				data.push(allData[i]);
@@ -264,7 +265,7 @@ function(proto, superProto, comp, superComp){
 				d = this.list[i] = $(mi2JS.addTag(this.div,{tag:'DIV',attr:{'class':'acItem'}}));
 				d.el.index = i;
 			}
-			d.el.innerHTML = data[i].html || data[i].text;
+			d.el.innerHTML = data[i].html || data[i].name || data[i].text;
 			d.el.data = data[i];
 			d.setVisible(true);
 			if(this.selectFirst && i==0) selectedId = data[i].id;
@@ -286,13 +287,13 @@ function(proto, superProto, comp, superComp){
 	proto.applySelection = function(skipIfNotSame){
 		var sel = {};
 		if(this.selected) sel = this.selected.data || sel;
-		if(skipIfNotSame && sel.text != this.textInput.el.value){
+		if(skipIfNotSame && (sel.name || sel.text) != this.textInput.el.value){
 			sel = {text:this.textInput.el.value};
 			this.idInput.el.value = '';
 		}else{
 			this.selectedData = sel;
 	        this.idInput.el.value = sel.id || '';
-	        this.setText(sel.text);			
+	        this.setText(sel.name || sel.text);			
 		}
 		this.fireIfChanged();
 		this.fireEvent({name:"afterSelect", selected:sel, fireTo:'parent'});
