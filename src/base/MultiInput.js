@@ -7,13 +7,6 @@ mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
 
         proto.initTemplate = function(){
             superProto.initTemplate.apply(this,arguments);
-
-            if(this.hasAttr('in-filter'))
-                this.inFilter = mi2.parseFilter(this.attr('in-filter'));
-            
-            if(this.hasAttr('out-filter'))
-                this.outFilter = mi2.parseFilter(this.attr('out-filter'));      
-
             this.setValue([]);
         };
 
@@ -44,8 +37,8 @@ mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
             }
         };
 
-        proto.getValue = function(){
-            var ret = superProto.getValue.call(this);
+        proto.getRawValue = function(){
+            var ret = superProto.getRawValue.call(this);
             while (ret.length && this.isEmptyValue(ret[ret.length -1])) ret.pop();
 
             if (this.attrBoolean('remove-empty')) {
@@ -56,14 +49,10 @@ mi2JS.addCompClass('base/MultiInput', 'base/Loop', '',
 
                 ret = tmp;
             }
-
-            return mi2.filter( ret, this.outFilter );
+            return ret;
         };
         
         proto.setValue = function(cval) {
-            cval = mi2.filter(cval, this.inFilter);
-
-            if (!cval) cval = [];
             superProto.setValue.call(this,cval);
             this.push(this.defaultNewValue());
         };
