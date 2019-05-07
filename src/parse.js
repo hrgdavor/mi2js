@@ -38,14 +38,17 @@ bt.save   |  obj.bt.save
 @function setRef
 @memberof mi2JS(core)
 */
-mi2.setRef = function(obj, comp, prop){
-	if(!prop) return;
+mi2.setRef = function(obj, comp, prop, group){
 
 	var idx = -1;
-	if(prop){
+	if(prop || group){
+
 		if( (idx=prop.indexOf('.')) != -1){
-			var group = prop.substring(0,idx);
+			group = prop.substring(0,idx);
 			prop = prop.substring(idx+1);
+			// TODO allow multiple levels
+			mi2.setRef(obj, comp, prop, group);
+		}else if(group){
 			comp.__propGroup = group;
 			if(prop){
 				//example: p="bt.edit"
@@ -113,6 +116,12 @@ function logPropTaken(prop, obj, by){
 				if(prop.charAt(prop.length-1) == '.') el.setAttribute('p',prop+comp.__propName);
 
 				if(!compName && obj.addRef) obj.addRef(comp); // list of referenced nodes
+			}
+
+			prop = el.getAttribute('name');
+			if(prop){
+				if(!comp) comp = new mi2(el);
+				mi2.setRef(obj, comp, prop, 'items');
 			}
 
 			// recursion is stopped for components with inline template, as the component will decide how to initialize

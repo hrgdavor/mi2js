@@ -10,6 +10,14 @@ describe( 'comp.js Component utilities', function () {
 	function(proto, superProto, comp, superComp){
 	});
 
+	mi2JS.addCompClass('test/FormTest1', 'Base', '<div><input p="items.name"/><input p="items.gender"/></div>',
+	function(proto, superProto, comp, superComp){
+	});
+
+	mi2JS.addCompClass('test/FormTest2', 'Base', '<div><input name="name"/><input name="gender"/></div>',
+	function(proto, superProto, comp, superComp){
+	});
+
 
 	mi2JS.addCompClass('test/ShowHideInitTest', 'Base', '',
 	function(proto, superProto, comp, superComp){
@@ -91,6 +99,28 @@ describe( 'comp.js Component utilities', function () {
 		comp.setVisible(true);
 		expect(comp.child.on_show_count).toEqual(1);
 
+	});
+
+	it(' / FormTest1', function () {
+		var comp = mi2.addComp(null,{tag:'B', attr:{as:"test/FormTest1"}});
+
+		expect(comp.el.innerHTML).toEqual('<div><input p="items.name" as="base/Input" autocomplete="fu-chrome"><input p="items.gender" as="base/Input" autocomplete="fu-chrome"></div>');
+		expect(comp.items != null).toEqual(true);
+		expect(comp.items.name!= null).toEqual(true);
+		comp.$items.setValue({name:'name-val', gender:'gender-val'});
+		expect(comp.items.name.getValue()).toEqual('name-val');
+		expect(comp.items.gender.getValue()).toEqual('gender-val');
+	});
+
+	it(' / FormTest2', function () {
+		var comp = mi2.addComp(null,{tag:'B', attr:{as:"test/FormTest2"}});
+
+		expect(comp.el.innerHTML).toEqual('<div><input name="name" as="base/Input" autocomplete="fu-chrome"><input name="gender" as="base/Input" autocomplete="fu-chrome"></div>');
+		expect(comp.items != null).toEqual(true);
+		expect(comp.items.name!= null).toEqual(true);
+		comp.$items.setValue({name:'name-val', gender:'gender-val'});
+		expect(comp.items.name.getValue()).toEqual('name-val');
+		expect(comp.items.gender.getValue()).toEqual('gender-val');
 	});
 
 });

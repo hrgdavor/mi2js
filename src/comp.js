@@ -5,7 +5,7 @@
 
 	// if the script is loaded again, it will reuse existing mi2.compData
 	var compData = mi2.compData = mi2.compData || {def:{}, tpl:{}, later:{}, tags:{}, counterSeq:0};
-
+	compData.tags.INPUT = compData.tags.SELECT = compData.tags.TEXTAREA = 'base/Input';
 	var mi2Proto = mi2.prototype;
 
 /** 
