@@ -65,8 +65,10 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.setup(optsIn.pager || {});
 		this.pager2.setup(optsIn.pager || {});
 		this.cols = optsIn.columns || {};
-		this.pager1.setVisible(optsIn.pager != 'hidden');
-		this.pager2.setVisible(optsIn.pager != 'hidden');
+		this.showPager1 = optsIn.pager != 'hidden' && optsIn.pager != 'bottom';
+		this.showPager2 = optsIn.pager != 'hidden' && optsIn.pager != 'top';
+		this.pager1.setVisible(this.showPager1);
+		this.pager2.setVisible(this.showPager2);
 		var i=0;
 		this.thead.el.innerHTML = '';
 		var tr = $.addTag(this.thead.el, "TR", null, this);
@@ -182,8 +184,8 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.pager1.update(tData);
 		this.pager2.update(tData);
 
-		this.pager1.setVisible(this.showPager == 'always' ||  this.pager1.pagesCount > 1);
-		this.pager2.setVisible(this.showPager == 'always' ||  this.pager2.pagesCount > 1);
+		if(this.showPager1) this.pager1.setVisible(this.showPager == 'always' ||  this.pager1.pagesCount > 1);
+		if(this.showPager2) this.pager2.setVisible(this.showPager == 'always' ||  this.pager2.pagesCount > 1);
 
 		this.tbody.setHtml('');
 		for(var i=0; i<tData.data.length; i++){
