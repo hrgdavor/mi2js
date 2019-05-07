@@ -123,7 +123,10 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(arr){
-		arr = mi2.filter( arr, this.inFilter);
+		this.setRawValue( mi2.filter( arr, this.inFilter));
+	}
+
+	proto.setRawValue = function(arr){
 		arr = arr || [];
 		for(var i=0; i<arr.length; i++){
 			this.setItem(arr[i],i);
@@ -237,8 +240,12 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
+	proto.getRawValue = function(){
+		return this.forEachGet(this.getItemValue.bind(this))
+	}
+
 	proto.getValue = function(){
-		return mi2.filter( this.forEachGet(this.getItemValue.bind(this)), this.outFilter);
+		return mi2.filter( this.getRawValue(), this.outFilter);
 	};
 
 	proto.push = function(data){
