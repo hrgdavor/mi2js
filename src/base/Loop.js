@@ -20,18 +20,12 @@ function(proto, superProto, comp, superComp){
 	
 	var mi2 = mi2JS;
 
-	proto.itemTpl = {
-		tag:'DIV',
-		attr: { },
-		html: ''
-	};
-
 	proto.initTemplate = function(){
 		var el = this.el;
 		
 		if(this.__template) el.innerHTML = this.__template;
 		delete this.__template;
-
+		
 		this.loadItemTpl(el);
 
 		// this was done before calling parent constructor to avoid stack overflow in case
@@ -44,6 +38,8 @@ function(proto, superProto, comp, superComp){
 		
 		if(this.hasAttr('out-filter'))
 			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);		
+
+		if(this.itemTpl.attr) this.itemTpl.attr.as = this.attrDef('item',this.itemTpl.attr.as);
 
 		this.allItems = [];
 		this.items = [];
@@ -83,11 +79,13 @@ function(proto, superProto, comp, superComp){
 
 		if(ch && ch.tagName){
 			this.itemsArea = ch.parentNode;
-			this.itemTpl = mi2.toTemplate(ch, this.itemTpl.attr);
+			this.itemTpl = mi2.toTemplate(ch, this.itemTpl ? this.itemTpl.attr:null);
 			this.itemNextSibling = ch.nextElementSibling;
 			ch.parentNode.removeChild(ch);
-		}else
+		}else{
 			this.itemsArea = el;
+			if(!this.itemTpl) this.itemTpl = { tag:'DIV', attr: { }};
+		}
 	};
 
 	proto.findItem = function(el){
