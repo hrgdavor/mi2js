@@ -39,8 +39,8 @@
 	mi2.addTag = function(parent, tpl, nextSibling){
 
 		if(typeof tpl == 'string') tpl = {tag:tpl};
-
-		return mi2.insertHtml(parent, new mi2.TagDef(tpl.tag, tpl.attr, tpl.children || [], tpl.html), nextSibling);
+		if(!(tpl instanceof mi2.TagDef)) tpl = new mi2.TagDef(tpl.tag, tpl.attr, tpl.children || [], tpl.html);
+		return mi2.insertHtml(parent, tpl, nextSibling);
 	};
 
 	/** 
