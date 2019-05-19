@@ -99,10 +99,6 @@ scriptsGroup.comp = {
 		"desc": "Value filters" , 
 		"require":["mi2"]
 	},
-	"template":{
-		"desc": "String template rendering, values can be transformed by filters" , 
-		"require":["mi2","filter"]
-	},
 	"parse": {
 		"desc": "Binding DOM nodes to script objects and components if com.js included", 
 		"require":["mi2","html"]
@@ -115,21 +111,9 @@ scriptsGroup.comp = {
 		"desc": "", 
 		"require":["mi2"]
 	},
-	"Group": {
-		"desc": "", 
-		"require":["comp","NWGroup"]
-	},
-	"InputGroup": {
-		"desc": "", 
-		"require":["comp", "Group"]
-	},
 	"Base": {
 		"desc": "", 
 		"require":["comp"]
-	},
-	"base/Tpl": {
-		"desc": "Render values via template (template strings in html and attributes)", 
-		"require":["comp","template"]
 	},
 	"base/Button": {
 		"desc": "", 
@@ -278,8 +262,8 @@ copy to: <input id="copyTo" name="copyTo" value="<?=$_GET['copyTo']?>" style="wi
 <a href="#" onclick="generateFiles();return false;">Generate</a>
 <div><b>Selection</b></div>
 <ul>
-	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+template+parse+comp+Group+InputGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table+validate+base/Form+base/InputBase+base/Input+base/AutoComplete+base/Calendar+base/CalendarWidget+base/ShowHide+base/Pager&baseName=mi2">full components build</a></li>
-	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+template+parse+comp+Group+InputGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table&baseName=mi2">core components build</a></li>
+	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+parse+comp+NWGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table+validate+base/Form+base/InputBase+base/Input+base/AutoComplete+base/Calendar+base/CalendarWidget+base/ShowHide+base/Pager&baseName=mi2">full components build</a></li>
+	<li><a href="build.php?sel=mi2+html+html.common+ajax+filter+parse+comp+NWGroup+Base+base/Tpl+base/Button+base/Group+base/Loop+base/Table&baseName=mi2">core components build</a></li>
 </ul>
 <hr/>
 Link to recently generated: 

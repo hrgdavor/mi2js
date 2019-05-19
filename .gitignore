@@ -1,7 +1,8 @@
 
 node_modules
 *.sublime-workspace
-build/*
+build/en/*
+build/hr/*
 .min/*
 compiler.jar
 js.jar

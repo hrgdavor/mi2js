@@ -26,6 +26,7 @@ module.exports = function(config) {
       'src/poly/bind.js',
       'src/NWGroup.js',
       'src/*.js',
+      'src/util/agregate.js',
       'src/util/filter.sample.js',
 
       'src/base/Button.js',
@@ -44,7 +45,7 @@ module.exports = function(config) {
       'spec/base/*.js',
       'spec/jsx/*.js',
 
-      // 'spec/jsx/x-clickSpec.js',
+      //'spec/util/agregateSpec.js',
        // 'spec/base/DialogSpec.js', 
       // 'spec/jsx/loopJsx.js',
 

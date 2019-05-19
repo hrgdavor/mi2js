@@ -31,7 +31,7 @@ data to be delegates. Original function is renamed to expandOwnVars for eventual
 */
 	proto.expandVars = function(data){
 		this.forEach(function(item,p){
-			if(item.expandVars) item.expandVars[data[p]];
+			if(item.expandVars) item.expandVars(data[p]);
 		});
 	};
 });
