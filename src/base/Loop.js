@@ -39,7 +39,15 @@ function(proto, superProto, comp, superComp){
 		if(this.hasAttr('out-filter'))
 			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);		
 
-		if(this.itemTpl.attr) this.itemTpl.attr.as = this.attrDef('item',this.itemTpl.attr.as);
+		if(this.itemTpl.attr) {
+			var comp = this.attrDef('item',this.itemTpl.attr.as);
+			var idx = comp.indexOf(':');
+			if(idx != -1){
+				this.itemTpl.tag = comp.substring(0,idx).toUpperCase();
+				comp = comp.substring(idx+1);
+			}
+			this.itemTpl.attr.as = comp;
+		}
 
 		this.allItems = [];
 		this.items = [];
