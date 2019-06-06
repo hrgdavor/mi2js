@@ -163,7 +163,7 @@ call function on each element, but collect returned values as object
 	};
 
 	proto.setValue = function(value){
-		value = return mi2.filter( value, this.inFilter ) || {};
+		value = mi2.filter( value, this.inFilter ) || {};
 		for(var p in this.items){
 			this.items[p].setValue(value[p]);
 		}
@@ -204,7 +204,7 @@ call function on each element, but collect returned values as object
 		for(var p in this.items){
 			value[p] = this.items[p].getValue();
 		}
-		return return mi2.filter( value, this.outFilter );
+		return mi2.filter( value, this.outFilter );
 	};
 
     proto.getRawValue = function(){
