@@ -167,4 +167,33 @@ automatic component template parsing (parseChildren) and initialization is done
 		return (compData.def[name] = comp);
 	};
 
+
+	mi2.popupControl = function(comp, ctrl,opt){
+	  opt = opt || {};
+
+	  var el = ctrl.el;
+	  if(el.parentNode != document.body) document.body.appendChild(el);
+
+	  ctrl.setVisible(true); // must be vesible to have values for offsetHeight and etc.
+	  var parent = el.parentNode;
+	  var r = comp.el.getBoundingClientRect();
+
+	  var top = r.bottom;
+	  var left = r.left;
+	  if(opt.alignTop == 'top') top = r.top; 
+	  if(opt.alignLeft == 'right') left = r.right; 
+	  
+	  top  += opt.offsetTop  || 0;
+	  left += opt.offsetLeft || 0;
+
+	  if(top < 0) top = 0;
+	  if(left < 0) left = 0;
+
+	  if(parent.clientHeight < (top + el.offsetHeight) ) top = parent.clientHeight - el.offsetHeight;
+	  if(parent.clientWidth < (left + el.offsetWidth) ) left = parent.clientWidth - el.offsetWidth;
+
+	  el.style.top  = top  +'px';
+	  el.style.left = left +'px';
+	}
+
 }(mi2JS));
