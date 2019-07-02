@@ -1,6 +1,7 @@
 describe( 'mi2.js loop with jsx', function () {
 	var $ = mi2= mi2JS;
 	var h = mi2.h;
+	var Base = mi2.getComp('Base');
 	
 	// translation implementation
 	var TRANS = {name:'Name'};
@@ -24,6 +25,7 @@ describe( 'mi2.js loop with jsx', function () {
 		// console.log(comp.el.innerHTML);
 
 		comp.loop.setValue([{action:'action1', name:'Name1'}]);
+		Base.performUpdate();		
 		expect(comp.el.innerHTML).toEqual('<div as="base/Loop" p="loop"><button as="Base" action="action1">Name1</button></div>');
 	});
 

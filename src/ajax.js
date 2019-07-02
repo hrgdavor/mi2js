@@ -42,6 +42,7 @@
 		args.method = args.method.toUpperCase();
 
 		xhr.open(args.method, args.url, args.async);
+		xhr.withCredentials = args.credentials == 'same-origin';
 
 		if (args.method == 'POST' && !args.headers['Content-Type']) args.headers['Content-Type'] = 'application/x-www-form-urlencoded';
 		for(var h in args.headers) xhr.setRequestHeader(h,args.headers[h]);

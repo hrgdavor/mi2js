@@ -170,9 +170,40 @@ relationship. Also adding other functionalities needed for component based compo
 	@param {Object} object
 	*/
 	proto.on_init = function(evt){ 
-		this.updateContent();// initial state values
+		this.scheduleUpdateContent();// initial state values
 	};
 
+	var forUpdate = [];
+	var forUpdateCurrent = 1;
+	var forUpdateNext = 2;
+	var forUpdateTimer;
+	// var updateActive = false;
+
+	var performUpdate = Base.performUpdate = function(){
+		// updateActive = true;
+		var list = forUpdate;
+		forUpdate = [];
+		forUpdateCurrent++;
+		forUpdateNext++;
+		forUpdateTimer = null;
+		var count = list.length;
+		for(var i=0; i<count; i++){
+			try{
+				list[i].updateContent();
+			}catch(e){mi2.logError('Error udpating content', e, {comp:list[i]})}
+		}
+		// updateActive = false;
+	}
+
+	proto.scheduleUpdateContent = function(){
+		// if(updateActive)// we are already inside the animationframe
+		// TODO test and enable buffered updates
+		return this.updateContent();
+		if(this._forUpdateId == forUpdateNext) return; // already in the list for next update
+		this._forUpdateId = forUpdateNext;
+		forUpdate.push(this);
+		if(!forUpdateTimer) forUpdateTimer = requestAnimationFrame(performUpdate);
+	};
 
 	/** Update component content by calling all collected updaters. in case initTemplate returns
 	    definitions for HTML that contain updaters.
@@ -559,11 +590,15 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	@param {Object} data
 	*/
     proto.expandVars = function(data){
+    	var changed = false;
     	for(var p in data){
-    		this.state[p] = data[p];
+    		if(this.state[p] !== data[p]){
+    			this.state[p] = data[p];
+    			changed = true;
+    		}
     	}
     	data = this.state;
-    	this.updateContent();
+    	if(changed) this.scheduleUpdateContent();
         if(!this.__expander) this.loadExpander();
 
         this.__expander.setValue(data);

@@ -1,7 +1,8 @@
 describe( 'mi2.js Base library', function () { 
 	var $ = mi2= mi2JS;
 	var h = mi2.h;
-	
+	var Base = mi2.getComp('Base');
+
 	// translation implementation
 	var TRANS = {name:'Name'};
 	function t(code){ return TRANS[code] ||code;}
@@ -71,6 +72,7 @@ describe( 'mi2.js Base library', function () {
 
 	it(' / jsx children', function () {
 		var comp = mi2.addComp(null,{tag:'B', attr:{as:'test/JsxTest2'}, html:''});
+		Base.performUpdate();
 		expect(comp.el.innerHTML).toEqual('action:<b as="base/Button">Name</b>')
 	});
 
