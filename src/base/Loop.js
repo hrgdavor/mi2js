@@ -41,13 +41,14 @@ function(proto, superProto, comp, superComp){
 
 		if(this.itemTpl.attr) {
 			var comp = this.attrDef('item',this.itemTpl.attr.as);
-
-			var idx = comp ? comp.indexOf(':'):-1;
-			if(idx != -1){
-				this.itemTpl.tag = comp.substring(0,idx).toUpperCase();
-				comp = comp.substring(idx+1);
+			if(comp){
+				var idx = comp ? comp.indexOf(':'):-1;
+				if(idx != -1){
+					this.itemTpl.tag = comp.substring(0,idx).toUpperCase();
+					comp = comp.substring(idx+1);
+				}
+				this.itemTpl.attr.as = comp;
 			}
-			this.itemTpl.attr.as = comp;
 		}
 
 		this.allItems = [];
