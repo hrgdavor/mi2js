@@ -18,14 +18,17 @@ function(proto, superProto, comp, superComp){
 
 	proto.show = function(params){
 		this.expandVars({});
-		this.callback = params.callback;
+		this.params = params;
 		var title = params.title || '';
 		var content = params.content || '';
 		var buttonClass = params.buttonClass;
+		var contentClass = params.contentClass || '';
 		var buttons = params.buttons || [{action:'ok'},{action:'cancel'}];
 		// button: {action: 'ok', text: t('ok'), 'class':''}
 
 		this.title.setText(title);
+		this.content.el.className = 'dialog-content '+contentClass;
+		
 		if(typeof(content) == 'string'){
 			this.content.setText(content);
 		}else{
@@ -62,12 +65,13 @@ function(proto, superProto, comp, superComp){
 
 	proto.on_close = function(evt){
 		var resp = evt.action;
-		if(this.callback){
+		var params = this.params;
+		if(params.callback){
 			if(this.callback(evt.action) !== false){
 				this.setVisible(false);
 			}
-		}else if(this['callback_'+resp]){
-			if(this['callback_'+resp](evt.action) !== false){
+		}else if(params['callback_'+resp]){
+			if(params['callback_'+resp](evt.action) !== false){
 				this.setVisible(false);
 			}
 		}else{
