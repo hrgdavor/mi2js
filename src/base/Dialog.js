@@ -67,7 +67,7 @@ function(proto, superProto, comp, superComp){
 		var resp = evt.action;
 		var params = this.params;
 		if(params.callback){
-			if(this.callback(evt.action) !== false){
+			if(params.callback(evt.action) !== false){
 				this.setVisible(false);
 			}
 		}else if(params['callback_'+resp]){
