@@ -20,6 +20,7 @@ function(proto, superProto, comp, superComp){
 		this.listen(this.bar,'mousedown');
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
+		this.minLength = 20;
 	};
 
 	proto.on_click = function(evt){
@@ -57,9 +58,12 @@ function(proto, superProto, comp, superComp){
 		var style = this.bar.style;
 		var maxSize = hor ? this.el.offsetWidth : this.el.offsetHeight;
 		var len = Math.floor( (range/max)*maxSize );
-		if(len<10) len = 10;
-		maxSize -= len;
-		var pos = Math.floor( ((offset+range)/max)*(maxSize));
+		if(len<this.minLength){
+			maxSize -= this.minLength;
+			range = max/(maxSize)*this.minLength;
+			len = this.minLength;
+		} 
+		var pos = Math.floor( ((offset+range)/max)*(maxSize))-len;
 		if(hor){
 			style.width = len+'px';
 			style.left = pos+'px';
