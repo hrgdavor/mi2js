@@ -17,6 +17,7 @@ function(proto, superProto, comp, superComp){
 		this.sort = null;
 		this.bar = this.el.firstElementChild;
 		this.listen(this.el,'click');
+		this.listen(this.el.parentNode,'mouseover', this.updateScroll);
 		this.listen(this.bar,'mousedown');
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
