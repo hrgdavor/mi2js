@@ -105,6 +105,10 @@ function(proto, superProto, comp, superComp){
 		});
 	};
 
+	proto.setConfig = function(data){
+		this.data = data;
+	};
+
 	proto.on_init = function(){
 		superProto.on_init.apply(this, arguments);
 		this.textInput.attr('placeholder',this.attr('placeholder'));
@@ -304,6 +308,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setReadOnly = function(readOnly){
+		this.attr('readonly', readOnly? '':null);
 		this.clearBt.setVisible(!readOnly && !this.attr("disable_clear_button") && (this.textInput.el.value || '') != this.emptyText);
 		this.textInput.el.readOnly = readOnly;
 	};

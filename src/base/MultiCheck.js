@@ -59,7 +59,7 @@ function(proto, superProto, comp, superComp){
 			var id = isArray ? data[p].id : p;
 			var item = mi2.add(this.el, this.itemTpl);
 			item.dataAttr('id', id);
-			item.setText(   isArray ? data[p].text  : data[p]);
+			item.setText(   isArray ? (data[p].text || data[p].name)  : data[p]);
 			this.items[id] = item;
 		}
 	};

@@ -12,10 +12,18 @@ function(proto, superProto, comp, superComp){
         this.input.setAttribute('type', 'file');
         if(this.hasAttr('multiple')) this.input.setAttribute('multiple', this.attr('multiple'));
 
-        this.listen(this.el, 'click',function(){this.input.click()});
+        this.listen(this.el, 'click');
         
         this.listen(this.input, 'change',function(evt){
             this.fireEvent({name:'change', files: this.input.files, domEvent:evt});
         });
 	};
+
+    proto.on_click = function(){
+        this.input.click();
+    };
+
+    proto.reset = function(){
+        this.input.value = '';
+    };
 });
