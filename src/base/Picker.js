@@ -10,10 +10,15 @@ function(proto, superProto, comp, superComp){
   proto.initChildren = function(){
     superProto.initChildren.call(this);
     this.value = 1;
-    this.listen(this.el, 'touchstart',this.on_mousedown);
-    this.listen(this.el, 'mousedown');
     this.config = [];
     this.configId = ++configId;
+    this.mode = this.attrDef('mode','mousedown');
+    if(this.mode == 'click'){
+      this.listen(this.el, 'click',this.on_mousedown);   
+    }else if(this.mode == 'mousedown'){
+      this.listen(this.el, 'touchstart',this.on_mousedown);
+      this.listen(this.el, 'mousedown');      
+    }
   };
  
   proto.on_mousedown = function(evt){
@@ -35,7 +40,10 @@ function(proto, superProto, comp, superComp){
   };
 
   proto.on_click = function(evt){
-    this.selected = evt.target.data;
+    var target = evt.target;
+    while(target && !target.data) target = target.parentNode;
+    if(!target.data) return;
+    this.selected = target.data;
     this.updateText(this, this.selected);
     this.hidePopup();
     this.fireIfChanged();
@@ -44,7 +52,7 @@ function(proto, superProto, comp, superComp){
   proto.updateText = function(item, value){
     if(value){
       if(value.html)
-        item.setHtml(this.html);
+        item.setHtml(value.html);
       else
         item.setText(value.name || value.text);    
     }else{
@@ -75,12 +83,22 @@ function(proto, superProto, comp, superComp){
 
       //proto.ctrl.el
       mi2.listen(document,'mouseup', function(evt){
+        if(!proto.ctrl.currentComp || proto.ctrl.currentComp.mode != 'mousedown') return;
+
         if(evt.target.parentNode != proto.ctrl.el) {
-          if(proto.ctrl.currentComp) proto.ctrl.currentComp.cancelPopup();
+           proto.ctrl.currentComp.cancelPopup();
         }else{
-          if(proto.ctrl.currentComp) proto.ctrl.currentComp.on_click(evt);
+          proto.ctrl.currentComp.on_click(evt);
         }
       });
+
+      mi2.listen(proto.ctrl.el,'click', function(evt){
+          if(proto.ctrl.currentComp){
+            if(proto.ctrl.currentComp.mode == 'mousedown') return;
+            proto.ctrl.currentComp.on_click(evt);
+          } 
+      });
+
     }
     if(this.configId != proto.ctrl.configId){
       proto.ctrl.configId = this.configId;
