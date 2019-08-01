@@ -108,10 +108,15 @@ function(proto, superProto, comp, superComp){
       mi2.listen(document,'mouseup', function(evt){
         var currentComp = proto.ctrl.currentComp;
         if(!currentComp) return;
-
         if(!currentComp || (currentComp.mode != 'mousedown' && !currentComp.moveActivated )) return;
 
-        if(evt.target.parentNode != proto.ctrl.el) {
+        var i=0, parent = evt.target.parentNode;
+        while(i< 5 && parent && parent != proto.ctrl.el){
+          parent = parent.parentNode;
+          i++;
+        }
+
+        if(parent != proto.ctrl.el){
            currentComp.cancelPopup();
         }else{
           currentComp.on_click(evt);
