@@ -12,19 +12,41 @@ function(proto, superProto, comp, superComp){
     this.value = 1;
     this.config = [];
     this.configId = ++configId;
-    this.mode = this.attrDef('mode','mousedown');
+    this.mode = this.attrDef('mode','click');
+
+    this.listen(this.el, 'touchstart',this.on_mousedown);
+    this.listen(this.el, 'mousedown');      
+    this.listen(this.el, 'mousemove');      
+    this.listen(this.el, 'mouseout', this.on_mousemove);
+
     if(this.mode == 'click'){
-      this.listen(this.el, 'click',this.on_mousedown);   
-    }else if(this.mode == 'mousedown'){
-      this.listen(this.el, 'touchstart',this.on_mousedown);
-      this.listen(this.el, 'mousedown');      
-    }
+      this.listen(this.el, 'click',this.on_mousedown);
+    }//else if(this.mode == 'mousedown'){
+    //}
   };
  
-  proto.on_mousedown = function(evt){
+  proto.on_mousemove = function(evt){
     if(this.isReadOnly()) return;
-    evt.stop();
-    this.showPopup();
+    if(this.mouseIsDown && (evt.type=='mouseout' || Math.abs(evt.clientX - this.clientX) > 3 || Math.abs(evt.clientY - this.clientY) > 3)){
+      this.moveActivated = true;
+      this.showPopup();
+    }
+  };
+
+  proto.on_mousedown = function(evt){
+    this.moveActivated = false;
+    if(this.isReadOnly()) return;
+    
+    this.mouseIsDown = evt.type == 'mousedown';
+
+    if(this.mouseIsDown){
+      this.clientX = evt.clientX;
+      this.clientY = evt.clientY;
+    }
+    if(this.mode == evt.type){
+      evt.stop();
+      this.showPopup();
+    }
   };
 
   proto.setRawValue = function(value){
@@ -40,6 +62,7 @@ function(proto, superProto, comp, superComp){
   };
 
   proto.on_click = function(evt){
+    this.mouseIsDown = false;
     var target = evt.target;
     while(target && !target.data) target = target.parentNode;
     if(!target.data) return;
@@ -83,13 +106,17 @@ function(proto, superProto, comp, superComp){
 
       //proto.ctrl.el
       mi2.listen(document,'mouseup', function(evt){
-        if(!proto.ctrl.currentComp || proto.ctrl.currentComp.mode != 'mousedown') return;
+        var currentComp = proto.ctrl.currentComp;
+        if(!currentComp) return;
+
+        if(!currentComp || (currentComp.mode != 'mousedown' && !currentComp.moveActivated )) return;
 
         if(evt.target.parentNode != proto.ctrl.el) {
-           proto.ctrl.currentComp.cancelPopup();
+           currentComp.cancelPopup();
         }else{
-          proto.ctrl.currentComp.on_click(evt);
+          currentComp.on_click(evt);
         }
+        currentComp.mouseIsDown = false;
       });
 
       mi2.listen(proto.ctrl.el,'click', function(evt){
