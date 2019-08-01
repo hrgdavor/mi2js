@@ -35,6 +35,7 @@ function(proto, superProto, comp, superComp){
 
   proto.on_mousedown = function(evt){
     this.moveActivated = false;
+    evt.stop();
     if(this.isReadOnly()) return;
     
     this.mouseIsDown = evt.type == 'mousedown';
@@ -44,7 +45,6 @@ function(proto, superProto, comp, superComp){
       this.clientY = evt.clientY;
     }
     if(this.mode == evt.type){
-      evt.stop();
       this.showPopup();
     }
   };
