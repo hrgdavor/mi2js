@@ -167,7 +167,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.applyFilter = function(){
 	    if(this.filter){
-	      this.data = this.data.filter(this.filter);
+	      this.data = this.allData.filter(this.filter);
 	    }else{
 	      this.data = this.allData;
 	    }  
