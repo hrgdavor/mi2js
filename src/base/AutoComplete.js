@@ -341,9 +341,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.validate = function(defReq){
-		var attr = this.attr('required');
-		var required = attr === null ? defReq : attr  == '1';
-		if(required && !this.getValue()) return {message:t('required'), type:'required'}
+		return $.Validity.required( !this.getValue() && this.attrBoolean('required'));
 	};
 
 });
