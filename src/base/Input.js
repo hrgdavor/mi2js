@@ -20,7 +20,14 @@ function(proto, superProto, comp, superComp){
 			console.log(msg,el);
 			throw new Error(msg);
 		}
+	};
 
+	proto.on_init = function(evt){
+		if(this.tracking){
+			// tractChanges was called early, while component is not initialized
+			// we force it now to finish the process
+			this.trackChanges(true);
+		}
 	};
 
 	proto.parseChildren = function(){
@@ -115,9 +122,12 @@ function(proto, superProto, comp, superComp){
 		superProto.addListener.call(this,evtName,callback,thisObj);
 	};	
 
-	proto.trackChanges = function(){
-		if(this.tracking) return;
+	proto.trackChanges = function(force){
+		if(this.tracking && !force) return;
 		this.tracking = true;
+		// in case events are caught inside template, this can be called
+		// before parseChildren happens, so we skip it, but on_init will continue this later on
+		if(!this.inp){return;} 
 		this.oldValue = this.getValue();
 
 		this.listen(this.inp,'change','fireIfChanged');
