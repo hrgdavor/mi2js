@@ -81,17 +81,15 @@ relationship. Also adding other functionalities needed for component based compo
 
 	proto.initChildrenJsx = function(jsx){return jsx; };
 	
-	proto.initNodeAttr = function(n, attr, updaters){
-		var options = mi2.extractDirectives(attr);
-		if(options){
-			mi2.runAttrDirective(n, null, options, updaters, this, mi2.directives);
+	proto.initNodeAttr = function(n, attr, directives, updaters){
+		if(directives){
+			mi2.runAttrDirective(n, null, directives, updaters, this, mi2.directives);
 		}
 	};
 
-	proto.initChildAttr = function(c,attr, updaters){
-		var options = mi2.extractDirectives(attr);
-		if(options){
-			mi2.runAttrDirective(c.el, c, options, updaters, this, mi2.directives);
+	proto.initChildAttr = function(c,attr, directives, updaters){
+		if(directives){
+			mi2.runAttrDirective(c.el, c, directives, updaters, this, mi2.directives);
 		}
 	};
 	
@@ -293,7 +291,11 @@ relationship. Also adding other functionalities needed for component based compo
 	@memberof mi2JS(comp).Base
 	@param {Object} object
 	*/
-	proto.addListener = function(evtName,callback, scope){
+	proto.addListener = function(evtName,callback, scope, compOnly){
+		if(this.el['on'+evtName] && !compOnly){
+			mi2.listen(this.el, evtName, callback, scope);
+		}
+
 		if(!this.__listeners) this.__listeners = {};
 		var l = this.__listeners[evtName];
 		if(!l) l = this.__listeners[evtName] = [];

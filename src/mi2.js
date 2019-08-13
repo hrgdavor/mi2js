@@ -414,12 +414,14 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 			if(def.html) n.innerHTML = def.html;
 			var compName = null;
 	        if (def.attr) {
-	        	compName = def.attr.as || mi2.compData.tags[def.tag];
+	        	compName = def.attr.as || mi2.compData.tags[def.tag.toUpperCase()];
+	        	var directives = mi2.extractDirectives(def.attr);
 	        	if(compName && !def.attr.template){
 	        		n.jsxAttr = def.attr;
+	        		n.jsxDir = directives;
 	        		if(def.attr.as) n.setAttribute('as',def.attr.as);
 	        	}else{
-	        		if(parentComp) parentComp.initNodeAttr(n,def.attr, parentComp._updaters);
+	        		if(parentComp) parentComp.initNodeAttr(n,def.attr, directives, parentComp._updaters);
 		        	mi2.insertAttr(n,def.attr,updaters);
 	        	}
 	        }
@@ -507,5 +509,17 @@ mi2.registerDirective('x', function x(el, comp, options, updaters, parentComp, o
 	mi2.runAttrDirective(el, comp, options, updaters, parentComp, mi2.directives.x, 'x-');
 });
 
+mi2.registerDirective('on', function(el, comp, value, updaters, parentComp, options){
+	if(parentComp && value){
+		for(var p in value){
+			var listener = value[p];
+
+			// default handling when listener is not defined is to look for method on_{eventName}
+			if(!listener || listener === true) listener = void 0; 
+			
+			parentComp.listen(comp || el, p, listener);
+		}
+	}
+});
 
 }());

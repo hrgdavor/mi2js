@@ -119,8 +119,8 @@ function(proto, superProto, comp, superComp){
 
 	proto.addListener = function(evtName,callback,thisObj){
 		if(evtName == 'change') this.trackChanges();
-		superProto.addListener.call(this,evtName,callback,thisObj);
-	};	
+		superProto.addListener.call(this,evtName,callback,thisObj,true);
+	};
 
 	proto.trackChanges = function(force){
 		if(this.tracking && !force) return;

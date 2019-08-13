@@ -63,7 +63,7 @@ automatic component template parsing (parseChildren) and initialization is done
 			updaters = updaters || (parent ? parent._updaters : []);
 
 			if(el.jsxAttr){
-				if(parent) parent.initChildAttr(c, el.jsxAttr, updaters);
+				if(parent) parent.initChildAttr(c, el.jsxAttr, el.jsxDir, updaters);
 				c.initAttr(el.jsxAttr, updaters );
 				delete el.jsxAttr;
 			}
