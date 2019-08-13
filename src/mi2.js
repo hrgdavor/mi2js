@@ -260,12 +260,12 @@ mi2.listen = function ( obj, evt, fnc, self, options ){
 	}
 
 
-	var listener = function(evt){
+	var listener = function(event){
 		if(typeof(fnc) == 'string') fnc = self[fnc];
 		try{
-			fnc.call(self || obj, mi2.fixEvent(evt));
+			fnc.call(self || obj, mi2.fixEvent(event));
 		}catch(e){
-			mi2.logError(e.message,e);			
+			mi2.logError('problem firing event "'+evt+'". ',e,{obj:obj});
 		}
 	};
 
