@@ -12,7 +12,10 @@ function(proto, superProto, comp){
 
 	// add/mixin methods from NWGroup but do not override any existing methods
 	// this assumes both use this.items for keeping list of items
-	mi2JS.mixin(comp,mi2JS.NWGroup);
+	if(mi2JS.applyNwGroup){
+		mi2JS.applyNwGroup(proto);
+	}else
+		mi2JS.mixin(comp,mi2JS.NWGroup);
 
 /** Copy of original expandVars function to use if needed.
 

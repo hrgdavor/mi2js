@@ -25,6 +25,24 @@ mi2.parse = function(elem, obj){
 	return obj;
 };
 
+// mi2.addGroupToComp = function(comp, group, isArray){
+// 	if(isArray){
+// 		comp[group] = [];
+// 		comp['$'+group] = new mi2.NWGroup(obj[group]);
+// 	}else{
+// 		comp[group] = {};
+// 		comp['$'+group] = new mi2.NWGroup(obj[group]);		
+// 	}
+// }
+
+mi2.addGroupToComp = function(comp, group, isArray){
+	if(isArray){
+		comp[group] = comp['$'+group] = mi2.applyNwGroup([]);
+	}else{
+		comp[group] = comp['$'+group] = new mi2.NWGroup();
+	}
+}
+
 /** 
 p       access by
 value        calling
@@ -53,8 +71,7 @@ mi2.setRef = function(obj, comp, prop, group){
 			if(prop){
 				//example: p="bt.edit"
 				if(!obj[group]){
-					obj[group] = {};
-					obj['$'+group] = new mi2.NWGroup(obj[group]);
+					mi2.addGroupToComp(obj,group);
 				} 
 				comp.__propName  = prop;
                 if(obj[group][prop]) logPropTaken(group+'.'+prop, obj, obj[group][prop]);
@@ -62,8 +79,7 @@ mi2.setRef = function(obj, comp, prop, group){
             }else{
                 //example: p="bt."
 				if(!obj[group]){
-					obj[group] = [];
-					obj['$'+group] = new mi2.NWGroup(obj[group]);
+					mi2.addGroupToComp(obj,group, true);
 				} 
                 comp.__propName = obj[group].length;
 				obj[group].push(comp);

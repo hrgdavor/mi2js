@@ -53,6 +53,8 @@ function(proto, superProto, comp, superComp){
 
 		this.allItems = [];
 		this.items = [];
+        // TODO remove after NwGroup refactor
+		// if(mi2.applyNwGroup) mi2.applyNwGroup(this);
 		this.count = 0;
 
 		this.itemMixin = function(tm,tmProto,tmSuper){};
@@ -261,7 +263,7 @@ function(proto, superProto, comp, superComp){
 		this.setItem(data,index);
 		this.count++;
 		this._fixItemList();
-		this.fireEvent({name:'afterAdd', index:index, data:data, item:this.item(index)});
+		this.fireEvent({name:'afterAdd', index:index, data:data, item:this.getItem(index)});
 	};
 
 	proto.pop = function(data){
@@ -278,6 +280,8 @@ function(proto, superProto, comp, superComp){
 
 	proto._fixItemList = function(reindex){
         this.items = this.allItems.slice(0,this.count);
+        // TODO remove after NwGroup refactor
+        //if(mi2.applyNwGroup) mi2.applyNwGroup(this.items);
 		if(reindex){
 	    	var it = this.allItems;
 	    	for(var i=0; i<it.length; i++){

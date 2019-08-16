@@ -97,7 +97,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.columnIndex = function(colName){
-		var column = this.$columns.item(colName);
+		var column = this.$columns.getItem(colName);
 		return column ? column.__index : -1;
 	};
 
@@ -170,9 +170,11 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.getSort = function(def){
-		return this.$columns.forEachGetObject(function(item, code){
-			return item.attr('sort') || void 0;
+		var ret = {};
+		this.$columns.forEach(function(item, code){
+			if(item.attr('sort')) ret[code] = item.attr('sort');
 		}); 
+		return ret;
 	};
 
 

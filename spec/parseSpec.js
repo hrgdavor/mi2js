@@ -27,9 +27,9 @@ describe( 'parse.js', function () {
 
 		expect(comp.bt).toBeDefined();
 		expect(comp.$bt).toBeDefined();
-		expect(comp.$bt.item('x')).toBeDefined();
+		expect(comp.$bt.getItem('x')).toBeDefined();
 		expect(comp.bt.y).toBeDefined();
-		expect(comp.$bt.item('x') instanceof mi2).toBeTruthy();
+		expect(comp.$bt.getItem('x') instanceof mi2).toBeTruthy();
 		expect(comp.bt.y instanceof mi2.getComp('Base')).toBeTruthy();
 	});
 

@@ -24,7 +24,8 @@ module.exports = function(config) {
       'src/mi2.js',
       'src/comp.js',
       'src/poly/bind.js',
-      'src/NWGroup.js',
+      // 'src/NWGroup.js',
+      'test/NWGroup.js',
       'src/*.js',
       'src/util/agregate.js',
       'src/util/filter.sample.js',
@@ -46,7 +47,7 @@ module.exports = function(config) {
       'spec/jsx/*.js',
 
       //'spec/util/agregateSpec.js',
-       // 'spec/base/DialogSpec.js', 
+      // 'spec/NWGroupSpec.js', 
       // 'spec/jsx/loopJsx.js',
 
        {pattern: 'spec/test.json', included: false}
