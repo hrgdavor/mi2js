@@ -14,7 +14,7 @@ function(proto, superProto, comp, superComp){
 	proto.itemTpl = {tag:'BUTTON'};
 
 	proto.construct = function(el, parent){
-		this.items = mi2JS.applyNwGroupEx ? new mi2.NWGroup() : {};
+		this.items = {};
 		superProto.construct.call(this, el, parent);
 	};
 
@@ -42,7 +42,7 @@ function(proto, superProto, comp, superComp){
 	proto.on_click = function(evt){
 		if(this.isReadOnly() || !this.isEnabled()) return;
 
-		var target = this.item(evt.target);
+		var target = this.getItem(evt.target);
 		if(target){
 			if(this.attrBoolean('single-value')){
 				this.selectedIs(target.dataAttr('id'));
@@ -56,7 +56,7 @@ function(proto, superProto, comp, superComp){
 	proto.setConfig = function(data){
 		// NodeWrapper is cheap, so we discard the old ones
 		this.el.innerHTML = '';
-		this.items = mi2JS.applyNwGroupEx ? new mi2.NWGroup() : {};
+		this.items = {};
 		// allow key:value object or array of {id:'',text:''} objects
 		var isArray = data instanceof Array;
 		for(var p in data){
@@ -74,7 +74,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.getRawValue = function(value){
 		var ret = [];
-		this.items.forEach(function(item){
+		this.forEach(function(item){
 			if(item.isSelected()) ret.push(item.dataAttr('id'));
 		});
 
