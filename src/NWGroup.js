@@ -235,4 +235,18 @@ markValidate
         }
   });
 
+  mi2.addToNwGroup('focus', function(){
+    var item, toFocus;
+    for(var p in this.items){
+      item = this.items[p];
+      if( ( !toFocus || item.hasAttr('firstInput') )
+          && item.focus 
+          && !(item.isReadOnly && item.isReadOnly()) ){
+
+        toFocus = item;
+      }
+    }
+    if(toFocus) toFocus.focus();
+  });
+
 }());
