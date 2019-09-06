@@ -31,7 +31,9 @@ markValidate
     if(!(this instanceof DEF)){
       return new DEF(group);
     } 
-    Object.defineProperty(this,'required',{value:false, writable:true});
+    Object.defineProperty(this,'required', {value: false,   writable:true});
+    Object.defineProperty(this,'inFilter', {value: void 0,  writable:true});
+    Object.defineProperty(this,'outFilter',{value: void 0,  writable:true});
     Object.defineProperty(this,'items',{value: group || this, writable:true});
   }
 
@@ -152,11 +154,11 @@ markValidate
         mi2.logError('getValue not defined for '+p,new Error(p),{key:p, obj:this.items[p]});
       }
     }
-    return ret;
+    return mi2.filter( ret, this.outFilter );
   });
 
   mi2.addToNwGroup('setValue', function(value){
-    value = value || {};
+    value = mi2.filter( value, this.inFilter ); || {};
     for(var p in this.items){
       if(this.items[p].setValue){       
         this.items[p].setValue(value[p]);
