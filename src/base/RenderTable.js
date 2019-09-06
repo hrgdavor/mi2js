@@ -196,12 +196,15 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 				var td = $.addTag(tr,{tag:"TD",attr:{'class':'cell_'+code}}, null, this);
 				td.code = code;
 				var opts = this.cols[code];
-				var def = opts.td(tr,td,code,tr.data,this);
+				var def = '';
 
 				if(opts.render){
 					def = opts.render(tr.data[code], code, tr.data, mi2JS.h, mi2JS.t, this);
 					if(typeof(def) == 'string') td.innerHTML = def;
+				}else{
+					def = opts.td(tr,td,code,tr.data,this);
 				}
+
 				if(def instanceof mi2JS.TagDef){
 					if(def.tag == 'td'){
 						mi2JS.vdiffNode(td, def,true);
