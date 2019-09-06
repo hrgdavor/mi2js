@@ -2,19 +2,20 @@
 
 // made it a function to avoid adding variables to global scope
 function rebuild_comp($lang){ global $TRANS;
+	$base = dirname(__FILE__);
 
-	if(!file_exists("build/".$lang)) mkdir("build/".$lang, 0777, true);
-	$langfile = "lang/$lang.json";
+	if(!file_exists("$base/build/".$lang)) mkdir("$base/build/".$lang, 0777, true);
+	$langfile = "$base/lang/$lang.json";
 	$str = file_get_contents($langfile);
 	$langMt = filemtime($langfile);
 	$TRANS = json_decode($str,true);
 	
-	$in_dir = "src/base";
-	$out_dir = "build/$lang/base";
+	$in_dir = "$base/src/base";
+	$out_dir = "$base/build/$lang/base";
 	rebuild_comp_do($in_dir,$out_dir,$lang, $langMt);
 
-	$in_dir = "src";
-	$out_dir = "build/$lang";
+	$in_dir = "$base/src";
+	$out_dir = "$base/build/$lang";
 	rebuild_comp_do($in_dir,$out_dir,$lang, $langMt);
 }
 
