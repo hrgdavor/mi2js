@@ -102,7 +102,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_dateSelected = function(evt){
-		this.setValue(evt.date);
+		this.setRawValue(evt.date);
 		this.on_blur({});
 		this.input.el.blur();
         this.fireEvent({name:'nextInput',eventFor:'parent'});
