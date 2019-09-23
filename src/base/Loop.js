@@ -230,7 +230,11 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setItemValue = function(item, newData){
-		item.setValue(newData);
+		if(item.setValue){
+			item.setValue(newData);
+		}else{
+			mi2.logError('setValue not found', new Error(),{item:item, data:data});
+		} 
 	};
 
 	proto.getItemValue = function(item){
