@@ -158,7 +158,7 @@ markValidate
   });
 
   mi2.addToNwGroup('setValue', function(value){
-    value = mi2.filter( value, this.inFilter ); || {};
+    value = mi2.filter( value, this.inFilter ) || {};
     for(var p in this.items){
       if(this.items[p].setValue){       
         this.items[p].setValue(value[p]);
