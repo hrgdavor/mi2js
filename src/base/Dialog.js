@@ -26,7 +26,7 @@ function(proto, superProto, comp, superComp){
 		var buttons = params.buttons || [{action:'ok'},{action:'cancel'}];
 		// button: {action: 'ok', text: t('ok'), 'class':''}
 
-		this.title.setText(title);
+		this.title.setContent(title);
 		this.content.el.className = 'dialog-content '+contentClass;
 		
 		this.content.setContent(content);
