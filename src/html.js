@@ -272,9 +272,34 @@ no real need to use dataset, and attributes work on more browsers
 @instance
 @memberof mi2JS(core).NodeWrapper
 */
-	mi2Proto.setHtml = function(html){
-		if(this.el.innerHTML !== html) this.el.innerHTML = html;
-	};
+	mi2.dom_register('setHtml', false, function(node, html){
+		if(typeof html == 'string'){
+			if(node.innerHTML !== html) node.innerHTML = html;
+		}else if(html instanceof mi2.TagDef){ 
+			// TODO diff
+			node.innerHTML = '';
+			mi2.insertHtml(node, html);
+		}
+	});
+
+/*
+@function setHtml
+@instance
+@memberof mi2JS(core).NodeWrapper
+*/
+	mi2.dom_register('setContent', false, function(node, content){
+		if(content instanceof mi2) content = content.el;
+		if(typeof(content) == 'string'){
+			mi2.h_setText(node,content);
+		}else if((content instanceof mi2.TagDef) || (content instanceof Array)){
+			node.innerHTML = '';
+			mi2.insertHtml(node, content);
+		}else{
+			node.innerHTML = '';
+			node.appendChild(content);
+		}
+	});
+
 
 /*
 @function setText

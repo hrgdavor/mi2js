@@ -29,14 +29,7 @@ function(proto, superProto, comp, superComp){
 		this.title.setText(title);
 		this.content.el.className = 'dialog-content '+contentClass;
 		
-		if(typeof(content) == 'string'){
-			this.content.setText(content);
-		}else{
-			this.content.el.innerHTML = '';
-			if(content instanceof mi2) content = content.el;
-			this.content.el.innerHTML = '';
-			this.content.el.appendChild(content);
-		}
+		this.content.setContent(content);
 
 		this.buttons.setValue([]);
 		this.hasCancel = false;
