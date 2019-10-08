@@ -2,9 +2,7 @@
 mi2JS.addCompClass('base/Dialog', 'Base', '<div class="dialog-inner"> <div class="dialog-title" p="title"></div> <div class="dialog-content" p="content"></div> <div class="dialog-buttons" p="buttons" as="base/Loop"><button template as="base/Button" event="close"></button></div> </div>',
 
 // component initializer function that defines constructor and adds methods to the prototype
-function(proto, superProto, comp, superComp){
-
-	var mi2 = mi2JS;
+function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
@@ -41,7 +39,7 @@ function(proto, superProto, comp, superComp){
 			if(button.action == 'cancel') this.hasCancel = true;
 
 			var item = this.buttons.getItem(i);
-			item.setText(text);
+			item.setContent(text);
 			item.attr('action', button.action);
 			item.attr('class',  button['class'] || buttonClass);
 		}

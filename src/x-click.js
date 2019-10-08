@@ -76,7 +76,8 @@ mi2._xClickListen = function(n, attrValue, updaters, parentComp){
 }
 
 mi2.registerDirective('x-click', function(el, comp, value, updaters, parentComp, options){
-	if(comp) throw new Error('x-click not supported on component nodes');
+	if(comp) parentComp = comp.parent; //
+		//throw new Error('x-click not supported on component nodes');
 	mi2._xClickListen(el, value, updaters, parentComp);
 });
 

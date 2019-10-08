@@ -334,6 +334,8 @@ mi2.h = function(tag,attr){
 mi2.TRANS = {}
 mi2.t = function(code){	return this.TRANS[code] || code; }
 
+mi2._ = function(callback){ callback(mi2, mi2.h, mi2.t, mi2.filters); }
+
 mi2.makeAttrUpdater = function(node, attr, func){
     var ret = function(){
         var newValue = func();

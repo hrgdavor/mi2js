@@ -88,14 +88,13 @@ function(proto, superProto, comp, superComp){
 
 	proto.loadItemTpl = function(el){
 		var ch = this.findItemTpl(el) || el.firstElementChild;
-
 		if(ch && ch.tagName){
 			this.itemsArea = ch.parentNode;
 			this.itemTpl = mi2.toTemplate(ch, this.itemTpl ? this.itemTpl.attr:null);
 			this.itemNextSibling = ch.nextElementSibling;
 			ch.parentNode.removeChild(ch);
 		}else{
-			this.itemsArea = el;
+			this.itemsArea = this.itemsArea || el;
 			if(!this.itemTpl) this.itemTpl = { tag:'DIV', attr: { }};
 		}
 	};
@@ -188,13 +187,14 @@ function(proto, superProto, comp, superComp){
 			compName = def.attr.as = def.attr.as || 'Base';
 			// updaters will be generated during this step, and will be later injected into the new component
 			node = mi2.insertHtml(this.itemsArea, def, this.itemNextSibling, updaters);
+			node.setAttribute('as',compName);
 		}else{
 			compName = this.itemTpl.attr ? this.itemTpl.attr.as:null;
 			node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
 		}
 
 		if(compName){
-			var comp = mi2.constructComp(node, null, this, updaters);
+			var comp = mi2.constructComp(node, compName, this, updaters);
 
 			var compClass = mi2.getComp(comp.getCompName());
 			var superClass = compClass.superClass;
@@ -233,7 +233,7 @@ function(proto, superProto, comp, superComp){
 		if(item.setValue){
 			item.setValue(newData);
 		}else{
-			mi2.logError('setValue not found', new Error(),{item:item, data:data});
+			mi2.logError('setValue not found', new Error(),{item:item, data:newData});
 		} 
 	};
 
@@ -268,6 +268,7 @@ function(proto, superProto, comp, superComp){
 		this.count++;
 		this._fixItemList();
 		this.fireEvent({name:'afterAdd', index:index, data:data, item:this.getItem(index)});
+		return this.getItem(index);
 	};
 
 	proto.pop = function(data){
@@ -306,6 +307,15 @@ function(proto, superProto, comp, superComp){
     	}
     	this.itemsArea.insertBefore(item.el, elBefore);
     	this._fixItemList(true);
+	};
+
+	proto.removeItem = function(item){
+		var index = this.getItemIndex(item);
+		this.splice(index,1);
+	};
+
+	proto.size = function(){
+		return this.count;
 	};
 
 	proto.splice = function(index, deleteCount){

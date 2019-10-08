@@ -20,8 +20,17 @@ function(proto, superProto, comp, superComp){
 
 		var el = this.el;
 		var THEAD = this.THEAD = findOrAdd(el, 'THEAD');
-		var TR    = findOrAdd(THEAD, 'TR');
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
+		this.itemsArea = TBODY;
+
+		console.log('this.TBODY1',this.TBODY);
+		if(this.headerJsx){//ensure to be in dom before tbody
+			$.insertHtml(this.THEAD,this.headerJsx(this.state));
+			delete this.headerJsx;
+		}
+		
+
+		var TR = findOrAdd(THEAD, 'TR');
 
 		this.listen(TBODY,'click',this.on_clickTbody);
 		this.listen(THEAD,'click',this.on_clickThead);
@@ -178,11 +187,24 @@ function(proto, superProto, comp, superComp){
 	};
 
 
-	function findOrAdd(el,tag){
+	function findOrAdd(el,tag,before){
 		var ch = $.find(tag, el);
-		return ch ? ch : $.addTag(el, tag);
+		return ch ? ch : $.addTag(el, tag, before);
 	}
 
-	proto.findItemTpl = function(el){ return this.TBODY.firstElementChild; };   
+	proto.initAttr = function(attr, updaters){ 
+		if(attr.header){
+			this.headerJsx = attr.header;
+			delete attr.header;
+		}
+		superProto.initAttr.apply(this, arguments);
+	};
+
+	proto.findItemsArea = function(el){
+		console.log('this.findItemsArea',this.findItemsArea);
+		return this.TBODY;
+	};
+
+	proto.findItemTpl = function(el){ return this.TBODY.firstElementChild || this.itemTpl; };   
 
 });

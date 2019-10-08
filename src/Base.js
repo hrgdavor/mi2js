@@ -320,6 +320,10 @@ relationship. Also adding other functionalities needed for component based compo
 
 
 
+	proto.fireParentEvent = function(evt){
+		evt.fireTo = 'parent';
+		this.fireEvent(evt);
+	}
 
 /** Fire event in desired direction in component tree (the component itself, to children, to parent)
 	
@@ -416,7 +420,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		}
 
 		if(required && !fired){
-			console.log('WARNING: event requred but not caught ', evt.name, evt, this.el, this);
+			console.log('WARNING: event required but not caught ', evt.name, evt, this.el, this);
 		}
 		return fired;
 	};

@@ -153,7 +153,7 @@ automatic component template parsing (parseChildren) and initialization is done
 		// else: 
 		// hapens when reloading component in runtime
 		// changes to the component prototype can be applied to the already instantiated components
-		initializer(comp.prototype, superClass.prototype, comp, superClass);
+		initializer(comp.prototype, superClass.prototype, comp, mi2, mi2.h, mi2.t, mi2.filters);
 		comp.compName = name;
 
 		if(tpl && tpl == 'extend:') 
