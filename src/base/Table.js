@@ -23,7 +23,6 @@ function(proto, superProto, comp, superComp){
 		var TBODY = this.TBODY = findOrAdd(el, 'TBODY');
 		this.itemsArea = TBODY;
 
-		console.log('this.TBODY1',this.TBODY);
 		if(this.headerJsx){//ensure to be in dom before tbody
 			$.insertHtml(this.THEAD,this.headerJsx(this.state));
 			delete this.headerJsx;
