@@ -112,9 +112,9 @@ function(proto, superProto, comp, superComp){
 		return val;
 	};
 
-	proto.focus = function(){
+	proto.focus = function(select){
 		if(this.inp.focus) this.inp.focus();
-		if(this.inp.select) this.inp.select();
+		if(select && this.inp.select) this.inp.select();
 	};
 
 	proto.validate = function(){
