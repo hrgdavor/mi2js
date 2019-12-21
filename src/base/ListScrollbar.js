@@ -87,8 +87,8 @@ function(proto, superProto, comp, superComp){
 	proto.on_mousewheel = function(evt){
 		var dir = evt.deltaY || evt.detail;
 		// this.moveOffset(this.limit * (dir > 0 ? 1:-1) );
-		this.moveOffset(this.scrollAmount * (dir > 0 ? 1:-1) );
-		evt.stop();
+		if(this.moveOffset(this.scrollAmount * (dir > 0 ? 1:-1) ))
+			evt.stop();
 
 		this.updateScroll();
 	};
@@ -134,13 +134,15 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.moveOffset = function(move){
-		this.setOffset(this.offset + move);
+		return this.setOffset(this.offset + move);
 	};
 
 	proto.setOffset = function(offset, limit){
-	  this.offset = offset;
-	  if(limit !== void 0) this.limit = limit;
-	  this.applyLimit();
+		var old = this.offset;
+		this.offset = offset;
+		if(limit !== void 0) this.limit = limit;
+		this.applyLimit();
+		return old != this.offset;
 	};
 
 	proto.setLimit = function(limit){
