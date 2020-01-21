@@ -13,13 +13,6 @@ function(proto, superProto, comp, superComp){
 
 	proto.construct = function(el, parent){
 		superProto.construct.call(this, el, parent);
-
-		var tag = el.tagName;
-		if(tag != 'INPUT' && tag != 'SELECT' && tag != 'TEXTAREA'){
-			var msg = 'Input component can only be used for INPUT,SELECT,TEXTAREA';
-			console.log(msg,el);
-			throw new Error(msg);
-		}
 	};
 
 	proto.on_init = function(evt){
@@ -46,6 +39,14 @@ function(proto, superProto, comp, superComp){
 		// input html node
 		if(!this.input) this.input = this;
 		this.inp=this.input.el;
+
+		var tag = this.inp.tagName;
+		if(tag != 'INPUT' && tag != 'SELECT' && tag != 'TEXTAREA'){
+			var msg = 'Input component can only be used for INPUT,SELECT,TEXTAREA';
+			console.log(msg,this.inp);
+			throw new Error(msg);
+		}
+
 		if(!this.inp) console.log('input problem', this.el);
 		if(el.type == 'checkbox'){
 			var n = el.nextElementSibling;
