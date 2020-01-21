@@ -36,7 +36,9 @@ function(proto, superProto, comp, superComp){
 		this.listen(this.widget,'focus', function(){
 			clearTimeout(this.hideTimer);		
 		});
-		this.listen(this.widget,'blur',  'on_blur');
+		this.listen(this.el,'click', function(){
+			this.input.focus();
+		});		this.listen(this.widget,'blur',  'on_blur');
 
 		this.input.trackChanges();
 		this.listen(this.input, 'change', 'on_changeInput');
