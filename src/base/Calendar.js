@@ -37,8 +37,9 @@ function(proto, superProto, comp, superComp){
 			clearTimeout(this.hideTimer);		
 		});
 		this.listen(this.el,'click', function(){
-			this.input.focus();
-		});		this.listen(this.widget,'blur',  'on_blur');
+			//this.input.focus();
+		});		
+		this.listen(this.widget,'blur',  'on_blur');
 
 		this.input.trackChanges();
 		this.listen(this.input, 'change', 'on_changeInput');
@@ -46,7 +47,7 @@ function(proto, superProto, comp, superComp){
 
 	proto.on_init = function(){
 		superProto.on_init.apply(this, arguments);
-		if(this.el.tagName != 'INPUT'){
+		if(this.el.tagName != 'INPUT'){ 
 			this.input.attr('name',this.attr('name'));
 			this.input.attr('placeholder',this.attr('placeholder'));
 			this.input.attr('value',this.attr('value'));
@@ -68,7 +69,8 @@ function(proto, superProto, comp, superComp){
 	proto.on_focus = function(evt){
 		if(this.isReadOnly()) return;
 		clearTimeout(this.hideTimer);
-		if(!this.editDate) return;
+		if(!this.editDate || evt.src == this.widget) return;
+
 		this.insertBefore(this.widget.el, this.input.el);
 		this.widget.el.style.top = this.input.el.offsetHeight+'px';
 		var val = this.input.el.value;
@@ -84,6 +86,7 @@ function(proto, superProto, comp, superComp){
 		this.widget.setVisible(show);
 		this.widgetVisible = show;
 	};
+
 	proto.on_blur = function(evt){
 		if(this.isReadOnly()) return;
         var inp = this.input.el;

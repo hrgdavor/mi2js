@@ -18,10 +18,10 @@ function str_ends($str, $sufix){
   <TITLE> </TITLE>
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
   <META NAME="Generator" CONTENT="EditPlus">
-  <link rel="stylesheet" type="text/css" media="all" href="style.css" />
+  <link rel="stylesheet" type="text/css" media="all" href="/style.css" />
  </HEAD>
 <BODY>
 <div class="menu">
-  <a href="components.php">Components</a>
-  <a href="build.php">Build</a>
+  <a href="/components.php">Components</a>
+  <a href="/build.php">Build</a>
 </div>

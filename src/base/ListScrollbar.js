@@ -22,14 +22,16 @@ function(proto, superProto, comp, superComp){
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
 		this.minLength = 20;
+		this.endBuffer = 0;
 	};
 
 	proto.on_click = function(evt){
 		if(evt.target == this.el){
 			var rect = this.el.getBoundingClientRect();
+			var len = this.data.length + this.endBuffer;
 			var to = ((evt.pointerY()-rect.top)/this.el.offsetHeight);
 			this.fireEvent({name:'scrollTo',pos:to});
-			this.setOffset( Math.floor(to*this.data.length) );
+			this.setOffset( Math.floor(to*len) );
 			this.updateScroll();
 		}
 	};
@@ -44,8 +46,9 @@ function(proto, superProto, comp, superComp){
 		if(!this.mousedown) return;
 		evt.stop();
 		var rect = this.el.getBoundingClientRect();
+		var len = this.data.length + this.endBuffer;
 		var to = ((evt.pointerY()-rect.top)/this.el.offsetHeight);
-		this.setOffset( Math.floor(to*this.data.length) );		
+		this.setOffset( Math.floor(to*len) );		
 	};
 
 	proto.on_mouseup = function(evt){
@@ -55,6 +58,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(offset,range,max){
+		if(this.attrBoolean('debug'))console.log('offset',offset,'range',range,'max',max);
 		var hor = this.attr('direction') == 'horizontal';
 		var style = this.bar.style;
 		var maxSize = hor ? this.el.offsetWidth : this.el.offsetHeight;
@@ -97,7 +101,7 @@ function(proto, superProto, comp, superComp){
 		this.setTimeout(function(){		
 			// this.setVisible(wh < max);
 			// this.setValue(this.scrollWrap.el.scrollTop,wh,max,);
-			var len = this.data.length;
+			var len = this.data.length + this.endBuffer;
 			this.setVisible(this.limit < len);
 			this.setValue( this.offset, this.limit, len );
 		},0);
@@ -177,17 +181,26 @@ function(proto, superProto, comp, superComp){
 
 	proto.applyLimit = function(){
 	    var data = this.data;
+	    var len = data.length + this.endBuffer;
 	    if(this.limit){
-	      if(this.limit + this.offset > data.length) this.offset = data.length - this.limit;
+	      if(this.limit + this.offset > len) this.offset = len - this.limit;
 	      if(this.offset < 0) this.offset = 0;
 	      var to = this.offset + this.limit;
-	      if(to > this.data.length) to = data.length;
+	      if(to > this.len) to = len;
 	      this.chunk = this.data.slice(this.offset, to);
 	    }else{
 	      this.chunk = this.data;
 	    }
 	    this.updateScroll();
 	    if(this.list) this.list.setValue(this.chunk);
+	    this.fireEvent({name: 'afterUpdate', list:this.list, listData:this.chunk});
+	};
+
+
+	proto.makeIndexVisible = function(idx){
+		if(!(idx >= this.offset && idx<this.offset+this.limit)){
+			this.setOffset(Math.round(idx-this.limit/2));
+		}
 	};
 
 });

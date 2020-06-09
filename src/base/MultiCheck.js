@@ -45,7 +45,9 @@ function(proto, superProto, comp, superComp){
 		var target = this.getItem(evt.target);
 		if(target){
 			if(this.attrBoolean('single-value')){
-				this.selectedIs(target.dataAttr('id'));
+				var sel = target.dataAttr('id');
+				if(sel == this.getRawValue() ) sel = '';
+				this.selectedIs(sel);
 			}else{
 				target.setSelected(!target.isSelected());
 			}

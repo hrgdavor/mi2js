@@ -36,7 +36,7 @@ function(proto, superProto, comp, superComp){
 		this.date = new Date();
 
 		this.initElements();
-		var l = [
+		var l = this.focusable = [
 			this.done.el, 
 			this.year.el, 
 			this.month.el, 
@@ -59,10 +59,14 @@ function(proto, superProto, comp, superComp){
 
 	proto.fireFocus = function(evt){
 		this.fireEvent({name:'focus',domEvent:evt});
+		clearTimeout(this.blurTimer);
 	};
 
 	proto.fireBlur = function(evt){
-		this.fireEvent({name:'blur',domEvent:evt});
+		var evtFire = {name:'blur',domEvent:evt};
+		this.blurTimer = this.setTimeout(()=>{
+			this.fireEvent(evtFire);
+		}, 50);
 	};
 
 	proto.initElements = function(){
