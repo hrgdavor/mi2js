@@ -90,6 +90,7 @@ mi2.setRef = function(obj, comp, prop, group){
 			comp.__propName = prop;
 			obj[prop] = comp;
 		}
+		if(comp.__propName) comp.el.__propName = comp.__propName;
 	}
 };
 

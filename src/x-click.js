@@ -26,6 +26,7 @@ mi2._xClickEventData = function(el,evt, end){
 		if(el == end) break;
 		el = el.parentNode;
 	}
+	if(el.__propName) actions.push(el.__propName);
 	
 	return {
 			action:actions[0],

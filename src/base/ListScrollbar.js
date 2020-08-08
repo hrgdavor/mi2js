@@ -14,7 +14,7 @@ function(proto, superProto, comp, superComp){
 		this.offset = 0;
 		this.scrollAmount = 0;
 		this.filter = null;
-		this.sort = null;
+		this.sort = null; 
 		this.bar = this.el.firstElementChild;
 		this.listen(this.el,'click');
 		this.listen(this.el.parentNode,'mouseover', this.updateScroll);
@@ -35,6 +35,7 @@ function(proto, superProto, comp, superComp){
 			this.updateScroll();
 		}
 	};
+
 
 	proto.on_mousedown = function(evt){
 		evt.stop();
@@ -58,7 +59,6 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(offset,range,max){
-		if(this.attrBoolean('debug'))console.log('offset',offset,'range',range,'max',max);
 		var hor = this.attr('direction') == 'horizontal';
 		var style = this.bar.style;
 		var maxSize = hor ? this.el.offsetWidth : this.el.offsetHeight;
@@ -78,15 +78,34 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
-	proto.init = function(list, scrollAmount){
+	proto.init = function(list, scrollAmount, autoScroll){
 		this.list = list;
-		this.scrollAmount = scrollAmount || 3;
+		this.scrollAmount = scrollAmount || 1;
 		// FF
-		this.listen(this.list.el,'DOMMouseScroll',this.on_mousewheel);
+		this.listen(this.list.el.parentNode,'DOMMouseScroll',this.on_mousewheel);
 		// other
-		this.listen(this.list.el,'mousewheel');
+		this.listen(this.list.el.parentNode,'mousewheel');
+
+		this.autoScroll = autoScroll;
+		if(autoScroll){
+			this.listen(MAIN_APP, 'resizeContent', this.on_resize);
+		}
 	};
 
+	proto.on_resize = function(evt){
+		this.list.setVisible(false);
+		this.setVisible(false);
+		var h = this.list.el.parentNode.offsetHeight;
+		this.list.setVisible(true);
+		this.setVisible(true);
+		var limit = Math.floor(h/this.autoScroll);
+		if(limit) this.setLimit(limit); 
+		if(!evt.skipUpdate) this.applyLimit();
+	};
+
+	// proto.on_show = function(evt){
+	// 	if(this.autoScroll) this.scroll.on_resize({});
+	// };
 
 	proto.on_mousewheel = function(evt){
 		var dir = evt.deltaY || evt.detail;
@@ -98,7 +117,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.updateScroll = function(){
-		this.setTimeout(function(){		
+		clearTimeout(this._updateScroll_timer);
+		this._updateScroll_timer = this.setTimeout(function(){		
 			// this.setVisible(wh < max);
 			// this.setValue(this.scrollWrap.el.scrollTop,wh,max,);
 			var len = this.data.length + this.endBuffer;
