@@ -6,27 +6,36 @@
 	mi2.hiddenAttribute = 'hidden';
 	mi2.disabledAttribute = 'disabled';
 
-	mi2Proto.isVisible = function(){
-		return !this.el.hasAttribute(mi2.hiddenAttribute);
-	};
 
-	mi2Proto.setVisible = function(visible){
-		this.attr(mi2.hiddenAttribute, visible ? null:'');
-	};
+	mi2.dom_register('isVisible', true, function(node, text){
+		return !node.hasAttribute(mi2.hiddenAttribute);
+	});
 
-	mi2Proto.isEnabled = function(){
-		return !this.el.hasAttribute(mi2.disabledAttribute);
-	};
 
-	mi2Proto.setEnabled = function(enabled){
-		this.attr(mi2.disabledAttribute, enabled ? null:'');
-	};
+	mi2.dom_register('setVisible', false, function(node, value){
+		mi2.h_attr(node, mi2.hiddenAttribute, value ? null:'');
+	});
 
-	mi2Proto.isSelected = function(){
-		return this.hasClass('selected');
-	};
-	mi2Proto.setSelected = function(selected){
-		this.classIf('selected', selected);
-	};
+
+	mi2.dom_register('isEnabled', true, function(node){
+		return !node.hasAttribute(mi2.disabledAttribute);
+	});
+
+
+	mi2.dom_register('setEnabled', false, function(node, value){
+		mi2.h_attr(node, mi2.disabledAttribute, value ? null:'');
+	});
+
+
+
+	mi2.dom_register('isSelected', true, function(node){
+		return mi2.h_hasClass(node, 'selected');
+	});
+
+
+	mi2.dom_register('setSelected', false, function(node, value){
+		mi2.h_classIf(node, 'selected', value);
+	});
+
 
 }(mi2JS));
