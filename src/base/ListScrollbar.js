@@ -36,6 +36,9 @@ function(proto, superProto, comp, superComp){
 		}
 	};
 
+	proto.on_show = function(evt){
+		if(this.autoScroll) this.on_resize();
+	};
 
 	proto.on_mousedown = function(evt){
 		evt.stop();
@@ -103,10 +106,6 @@ function(proto, superProto, comp, superComp){
 		if(!evt.skipUpdate) this.applyLimit();
 	};
 
-	// proto.on_show = function(evt){
-	// 	if(this.autoScroll) this.scroll.on_resize({});
-	// };
-
 	proto.on_mousewheel = function(evt){
 		var dir = evt.deltaY || evt.detail;
 		// this.moveOffset(this.limit * (dir > 0 ? 1:-1) );
@@ -124,7 +123,7 @@ function(proto, superProto, comp, superComp){
 			var len = this.data.length + this.endBuffer;
 			this.setVisible(this.limit < len);
 			this.setValue( this.offset, this.limit, len );
-		},0);
+		},100);
 	};
 
 
