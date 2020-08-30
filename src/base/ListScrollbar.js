@@ -23,6 +23,7 @@ function(proto, superProto, comp, superComp){
 		this.listen(document,'mouseup');
 		this.minLength = 20;
 		this.endBuffer = 0;
+		console.log('111',111);
 	};
 
 	proto.on_click = function(evt){
@@ -37,7 +38,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_show = function(evt){
-		if(this.autoScroll) this.on_resize();
+		if(this.autoScroll && !this.skipResize) this.on_resize({});
 	};
 
 	proto.on_mousedown = function(evt){
@@ -96,14 +97,18 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_resize = function(evt){
+		this.skipResize = true;
+		
 		this.list.setVisible(false);
-		this.setVisible(false);
+		this.attr('hidden', true);
 		var h = this.list.el.parentNode.offsetHeight;
 		this.list.setVisible(true);
-		this.setVisible(true);
+		this.attr('hidden', false);
 		var limit = Math.floor(h/this.autoScroll);
 		if(limit) this.setLimit(limit); 
 		if(!evt.skipUpdate) this.applyLimit();
+
+		this.skipResize = false;
 	};
 
 	proto.on_mousewheel = function(evt){
@@ -121,7 +126,10 @@ function(proto, superProto, comp, superComp){
 			// this.setVisible(wh < max);
 			// this.setValue(this.scrollWrap.el.scrollTop,wh,max,);
 			var len = this.data.length + this.endBuffer;
-			this.setVisible(this.limit < len);
+			var vis = this.limit < len;
+			this.skipResize = true;
+			if(this.isVisible() != vis) this.setVisible(vis);
+			this.skipResize = false;
 			this.setValue( this.offset, this.limit, len );
 		},100);
 	};
