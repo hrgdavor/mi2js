@@ -2,6 +2,7 @@
 
 	mi2.getValidator = function(comp, defReq){
 		if(comp.getValidator) return comp.getValidator();
+		if(comp.validate) return comp;
 		return new Validator({
 			required: comp.attrBoolean('required', defReq),
 			invalid: comp.attr('invalid'),
@@ -83,7 +84,7 @@
 	RProto.validate = function(v){
 		var opts = this.rules;
 
-		if(v === null || v === void 0 || v === ''){
+		if(v === null || v === void 0 || v === '' || v === false){
 			return Validity.required(opts.required);
 		}
 
