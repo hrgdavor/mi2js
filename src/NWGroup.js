@@ -210,7 +210,6 @@ markValidate
   mi2.addToNwGroup('validate', function(){
       var validator = this.getValidator();
       var result = validator.validate(this.getRawValue ? this.getRawValue():this.getValue());
-      this.markValidate(result);
       return result;
   });
 
