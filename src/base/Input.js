@@ -118,10 +118,6 @@ function(proto, superProto, comp, superComp){
 		if(select && this.inp.select) this.inp.select();
 	};
 
-	proto.validate = function(){
-		return mi2.getValidator(this).validate(this.getValue());
-	};
-
 	proto.addListener = function(evtName,callback,thisObj){
 		if(evtName == 'change') this.trackChanges();
 		superProto.addListener.call(this,evtName,callback,thisObj,true);
