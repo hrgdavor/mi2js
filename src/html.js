@@ -153,8 +153,8 @@
 	@param {string} name attribute name
 	@param {object} def default value if attribute is not present
 	*/
-	mi2.dom_register('attrNum', true, function(name, def){
-		return mi2.num( mi2.h_attrDef(name, def) );
+	mi2.dom_register('attrNum', true, function(node, name, def){
+		return mi2.num( mi2.h_attrDef(node,name, def) );
 	});
 
 
