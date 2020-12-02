@@ -30,7 +30,11 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<it.length; i++){
 			nw = this.findRef(it[i]);
 			id = nw.dataAttr('id');
-			if(id !== null) this.items[id] = nw;
+			if(id !== null){
+				this.items[id] = nw;
+			}else if(it[i].children){
+				this.mapItems(it[i].children)
+			}
 		}
 	};
 
