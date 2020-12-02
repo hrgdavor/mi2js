@@ -230,7 +230,10 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.filterResults = function(srch,comp){
-		var allData = this.getOptions();
+		var showall = this.showall || this.firstKey;
+		var allData = this.getOptions()
+		if(!this.noEmpty || showall) allData = allData.filter(item=>this.filterResult('','',item));
+
 		var data = [];
 		srch = srch ? srch.toLowerCase() : '';
 		srch = srch.split(' ');
@@ -247,10 +250,9 @@ function(proto, superProto, comp, superComp){
 			if(this.displayLimit > 0 && data.length >= this.displayLimit) break;
 		}
 		
-		var showall = this.showall || this.firstKey;
 		if(data.length > 1 || !this.noEmpty || showall){
 			if(showall && this.displayLimit > 0 && allData.length < this.displayLimit) {
-				data = allData.filter(item=>this.filterResult('','',item));
+				data = allData;
 				firstIndex = firstIndexAll;
 			}else{
 				if(this.selectFirst && this.list.length) firstIndex = 0;
