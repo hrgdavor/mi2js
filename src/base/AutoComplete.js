@@ -221,16 +221,25 @@ function(proto, superProto, comp, superComp){
 		this.filterResults(srch,comp);
 	};
 
+	proto.filterResult = function(srch,str, data){
+		for(var i=0; i<srch.length; i++){
+			if(!srch[i] || srch[i] == ' ') continue;
+			if(str.indexOf(srch[i]) == -1) return false;
+		}
+		return true;
+	};
+
 	proto.filterResults = function(srch,comp){
 		var allData = this.getOptions();
 		var data = [];
 		srch = srch ? srch.toLowerCase() : '';
+		srch = srch.split(' ');
 		var firstIndex = -1;
 		var firstIndexAll = -1;
 		
 		for(var i=0; i<allData.length; i++){
 			var str = allData[i].name || allData[i].text || '';
-			if(str.toLowerCase().indexOf(srch) != -1){
+			if( this.filterResult(srch, str.toLowerCase(), allData[i]) ){
 				firstIndexAll = i;
 				if(this.selectFirst && firstIndex == -1) firstIndex = data.length;
 				data.push(allData[i]);
@@ -241,24 +250,23 @@ function(proto, superProto, comp, superComp){
 		var showall = this.showall || this.firstKey;
 		if(data.length > 1 || !this.noEmpty || showall){
 			if(showall && this.displayLimit > 0 && allData.length < this.displayLimit) {
-				data = allData;
+				data = allData.filter(item=>this.filterResult('','',item));
 				firstIndex = firstIndexAll;
 			}else{
 				if(this.selectFirst && this.list.length) firstIndex = 0;
 			}
         }
 		this.showResults(data);
-		if(firstIndex != -1 ) 
+		if(firstIndex != -1 ) {
 			this.selectElem(this.list[firstIndex].el); 
-    	else 
+		} else 
     		this.selectElem(null);
 	};
 
 	proto.showResults = function(data){
 		if(this.emptyText && this.showall){
 			var tmp = data;
-			data = [{id:'',text:this.emptyText}];
-			for(var i=0; i<tmp.length; i++) data.push(tmp[i]);
+			data = [{id:'',text:this.emptyText}, ...tmp];
 		} 
 	
 		var num = this.count = data.length;
