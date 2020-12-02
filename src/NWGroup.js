@@ -143,7 +143,6 @@ markValidate
   addToggle('setEnabled', 'enabledIs');// + setEnabledEx
   addToggle('setSelected', 'selectedIs');// + setSelectedEx
 
-
   mi2.addToNwGroup('getValue', function(){
     var ret = (this.items instanceof Array) ? []:{};
     for(var p in this.items){
@@ -164,6 +163,14 @@ markValidate
         this.items[p].setValue(value[p]);
       }else{
         mi2.logError('setValue not defined for '+p,new Error(p),{key:p, obj:this.items[p]});
+      }
+    }
+  });
+
+  mi2.addToNwGroup('updateValue', function(value){
+    for(var p in value){
+      if(this.items[p] && this.items[p].setValue){
+        this.items[p].setValue(value[p]);
       }
     }
   });
