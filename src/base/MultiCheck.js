@@ -50,7 +50,7 @@ function(proto, superProto, comp, superComp){
 		if(target){
 			if(this.attrBoolean('single-value')){
 				var sel = target.dataAttr('id');
-				if(sel == this.getRawValue() ) sel = '';
+				if(sel == this.getRawValue() && !this.attrBoolean('required')) sel = '';
 				this.selectedIs(sel);
 			}else{
 				target.setSelected(!target.isSelected());
