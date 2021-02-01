@@ -16,7 +16,7 @@ example in separate template file:
 @memberof mi2JS(comp)
 */
 // component initializer function that defines constructor and adds methods to the prototype 
-function(proto, superProto, comp, superComp){
+function(proto, superProto, comp, mi2, h, t, filters){
 	
 	var mi2 = mi2JS;
 
@@ -132,6 +132,7 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.setValue = function(arr){
+		if(this.debug) console.trace('setValue', arr.length, arr);
 		this.setRawValue( mi2.filter( arr, this.inFilter));
 	}
 
@@ -178,6 +179,7 @@ function(proto, superProto, comp, superComp){
 		var jsxInline = typeof this.itemTpl == 'function';
 		var state = {};
 		var updaters = [];
+		var comp;
 		if(jsxInline){
 			// state object needs to be present during call to template definition from jsx
 			// it will be later put into component, as otherwise state changes would not be seen
@@ -185,25 +187,31 @@ function(proto, superProto, comp, superComp){
 			var def = this.itemTpl(state);
 			def.attr = def.attr || {};
 			compName = def.attr.as = def.attr.as || 'Base';
+
+			var childrenDef = def.children
+			delete def.children
 			// updaters will be generated during this step, and will be later injected into the new component
+			// insert only top level node to have a reference to create a component
 			node = mi2.insertHtml(this.itemsArea, def, this.itemNextSibling, updaters);
 			node.setAttribute('as',compName);
+			comp = mi2.constructComp(node, compName, this, updaters);
+			// now insert child nodes so attributes can be initialized properly, as now we have the parent component for the rest of the template
+			if(childrenDef) mi2.insertHtml(node, childrenDef, null, updaters, comp);
+			comp.state = state;
+			comp._updaters = updaters;
+			comp.initUpdaters();
 		}else{
 			compName = this.itemTpl.attr ? this.itemTpl.attr.as:null;
 			node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
+			if(compName){
+				comp = mi2.constructComp(node, compName, this, updaters);
+			}
 		}
 
 		if(compName){
-			var comp = mi2.constructComp(node, compName, this, updaters);
-
 			var compClass = mi2.getComp(comp.getCompName());
 			var superClass = compClass.superClass;
 
-			if(jsxInline){
-				comp.state = state;
-				comp._updaters = updaters;
-				comp.initUpdaters();
-			}
 			if(!comp.lazyInit) comp.__init();
 
 			this.itemMixin(comp, compClass.prototype, superClass.prototype, compClass, superClass);			
