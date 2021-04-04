@@ -188,7 +188,7 @@ relationship. Also adding other functionalities needed for component based compo
 		for(var i=0; i<count; i++){
 			try{
 				list[i].updateContent();
-			}catch(e){mi2.logError('Error udpating content', e, {comp:list[i]})}
+			}catch(e){mi2.logError('Error udpating content', e, {state: list[i].state, comp:list[i]})}
 		}
 		// updateActive = false;
 	}
@@ -196,7 +196,10 @@ relationship. Also adding other functionalities needed for component based compo
 	proto.scheduleUpdateContent = function(){
 		// if(updateActive)// we are already inside the animationframe
 		// TODO test and enable buffered updates
-		return this.updateContent();
+		try{
+			return this.updateContent();
+		}catch(e){mi2.logError('Error udpating content', e, {state: this.state, comp:this})}
+
 		if(this._forUpdateId == forUpdateNext) return; // already in the list for next update
 		this._forUpdateId = forUpdateNext;
 		forUpdate.push(this);
@@ -211,10 +214,14 @@ relationship. Also adding other functionalities needed for component based compo
 	@param {Object} object
 	*/
 	proto.updateContent = function(){
-		if(this._updaters){
-			for(var i =0; i< this._updaters.length; i++){
-				this._updaters[i].apply(this);
+		try{		
+			if(this._updaters){
+				for(var i =0; i< this._updaters.length; i++){
+					this._updaters[i].apply(this);
+				}
 			}
+		}catch (e){
+			mi2.logError('',e,{comp:this});
 		}
 	};
 
@@ -362,6 +369,14 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		if(evt.required) delete evt.required;
 
 		if(evtName == 'show'){
+			if(!this.__shown){
+				var visible = this.isVisible();
+				if(this.parent && !this.parent.isVisibleTruly()) visible = false;
+				if(visible){
+					this.__shown = true;
+					this.fireEvent('initial_show')
+				}
+			}
 			// if not initialized yet, fire init event first
 			this.__init();
 		}
@@ -388,7 +403,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					this['on_'+evtName](evt);
 					fired = true;
 				}catch(e){
-					mi2.logError('Error calling event handler function  on_'+evtName, e, {'this':this, event:evt});
+					mi2.logError('Error calling event handler function  on_'+evtName, e, {'comp':this.el, event:evt});
 					console.error(e.message);
 				}
 
@@ -401,7 +416,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					l[i].callback(evt);
 					fired = true;
 				}catch(e){
-					mi2.logError('Error firing event '+evtName, e, {'listener':l[i].scope, event:evt});
+					mi2.logError('Error firing event '+evtName, e, {'listener':l[i].scope.el, event:evt});
 					console.error(e.message);
 				}
 			}

@@ -70,7 +70,7 @@ automatic component template parsing (parseChildren) and initialization is done
 
 			if(el.jsxChildren){
 				el.jsxChildren = c.initChildrenJsx(el.jsxChildren);
-				mi2.insertHtml(el, el.jsxChildren, null, updaters);
+				mi2.insertHtml(el, el.jsxChildren, null, updaters, parent);
 				delete el.jsxChildren;
 			}
 
