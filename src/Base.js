@@ -369,6 +369,8 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		if(evt.required) delete evt.required;
 
 		if(evtName == 'show'){
+			// if not initialized yet, fire init event first
+			this.__init();
 			if(!this.__shown){
 				var visible = this.isVisible();
 				if(this.parent && !this.parent.isVisibleTruly()) visible = false;
@@ -377,8 +379,6 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					this.fireEvent('initial_show')
 				}
 			}
-			// if not initialized yet, fire init event first
-			this.__init();
 		}
 
 		if(!evt) evt = {};
