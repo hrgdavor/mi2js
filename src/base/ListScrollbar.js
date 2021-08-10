@@ -2,7 +2,7 @@
 mi2JS.addCompClass('base/ListScrollbar', 'Base', '<div></div>',
 
 // component initializer function that defines constructor and adds methods to the prototype
-function(proto, superProto, comp, superComp){
+function(proto, superProto, comp, mi2, h, t, filters){
 
 	var mi2 = mi2JS;
 
@@ -17,13 +17,13 @@ function(proto, superProto, comp, superComp){
 		this.sort = null; 
 		this.bar = this.el.firstElementChild;
 		this.listen(this.el,'click');
-		this.listen(this.el.parentNode,'mouseover', this.updateScroll);
+		this.listen(this.el.parentNode,'mouseover', ()=>this.updateScroll);
 		this.listen(this.bar,'mousedown');
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
 		this.minLength = 20;
 		this.endBuffer = 0;
-		console.log('111',111);
+		this.pivot = 0
 	};
 
 	proto.on_click = function(evt){
@@ -116,22 +116,21 @@ function(proto, superProto, comp, superComp){
 		// this.moveOffset(this.limit * (dir > 0 ? 1:-1) );
 		if(this.moveOffset(this.scrollAmount * (dir > 0 ? 1:-1) ))
 			evt.stop();
-
-		this.updateScroll();
 	};
 
-	proto.updateScroll = function(){
-		clearTimeout(this._updateScroll_timer);
-		this._updateScroll_timer = this.setTimeout(function(){		
-			// this.setVisible(wh < max);
-			// this.setValue(this.scrollWrap.el.scrollTop,wh,max,);
+	proto.updateScroll = function(data){
+		cancelAnimationFrame(this._updateScroll_timer);
+		this._updateScroll_timer = this.requestAnimationFrame(function(){		
 			var len = this.data.length + this.endBuffer;
 			var vis = this.limit < len;
 			this.skipResize = true;
 			if(this.isVisible() != vis) this.setVisible(vis);
 			this.skipResize = false;
 			this.setValue( this.offset, this.limit, len );
-		},100);
+		    if(data && this.list) this.list.setValue(this.chunk)
+		    if(data) this.fireEvent({name: 'afterUpdate', list:this.list, listData:data})
+
+		});
 	};
 
 
@@ -212,15 +211,23 @@ function(proto, superProto, comp, superComp){
 	    if(this.limit){
 	      if(this.limit + this.offset > len) this.offset = len - this.limit;
 	      if(this.offset < 0) this.offset = 0;
-	      var to = this.offset + this.limit;
-	      if(to > this.len) to = len;
-	      this.chunk = this.data.slice(this.offset, to);
+	      let offset = this.offset
+	      var to = this.offset + this.limit
+	      let chunk = this.data.slice(this.offset, to)
+
+
+	      for(let i = this.pivot-1; i>=0; i--){
+	      	if(i<offset) chunk.unshift(data[i])
+	      }
+
+	      if(chunk.length > this.limit){
+	      	chunk.length = this.limit
+	      }
+	      this.chunk = chunk 
 	    }else{
 	      this.chunk = this.data;
 	    }
-	    this.updateScroll();
-	    if(this.list) this.list.setValue(this.chunk);
-	    this.fireEvent({name: 'afterUpdate', list:this.list, listData:this.chunk});
+	    this.updateScroll(this.chunk)
 	};
 
 

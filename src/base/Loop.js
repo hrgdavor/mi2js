@@ -195,6 +195,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			node = mi2.insertHtml(this.itemsArea, def, this.itemNextSibling, updaters);
 			node.setAttribute('as',compName);
 			comp = mi2.constructComp(node, compName, this, updaters);
+			comp._updaters = updaters
 			// now insert child nodes so attributes can be initialized properly, as now we have the parent component for the rest of the template
 			if(childrenDef) mi2.insertHtml(node, childrenDef, null, updaters, comp);
 			comp.state = state;
