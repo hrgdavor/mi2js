@@ -201,6 +201,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			comp.state = state;
 			comp._updaters = updaters;
 			comp.initUpdaters();
+			if(compName == 'Base') comp._transitive = true
 		}else{
 			compName = this.itemTpl.attr ? this.itemTpl.attr.as:null;
 			node = mi2.addTag(this.itemsArea, this.itemTpl, this.itemNextSibling);
