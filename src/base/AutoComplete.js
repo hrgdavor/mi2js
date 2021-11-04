@@ -2,7 +2,7 @@
 mi2JS.addCompClass('base/AutoComplete', 'base/InputBase', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(proto, superProto, comp, superComp){
+function(proto, superProto, comp, mi2, h, t, filters){
 
 	var $ = mi2JS;
 /*
@@ -76,14 +76,14 @@ function(proto, superProto, comp, superComp){
 		});
 
 		this.listen(this.div.el, "click", function(evt){
-			if(this.selectElem(evt.target)){
+			if(!evt.target.unselectable && this.selectElem(evt.target)){
 				this.applySelection();
 				this.next();
 			}
 		});
 		
 		this.listen(this.div.el, "mouseover", function(evt){
-			this.selectElem(evt.target);
+			if(!evt.target.unselectable) this.selectElem(evt.target);
 		});
 		
 		this.listen(this.textInput.el, "keyup", function(evt){
@@ -92,11 +92,15 @@ function(proto, superProto, comp, superComp){
 			if((evt.keyCode == 38 || evt.keyCode == 40) && this.count > 0 ){
 				var sel = this.selected;
 				var i = sel ? sel.index:-1;
-				i += evt.keyCode == 40 ? 1:-1;
-				if(i<0 || i>=this.count){
-					i = evt.keyCode == 40 ? 0:this.count-1;
-				}
-				this.selectElem(this.list[i].el);
+				var move = evt.keyCode == 40 ? 1:-1;
+				var item
+				do{
+					i+=move
+					item = this.list[i]
+				}while(item && item.unselectable)
+
+				if(item) this.selectElem(item.el);
+
 			}else{
 				this.firstKey = false;
 			}
@@ -127,6 +131,13 @@ function(proto, superProto, comp, superComp){
 	};
 	
 	proto.on_clear = function(){
+		if(this.isReadOnly()) return;
+		this.setText(this.emptyText);
+		this.setValue('', true);
+		this.textInput.disabled = false;
+	};
+
+	proto.clear = function(){
 		if(this.isReadOnly()) return;
 		this.setText(this.emptyText);
 		this.setValue('', true);
@@ -265,7 +276,21 @@ function(proto, superProto, comp, superComp){
     		this.selectElem(null);
 	};
 
+	proto.makeListElement = function(data,i){
+		var d = $(mi2JS.addTag(this.div,{tag:'DIV',attr:{'class':'acItem'}}))
+		return d
+	}
+
+	proto.updateListElement = function(d,data,i){
+		d.attr('child', data.child ? true:void 0)
+		d.attr('group', data.group ? true:void 0)
+		d.attr('unselectable', data.unselectable ? '1':void 0)
+		d.el.unselectable = d.unselectable = data.unselectable
+		d.el.innerHTML = data.html || data.name || data.text;
+	}
+
 	proto.showResults = function(data){
+		clearTimeout(this.hideTimer)
 		if(this.emptyText && this.showall){
 			var tmp = data;
 			data = [{id:'',text:this.emptyText}, ...tmp];
@@ -276,10 +301,10 @@ function(proto, superProto, comp, superComp){
 		for(var i=0; i<num; i++){
 			var d = this.list[i];
 			if(i>= this.list.length){
-				d = this.list[i] = $(mi2JS.addTag(this.div,{tag:'DIV',attr:{'class':'acItem'}}));
+				d = this.list[i] = this.makeListElement(data[i], i)
 				d.el.index = i;
 			}
-			d.el.innerHTML = data[i].html || data[i].name || data[i].text;
+			this.updateListElement(d,data[i], i)
 			d.el.data = data[i];
 			d.setVisible(true);
 			if(this.selectFirst && i==0) selectedId = data[i].id;
