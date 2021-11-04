@@ -24,6 +24,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.minLength = 20;
 		this.endBuffer = 0;
 		this.pivot = 0
+		this.maxLimit = 50
 	};
 
 	proto.on_click = function(evt){
@@ -39,6 +40,10 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.on_show = function(evt){
 		if(this.autoScroll && !this.skipResize) this.on_resize({});
+	};
+
+	proto.on_init = function(evt){
+		this.setTimeout(()=>this.on_resize({}),100);
 	};
 
 	proto.on_mousedown = function(evt){
@@ -96,6 +101,12 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		}
 	};
 
+
+	proto.setPivot = function(pivot){
+		this.pivot = pivot
+		this.on_resize({skipUpdate:true})
+	};
+
 	proto.on_resize = function(evt){
 		this.skipResize = true;
 		
@@ -104,7 +115,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var h = this.list.el.parentNode.offsetHeight;
 		this.list.setVisible(true);
 		this.attr('hidden', false);
-		var limit = Math.floor(h/this.autoScroll);
+		var limit = Math.min(Math.floor(h/this.autoScroll),this.maxLimit)
+		if(this.autoScroll){
+			this.el.style.height = ((limit-this.pivot)*this.autoScroll)+'px'
+			this.el.style.marginTop = (this.pivot*this.autoScroll)+'px'
+		} 
 		if(limit) this.setLimit(limit); 
 		if(!evt.skipUpdate) this.applyLimit();
 
@@ -207,7 +222,10 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.applyLimit = function(){
 	    var data = this.data;
-	    var len = data.length + this.endBuffer;
+	    var len = data.length + this.endBuffer
+	    if(len > this.maxLimit){
+	    	this.limit = this.maxLimit
+	    } 
 	    if(this.limit){
 	      if(this.limit + this.offset > len) this.offset = len - this.limit;
 	      if(this.offset < 0) this.offset = 0;
