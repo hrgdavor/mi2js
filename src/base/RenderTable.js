@@ -24,8 +24,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 		this.sortInline = true;
 
 
-		// if(this.noData)
-			this.noData.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
+		this.noData.el.innerHTML = t(this.attrDef("no_data","no_data_to_display"));
 		
 		this.listen(this.tbody.el,"click",this.rowClick);
 
@@ -256,6 +255,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			param = td.getAttribute('param');
 			td=td.parentNode;
 		}
+		while(td.tagName != 'TD') td = td.parentNode
 		if(! action ) action = 'edit';
 		var tr = td.parentNode;
 		this.fireEvent({

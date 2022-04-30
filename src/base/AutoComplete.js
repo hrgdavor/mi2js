@@ -201,7 +201,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.getDataFor = function(id){
-		var allData = this.getOptions();
+		var allData = this.getOptions() || [];
 		if(id) for(var i=0; i<allData.length; i++){
 			if(allData[i].id == id) {
 				return allData[i];
@@ -212,14 +212,21 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	
 	proto.updateTextFromData = function(){
 		this.textInput.disabled = false;
-		var allData = this.getOptions();
+		var allData = this.getOptions() || [];
 		if(allData.length <= 1 && this.noEmpty){
 			this.textInput.disabled = true;
 			this.clearBt.setEnabled(false);
 		}
-		this.selectedData = this.getDataFor(this.getValue());
-		this.setText(this.selectedData ?  (this.selectedData.name || this.selectedData.text) :this.emptyText);
-		var val = this.getValue();
+		this.selectedData = this.getDataFor(this.idInput.el.value);
+		let text = this.emptyText
+		if(this.selectedData){
+			text  = this.selectedData.name || this.selectedData.text
+		}else{
+			if(this.allowNew && this.freeText) 
+				text = this.idInput.el.value || this.emptyText
+		}
+		this.setText(text)
+		
 		if(this.noEmpty && allData.length >0 && !this.getText() ){
 			this.selectedData = allData[0];
 			this.setValue(allData[0].id);
@@ -242,7 +249,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.filterResults = function(srch,comp){
 		var showall = this.showall || this.firstKey;
-		var allData = this.getOptions()
+		var allData = this.getOptions() || []
 		if(!this.noEmpty || showall) allData = allData.filter(item=>this.filterResult('','',item));
 
 		var data = [];
@@ -318,7 +325,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 		if(this.hasFocus && this.count >0){
 			this.div.setVisible(true);
-			this.div.el.style.top = this.textInput.el.offsetHeight +'px';
+			const tx  =this.textInput.el
+			this.div.el.style.top = (tx.offsetTop + tx.offsetHeight) +'px';
 			this.div.el.style.minWidth = (this.textInput.el.offsetWidth - this.div.el.offsetWidth + this.list[0].el.offsetWidth) +'px';
 		}		
 	};
