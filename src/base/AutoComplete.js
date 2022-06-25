@@ -124,8 +124,6 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			if(this.freeText){
 				this.idInput.el.value = this.textInput.el.value;
 				this.fireIfChanged();
-			}else{
-				this.applySelection(this.allowNew);
 			}
 		}
 	};
@@ -360,7 +358,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		return this.textInput.el.readOnly;
 	};
 
-	proto.setValue = function(val, fireChange){
+	proto.setRawValue = function(val, fireChange){
 		if(val === null || val === void 0) val = '';
 		this.idInput.el.value = val;
 		this.updateText();
@@ -370,7 +368,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
             this.oldValue = this.getValue();
 	};
 
-	proto.getValue = function(){
+	proto.getRawValue = function(){
 		return this.idInput.el.value;
 	};
 

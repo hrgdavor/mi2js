@@ -411,31 +411,53 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
     } else if(def instanceof mi2.TagDef){
     	if(def.tag == 'template' || def.tag == 'frag'){
     		mi2.insertHtml(parent, def.children, before, updaters, parentComp);
-    	}else{		
-	        var n = document.createElement(def.tag);
-			if(def.html) n.innerHTML = def.html;
-			var compName = null;
-	        if (def.attr) {
-	        	compName = def.attr.as || mi2.compData.tags[def.tag.toUpperCase()];
-	        	var directives = mi2.extractDirectives(def.attr);
-	        	if(compName && !def.attr.template){
-	        		n.jsxAttr = def.attr;
-	        		n.jsxDir = directives;
-	        		if(def.attr.as) n.setAttribute('as',def.attr.as);
-	        	}else{
-	        		if(parentComp) parentComp.initNodeAttr(n,def.attr, directives, parentComp._updaters);
-		        	mi2.insertAttr(n,def.attr,updaters);
-	        	}
-	        }
-	        if(parent) parent.insertBefore(n, before);
-	        if (def.children && def.children.length) {
-	        	if(compName && !def.attr.template){
-	        		n.jsxChildren = def.children;
-	        	}else{
-		            mi2.insertHtml(n, def.children, null, updaters, parentComp);
-	        	}
-	        }
-	        return n;
+    	}else{
+    		if(def.attr && def.attr.as && def.attr.as.startsWith('jsx6') && mi2.jsx6){
+    			const tagName = def.tag
+    			const attr = def.attr
+    			const arr = attr.as.split('/')
+    			//delete attr.as
+    			attr.tagName = tagName
+    			let comp = mi2
+    			try{
+    				var p = attr.p
+    				//delete attr.p
+	    			arr.forEach(p=>comp=comp[p])
+	    			def.tag = comp
+	    			var n = mi2.jsx6.insertHtml(parent, before, mi2JS.jsx6.h(def.tag, attr, ...def.children), parentComp)
+	    			n.__init()
+	    			n.el.__comp = n
+    				if(p){
+    					console.log('setRef',parentComp, n, p);
+    					mi2.setRef(parentComp, n, p)
+    				}
+    			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, e)}
+    		}else{			
+		        var n = document.createElement(def.tag);
+				if(def.html) n.innerHTML = def.html;
+				var compName = null;
+		        if (def.attr) {
+		        	compName = def.attr.as || mi2.compData.tags[def.tag.toUpperCase()];
+		        	var directives = mi2.extractDirectives(def.attr);
+		        	if(compName && !def.attr.template){
+		        		n.jsxAttr = def.attr;
+		        		n.jsxDir = directives;
+		        		if(def.attr.as) n.setAttribute('as',def.attr.as);
+		        	}else{
+		        		if(parentComp) parentComp.initNodeAttr(n,def.attr, directives, parentComp._updaters);
+			        	mi2.insertAttr(n,def.attr,updaters);
+		        	}
+		        }
+		        if(parent) parent.insertBefore(n, before);
+		        if (def.children && def.children.length) {
+		        	if(compName && !def.attr.template){
+		        		n.jsxChildren = def.children;
+		        	}else{
+			            mi2.insertHtml(n, def.children, null, updaters, parentComp);
+		        	}
+		        }
+		        return n;
+    		}
     	}
     }else{
     	// TODO join text node updating and value handling

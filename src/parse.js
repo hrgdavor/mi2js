@@ -113,39 +113,40 @@ function logPropTaken(prop, obj, by){
 	var el = elem.firstElementChild,next,templateAttr;
 	while(el){
 		next = el.nextElementSibling;
-		templateAttr = el.getAttribute('template');
-		if(el.getAttribute && el.tagName != 'TEMPLATE' && (templateAttr === null || templateAttr === 'inline') ){
-			var comp = null, compName;
-			if(compData){
-				compName = el.getAttribute('as') || compData.tags[el.tagName];
-				if(compName && templateAttr !== ''){
-					comp = mi2.constructComp(el, compName, obj);
+		if(!el.__comp){//jsx6 transition support
+			templateAttr = el.getAttribute('template');
+			if(el.getAttribute && el.tagName != 'TEMPLATE' && (templateAttr === null || templateAttr === 'inline') ){
+				var comp = null, compName;
+				if(compData){
+					compName = el.getAttribute('as') || compData.tags[el.tagName];
+					if(compName && templateAttr !== ''){
+						comp = mi2.constructComp(el, compName, obj);
+					}
 				}
+
+				var prop = el.getAttribute('p');
+				if(prop){
+					if(!comp) comp = new mi2(el);
+					mi2.setRef(obj, comp, prop);
+					// if property id "group." the part after dot is based on index, 
+					// we put the index into html for consistency.
+					// for example "group.3" for fourth time such element is found
+					if(prop.charAt(prop.length-1) == '.') el.setAttribute('p',prop+comp.__propName);
+
+					if(!compName && obj.addRef) obj.addRef(comp); // list of referenced nodes
+				}
+
+				prop = el.getAttribute('name');
+				if(prop){
+					if(!comp) comp = new mi2(el);
+					mi2.setRef(obj, comp, prop, 'items');
+				}
+
+				// recursion is stopped for components with inline template, as the component will decide how to initialize
+				if(templateAttr === null)
+					mi2.parseChildren(el, obj);
 			}
-
-			var prop = el.getAttribute('p');
-			if(prop){
-				if(!comp) comp = new mi2(el);
-				mi2.setRef(obj, comp, prop);
-				// if property id "group." the part after dot is based on index, 
-				// we put the index into html for consistency.
-				// for example "group.3" for fourth time such element is found
-				if(prop.charAt(prop.length-1) == '.') el.setAttribute('p',prop+comp.__propName);
-
-				if(!compName && obj.addRef) obj.addRef(comp); // list of referenced nodes
-			}
-
-			prop = el.getAttribute('name');
-			if(prop){
-				if(!comp) comp = new mi2(el);
-				mi2.setRef(obj, comp, prop, 'items');
-			}
-
-			// recursion is stopped for components with inline template, as the component will decide how to initialize
-			if(templateAttr === null)
-				mi2.parseChildren(el, obj);
 		}
-
 
 		el = next;
 	}
