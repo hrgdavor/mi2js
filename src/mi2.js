@@ -424,11 +424,10 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
     				//delete attr.p
 	    			arr.forEach(p=>comp=comp[p])
 	    			def.tag = comp
-	    			var n = mi2.jsx6.insertHtml(parent, before, mi2JS.jsx6.h(def.tag, attr, ...def.children), parentComp)
+	    			var n = mi2.jsx6.insertHtml(parent, before, mi2JS.jsx6.h.bind(parentComp)(def.tag, attr, ...def.children), parentComp)
 	    			n.__init()
 	    			n.el.__comp = n
     				if(p){
-    					console.log('setRef',parentComp, n, p);
     					mi2.setRef(parentComp, n, p)
     				}
     			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, e)}
