@@ -1,8 +1,19 @@
-
+/**
+ * Component to display date or dateTime picker.
+ *
+ * Argument "past_not_allowed"
+ *  - this argument tells validator not to allow date too far in past
+ *  - it allows date to be in past just for several hours, which is set in "validate" method
+ *  - if component is inside administration form, then form must set initial value when in edit mode, using "setInitialValue" method (example can be found in project)
+ *    - reason for this is to allow saving date in past without limitation when user is editing form, but not changing the date
+ *    - Example
+ *      - if there is a record that has date set to "01.01.2020. 15:00", when user edits something in that record, validator would say "date_in_past_not_allowed"
+ *      - but if initialValue "01.01.2020. 15:00" is passed to component, and on form submit that date is still "01.01.2020. 15:00", validator will allow that date in past
+ */
 mi2JS.addCompClass('base/Calendar', 'base/InputBase', '<input p="input" as="base/Input">',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(proto, superProto, comp, superComp){
+function(proto, superProto, comp, mi2, h, t, filters){
 
 	var mi2 = mi2JS; // minimizer friendly 
 
@@ -43,6 +54,7 @@ function(proto, superProto, comp, superComp){
 
 		this.input.trackChanges();
 		this.listen(this.input, 'change', 'on_changeInput');
+		this.initialValue = null
 	};
 
 	proto.on_init = function(){
@@ -114,8 +126,8 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.validate = function(defReq){
-		var attr = this.attr('required');
-		var required = attr === null ? defReq : attr  == '1';
+		var attr = this.hasAttr('required');
+		var required = attr ? this.attrBoolean('required') : defReq;
 		var v = this.input.el.value;
 		if(!v){
 			if(required) return {type:'required', message:t('required')};
@@ -123,6 +135,16 @@ function(proto, superProto, comp, superComp){
 			// not empty but can not be parsed (getValue returns null)
 			if(!this.parseValue())
 				return {type:'invalid', message:t('invalid_value')};
+		}
+
+		if (this.attrBoolean('past_not_allowed') && v) {
+			const currentValue = mi2.parseDateTime(v).getTime()
+			const diffInSeconds = (Date.now() - currentValue) / 1000
+
+			// 3600 is number of seconds in 1 hour, so we multiply tolerated amount of hours with it
+			if (this.initialValue != currentValue && diffInSeconds > (8 * 3600)) {
+				return {type:'invalid', message:t('date_in_past_not_allowed')};
+			}
 		}
 
 		return null;
@@ -167,6 +189,10 @@ function(proto, superProto, comp, superComp){
 			return mi2.parseTime(str);
 		}
 	};
+
+	proto.setInitialValue = function(value) {
+		this.initialValue = value
+	}
 
 	proto.focus = function(){
 		this.input.focus();
