@@ -419,18 +419,22 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
     			//delete attr.as
     			attr.tagName = tagName
     			let comp = mi2
+					let n
     			try{
     				var p = attr.p
-    				//delete attr.p
+    				delete attr.p//mi2.jsx6.insert messes up groupped props
 	    			arr.forEach(p=>comp=comp[p])
+						if(!comp) throw new Error('comp not found '+attr.as)
 	    			def.tag = comp
-	    			var n = mi2.jsx6.insertHtml(parent, before, mi2JS.jsx6.h.bind(parentComp)(def.tag, attr, ...def.children), parentComp)
+	    			n = mi2.jsx6.insert(parent, mi2JS.jsx6.domWithScope(parentComp,()=>mi2JS.jsx6.h(def.tag, attr, ...def.children)))
 	    			n.__init()
 	    			n.el.__comp = n
     				if(p){
     					mi2.setRef(parentComp, n, p)
+							n.el.setAttribute('p',p)
     				}
-    			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, e)}
+						return n
+    			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, n, arr, comp, def, e)}
     		}else{			
 		        var n = document.createElement(def.tag);
 				if(def.html) n.innerHTML = def.html;
