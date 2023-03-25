@@ -2,7 +2,7 @@
 mi2JS.addCompClass('base/CalendarWidget', 'Base', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
-function(proto, superProto, comp, superComp){
+function(proto, superProto, comp, mi2, h, t, filters){
 
 	var mi2 = mi2JS; // minimizer friendly 
 	
@@ -92,10 +92,66 @@ function(proto, superProto, comp, superComp){
 	};
 
 	proto.on_selectChange = function(evt){
+		let compare = this.parent.__propName === 'end_time' ? 'start_time' : 'end_time'
+		let itemsVal = this.parent.parent.items ? this.parent.parent.items.getValue() : ''
+		if(itemsVal) {
+			const compareItemYear = itemsVal[compare] ? new Date(itemsVal[compare]).getFullYear() : null
+			const compareItemMonth = itemsVal[compare] ? new Date(itemsVal[compare]).getMonth() : null
+			itemsVal.year = evt.target.__propName === 'year' ? '' : compareItemYear
+			itemsVal[compare] = evt.target.__propName === 'year' ? compareItemYear : compareItemMonth
+		}
+		if(this.parent.__propName === 'end_time'){
+			if(evt.target.__propName === 'year'){
+				if(itemsVal && evt.value < itemsVal[compare]){
+					evt.value = evt.oldValue
+					MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+				}
+			}	
+			if(evt.target.__propName === 'month'){
+				if(itemsVal && parseInt(this.year.getValue()) === itemsVal.year && evt.value < itemsVal[compare]){
+					evt.value = evt.oldValue
+					MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+				}
+			}
+		}
+
+		if(this.parent.__propName === 'start_time'){
+			if(evt.target.__propName === 'year'){
+				if(itemsVal && itemsVal[compare] && evt.value > itemsVal[compare]){
+					evt.value = evt.oldValue
+					MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+				}
+			}	
+			if(evt.target.__propName === 'month'){
+				if(itemsVal && parseInt(this.year.getValue()) === itemsVal.year && evt.value > itemsVal[compare]){
+					evt.value = evt.oldValue
+					MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+				}
+			}
+		}
+		
 		this.setDate(this.year.getValue(), this.month.getValue());
 	};
 
+	proto.checkDates = function(year, month, day){
+		let itemsVal = this.parent.parent.items ? this.parent.parent.items.getValue() : ''
+
+		if(this.parent.__propName === 'end_time' && itemsVal && (itemsVal.start_time > new Date(year, month, day+1).getTime())){
+			MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+			return false
+		} 
+		if(this.parent.__propName === 'start_time' && itemsVal && itemsVal.end_time && (new Date(year, month, day).getTime() > itemsVal.end_time)){
+			MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
+			return false
+		} 
+				
+		return true
+	}
+
 	proto.setDate = function(year,month,day){
+		let validDates = this.checkDates(year,month,day)
+		if(!validDates) return false
+
 		var d = this.date;
 		if(!d) d = new Date(0,0,0,0,0,0,0);
 		var time = this.parseTime(this.timeInput.getValue());
@@ -108,6 +164,8 @@ function(proto, superProto, comp, superComp){
 			time[1],
 			time[2]
 		));
+
+		return true
 	};
 
 	proto.update = function(date){
@@ -177,11 +235,37 @@ function(proto, superProto, comp, superComp){
 		if(td.tagName != 'TD') return;
 
 		var d = td.date;
-		this.setDate( d.getFullYear(), d.getMonth(), d.getDate() );
-		this.on_done();
+		const dateIsSet = this.setDate( d.getFullYear(), d.getMonth(), d.getDate() );
+		if (dateIsSet) {
+			// this.on_done();
+			var date = this.date;
+			this.fireEvent({name:'dateSelected', widget: this, date:date, fireTo:'parent'});
+		}
 	};
 
+	proto.checkHourMin = function(evt){
+		let itemsVal = this.parent.parent.items ? this.parent.parent.items.getValue() : ''
+		let compare = this.parent.__propName === 'end_time' ? 'start_time' : 'end_time'
+		let hours = evt ? evt.target.date.getHours() : parseInt(this.timeInput.getValue().split(':')[0])
+		let mins = evt ? evt.target.date.getMinutes() : parseInt(this.timeInput.getValue().split(':')[1])
+		let day = parseInt(this.date.toString().split(' ')[2])
+
+		if(new Date(itemsVal[compare]).getMonth() === parseInt(this.month.getValue()) && day === new Date(itemsVal[compare]).getDate()){
+			if(this.parent.__propName === 'start_time'){
+				if(hours > new Date(itemsVal[compare]).getHours() || (hours <= new Date(itemsVal[compare]).getHours() && mins > new Date(itemsVal[compare]).getMinutes())) return false
+			}
+	
+			if(this.parent.__propName === 'end_time'){
+				if(hours < new Date(itemsVal[compare]).getHours() || (hours >= new Date(itemsVal[compare]).getHours() && mins < new Date(itemsVal[compare]).getMinutes())) return false
+			}
+		}
+		
+		return true
+	}
+
 	proto.on_done = function(evt){
+		let validateHMin = this.checkHourMin(evt)
+		if(!validateHMin) return
 		this.setDate();
 		var date = this.date;
 		if(evt && evt.action == 'clear') date = null;
