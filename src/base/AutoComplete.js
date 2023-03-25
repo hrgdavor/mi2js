@@ -65,7 +65,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
             if(this.isReadOnly()) return;
 			if(evt.keyCode == 9){ // TAB
 				this.on_blur();
-			}else if(evt.keyCode == 13){ // ENTER
+			}else if(evt.keyCode == 13 && this.div.isVisible()){ // ENTER
 				this.applySelection();
 				evt.stop();
 				this.next();
@@ -130,9 +130,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	
 	proto.on_clear = function(){
 		if(this.isReadOnly()) return;
+		var oldValue = this.getValue()
 		this.setText(this.emptyText);
 		this.setValue('', true);
 		this.textInput.disabled = false;
+		this.fireEvent({name:'change', oldValue, value: this.getValue()})
 	};
 
 	proto.clear = function(){
@@ -326,7 +328,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			const tx  =this.textInput.el
 			this.div.el.style.top = (tx.offsetTop + tx.offsetHeight) +'px';
 			this.div.el.style.minWidth = (this.textInput.el.offsetWidth - this.div.el.offsetWidth + this.list[0].el.offsetWidth) +'px';
-		}		
+		} else if (this.count < 1) {
+			this.div.setVisible(false)
+		}
 	};
 
 	proto.applySelection = function(skipIfNotSame){
@@ -335,7 +339,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		if(skipIfNotSame && (sel.name || sel.text) != this.textInput.el.value){
 			sel = {text:this.textInput.el.value};
 			this.idInput.el.value = '';
-		}else{
+		} else if (sel.name || sel.text){
 			this.selectedData = sel;
 	        this.idInput.el.value = sel.id || '';
 	        this.setText(sel.name || sel.text);			
@@ -359,6 +363,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.setRawValue = function(val, fireChange){
+		if(this.attr('inputVal')) this.textInput.setValue(val)
+		
 		if(val === null || val === void 0) val = '';
 		this.idInput.el.value = val;
 		this.updateText();
@@ -380,6 +386,13 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var newText = this.textInput.el.value = str || this.emptyText;
 		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button') && (this.textInput.el.value || '') != this.emptyText);
 	};
+
+	proto.triggerOnBlur = function(isReadOnly) {
+		if (isReadOnly) {
+			this.on_blur();
+			this.hide();
+		}
+	}
 
 	proto.validate = function(defReq){
 		return $.Validity.required( !this.getValue() && this.attrBoolean('required'));
