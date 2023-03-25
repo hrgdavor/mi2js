@@ -1,22 +1,45 @@
 (function(mi2){
 
+	mi2.getValidatorX = function(comp, defReq){
+	}
+
 	mi2.getValidator = function(comp, defReq){
-		if(comp.getValidator) return comp.getValidator();
+		if(comp.getValidator) return comp.getValidator(defReq);
 		if(comp.validate) return comp;
-		return new Validator({
-			required: comp.attrBoolean('required', defReq),
-			invalid: comp.attr('invalid'),
-			min: comp.attr('min'),
-			max: comp.attr('max'),
-			example: comp.attr('example'),
-			pattern: comp.attr('pattern')
-		});		
+		return mi2.compValidator(comp, defReq);		
+	}
+
+	mi2.compValidator = function(comp, defReq){
+		const h_attr = mi2JS.h_attr
+		try {			
+			return new Validator({
+				required: comp.attrBoolean('required', defReq),
+				invalid: h_attr(comp.el,'invalid'),
+				min: h_attr(comp.el,'min'),
+				max: h_attr(comp.el,'max'),
+				example: h_attr(comp.el,'example'),
+				pattern: h_attr(comp.el,'pattern')
+			})
+		} catch (e) {
+			console.error('comp', comp,e)
+			throw e
+		}
 	}
 
 	mi2.validationMessage = function(v){
 		if(!v) return '';
 		return v.message;
 	};
+
+	mi2.validate = function(comp){
+		if(comp.validate) return comp.validate();
+		return mi2.getValidator(comp).validate(comp.getValue());
+	}
+
+	mi2.markValidateX = function(comp,data){
+		if(comp.markValidate) return comp.markValidate(comp,data);
+		mi2.markValidate(comp,data);
+	}
 
 	mi2.markValidate = function(comp,data){
 		data = data || new mi2.Validity();
