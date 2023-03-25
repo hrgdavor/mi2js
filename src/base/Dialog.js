@@ -7,6 +7,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
 		
+		this.baseClass = this.el.className
 		this.listen(document.body,'keyup', function(evt){
 			if(evt.keyCode == 27){
 				if(this.isVisible() && this.hasCancel) this.on_close({action:'cancel'});
@@ -21,12 +22,13 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var content = params.content || '';
 		var buttonClass = params.buttonClass;
 		var contentClass = params.contentClass || '';
+		var dialogClass = params.dialogClass || '';
 		var buttons = params.buttons || [{action:'ok'},{action:'cancel'}];
 		// button: {action: 'ok', text: t('ok'), 'class':''}
 
 		this.title.setContent(title);
 		this.content.el.className = 'dialog-content '+contentClass;
-		
+		this.el.className = this.baseClass +' '+ dialogClass
 		this.content.setContent(content);
 
 		this.buttons.setValue([]);
@@ -39,7 +41,16 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			if(button.action == 'cancel') this.hasCancel = true;
 
 			var item = this.buttons.getItem(i);
-			item.setContent(text);
+			if (button.icon) {
+				text = button.text || ''
+				item.attr('icon', button.icon)
+			}
+
+			if (button.xTitle) {
+				item.attr('x-title', button.xTitle);
+			}
+
+			item.setContent(text)
 			item.attr('action', button.action);
 			item.attr('class',  button['class'] || buttonClass);
 		}
