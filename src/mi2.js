@@ -364,6 +364,8 @@ mi2.insertAttr = function(n, def_attr, updaters){
     }
 };
 
+mi2.isNode = obj => obj?.nodeType !== undefined
+
 mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 	updaters = updaters || [];
 
@@ -403,6 +405,8 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
         def.makeNode(parent, before);
         updaters.push(updater(def));
 
+    } else if(mi2.isNode(def)){
+			parent.insertBefore(def,before)
     } else if(def instanceof Array){
         def.forEach(function (c) { 
         	mi2.insertHtml(parent, c, before, updaters, parentComp);
@@ -437,17 +441,17 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
     			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, n, arr, comp, def, e)}
     		}else{			
 		        var n = document.createElement(def.tag);
-				if(def.html) n.innerHTML = def.html;
+				if(def.html) mi2.insertHtml(n, def.html, null, updaters, parentComp)
 				var compName = null;
 		        if (def.attr) {
-		        	compName = def.attr.as || mi2.compData.tags[def.tag.toUpperCase()];
+							compName = def.attr.as || mi2.compData.tags[def.tag.toUpperCase()];
 		        	var directives = mi2.extractDirectives(def.attr);
 		        	if(compName && !def.attr.template){
-		        		n.jsxAttr = def.attr;
+								n.jsxAttr = def.attr;
 		        		n.jsxDir = directives;
-		        		if(def.attr.as) n.setAttribute('as',def.attr.as);
+		        		n.setAttribute('as',def.attr.as = compName);
 		        	}else{
-		        		if(parentComp) parentComp.initNodeAttr(n,def.attr, directives, parentComp._updaters);
+								if(parentComp) parentComp.initNodeAttr(n,def.attr, directives, parentComp._updaters);
 			        	mi2.insertAttr(n,def.attr,updaters);
 		        	}
 		        }

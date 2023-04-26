@@ -55,6 +55,17 @@
 		return new mi2(mi2.addTag(parent, tpl, nextSibling));
 	}
 
+	mi2.replaceTag = function(parent, tpl){
+		mi2.clearNode(parent)
+		return new mi2(mi2.addTag(parent, tpl));
+	}
+
+	mi2.replaceHtml = function(parent, tpl, parentComp){
+		mi2.clearNode(parent)
+		mi2.insertHtml(parent, tpl);
+		mi2.parseChildren(parent,parentComp);
+	}
+
 	/** Check if two rectangles are intersecting each other.
 
 	@function intersect
@@ -66,6 +77,8 @@
 			a.top <= b.bottom &&
 			b.top <= a.bottom);
 	}
+
+	mi2.clearNode = n=> n.innerHTML = ''
 
 	/** Generate {@link TagTemplate} object that represents the given Element.
 
@@ -154,7 +167,7 @@
 	@param {object} def default value if attribute is not present
 	*/
 	mi2.dom_register('attrNum', true, function(node, name, def){
-		return mi2.num( mi2.h_attrDef(node,name, def) );
+		return mi2.num( mi2.h_attrDef(node, name, def) );
 	});
 
 
@@ -273,14 +286,8 @@ no real need to use dataset, and attributes work on more browsers
 @memberof mi2JS(core).NodeWrapper
 */
 	mi2.dom_register('setHtml', false, function(node, html){
-		if(typeof html == 'string'){
-			if(node.innerHTML !== html) node.innerHTML = html;
-		}else if(html instanceof mi2.TagDef){ 
-			// TODO diff
-			node.innerHTML = '';
-			mi2.insertHtml(node, html);
-		}
-	});
+		mi2.replaceHtml(node, html)
+	})
 
 /*
 @function setHtml
