@@ -431,8 +431,8 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 						if(!comp) throw new Error('comp not found '+attr.as)
 	    			def.tag = comp
 	    			n = mi2.jsx6.insert(parent, mi2JS.jsx6.domWithScope(parentComp,()=>mi2JS.jsx6.h(def.tag, attr, ...def.children)))
-	    			n.__init()
-	    			n.el.__comp = n
+	    			n.__init?.()
+	    			if(n.el) n.el.__comp = n
     				if(p){
     					mi2.setRef(parentComp, n, p)
 							n.el.setAttribute('p',p)
