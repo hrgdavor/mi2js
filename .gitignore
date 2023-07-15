@@ -7,3 +7,5 @@ build/cz/*
 .min/*
 compiler.jar
 js.jar
+.vscode
+.history
