@@ -432,10 +432,12 @@ mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 	    			def.tag = comp
 	    			n = mi2.jsx6.insert(parent, mi2JS.jsx6.domWithScope(parentComp,()=>mi2JS.jsx6.h(def.tag, attr, ...def.children)))
 	    			n.__init?.()
+						n.__isjsx6 = true
 	    			if(n.el) n.el.__comp = n
     				if(p){
     					mi2.setRef(parentComp, n, p)
-							n.el.setAttribute('p',p)
+							if(n.el?.setAttribute) n.el.setAttribute('p',p)
+							else if(n.setAttribute) n.setAttribute('p',p)
     				}
 						return n
     			}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, n, arr, comp, def, e)}
@@ -500,6 +502,10 @@ mi2.extractDirectives  = function(attr){
 	if(count) return out;
 }
 
+mi2.isVisible = function(c){
+	if(c.isVisible) return c.isVisible()
+	return mi2.h_isVisible(c.el || c)
+}
 
 mi2.registerDirective = function(name, dir){
 	var nameArr = name.split('-');

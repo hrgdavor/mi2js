@@ -94,7 +94,7 @@ relationship. Also adding other functionalities needed for component based compo
 	};
 	
 	proto.initAttr = function(attr, updaters){
-		if(attr && attr.tpl && typeof(attr.tpl) == 'function') {
+		if(attr && attr.tpl && typeof(attr.tpl) == 'function') {			
 			// used later in initTemplate
 			this.__templateJsx = attr.tpl;
 			delete attr.tpl;
@@ -391,7 +391,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 		var continueFire = true;
 		if(evt.fireTo == 'parent' || evt.direction == 'parent'){
 			if((this.isTransitive(evt)) || initialFire){
-				if(this.parent) fired = this.parent.fireEvent(evt);
+				if(this.parent && this.parent.fireEvent) fired = this.parent.fireEvent(evt);
 				continueFire = false;
 			}
 		}
@@ -416,7 +416,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 					l[i].callback(evt);
 					fired = true;
 				}catch(e){
-					mi2.logError('Error firing event '+evtName, e, {'listener':l[i].scope.el, event:evt});
+					mi2.logError('Error firing event '+evtName, e, {'listener':l[i].scope?.el || l[i].scope, event:evt});
 					console.error(e.message);
 				}
 			}
@@ -575,7 +575,7 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	proto.isVisibleTruly = function(){
 		var c = this;
 		while(c){
-			if(!c.isVisible()) return false;
+			if(c.isVisible && !c.isVisible()) return false;
 			c = c.parent;
 		}
 		return true;
