@@ -126,7 +126,7 @@ function logPropTaken(prop, obj, by){
 
 				var prop = el.getAttribute('p');
 				if(prop){
-					if(!comp) comp = new mi2(el);
+					if(!comp) comp = el.__isjsx6 ? el : new mi2(el);
 					mi2.setRef(obj, comp, prop);
 					// if property id "group." the part after dot is based on index, 
 					// we put the index into html for consistency.
