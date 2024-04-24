@@ -42,12 +42,13 @@ module.exports = function(config) {
       'build/en/base/Pager.js',
       'build/en/base/RenderTable.js',
 
-      'spec/*.js',
-      'spec/base/*.js',
-      'spec/jsx/*.js',
+      // 'spec/*.js',
+      // 'spec/base/*.js',
+      // 'spec/jsx/*.js',
 
       //'spec/util/agregateSpec.js',
-      // 'spec/NWGroupSpec.js', 
+      // 'spec/base/TableSpec.js', 
+      'spec/jsx/TableSpecJsx.js', 
       // 'spec/jsx/loopJsx.js',
 
        {pattern: 'spec/test.json', included: false}

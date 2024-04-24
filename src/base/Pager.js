@@ -1,5 +1,5 @@
 
-mi2JS.addCompClass('base/Pager', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/Pager', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
@@ -57,6 +57,13 @@ function(proto, superProto, comp, superComp){
 		this.fireEvent({name:'page', page:evt.action, offset: mi2.num(evt.action)*this.limit, fireTo:'parent'});
 	};
 
+	proto.initTemplate = function (h, t, state, self) {
+		return h("frag", null,
+		h("div", { p: "noData", "class": "noData", hidden: true }),
+		h("b", { as: "base/Button", event: "page", action: "prev", "class": "disabled", p: "prev" }, "[[previous]]"),
+		h("span", { p: "pagesArea" }),
+		h("b", { as: "base/Button", event: "page", action: "next", "class": "disabled", p: "next" }, "[[next]]"));
+	}	
 });
 
 

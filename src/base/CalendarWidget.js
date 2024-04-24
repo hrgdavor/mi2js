@@ -1,5 +1,7 @@
+import { CalendarWidgetTpl } from './CalendarWidget.jsx'
+export default { CalendarWidgetTpl }
 
-mi2JS.addCompClass('base/CalendarWidget', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/CalendarWidget', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, mi2, h, t, filters){
@@ -278,4 +280,5 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.on_done();
 	};
 
+	proto.initTemplate = CalendarWidgetTpl
 });

@@ -113,7 +113,7 @@ function logPropTaken(prop, obj, by){
 	var el = elem.firstElementChild,next,templateAttr;
 	while(el){
 		next = el.nextElementSibling;
-		if(!el.__comp){//jsx6 transition support
+		if(!el.__comp && !el.__isjsx6){//jsx6 transition support
 			templateAttr = el.getAttribute('template');
 			if(el.getAttribute && el.tagName != 'TEMPLATE' && (templateAttr === null || templateAttr === 'inline') ){
 				var comp = null, compName;

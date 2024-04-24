@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "module": "commonjs",
+    "target": "es6",
+    "allowJs": true,
+    "outDir": "dist"
+  },
+  "exclude": ["node_modules","build","dist","karma.conf.js","mi2.ext.js"]
+}

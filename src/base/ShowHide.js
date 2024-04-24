@@ -1,20 +1,10 @@
 
-mi2JS.addCompClass('base/ShowHide', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/ShowHide', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
 
 	var $ = mi2JS;
-
-	proto.initTemplate = function(){
-		var el = this.el;
-		this.titleHTML = el.innerHTML;
-		el.innerHTML = '';
-
-		superProto.initTemplate.call(this);
-
-		this.texts = this.attrDef('texts','&#x25B2;,&#x25BC;').split(',');
-	};
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
@@ -53,4 +43,15 @@ function(proto, superProto, comp, superComp){
 		this.updateButton();
 		this.fireEvent({name:'change', value:this.panel.isVisible()});
 	};
+
+	proto.initTemplate = function(h, t, state, self){
+		var el = this.el;
+		this.titleHTML = el.innerHTML;
+		el.innerHTML = '';
+
+		
+		this.texts = this.attrDef('texts','&#x25B2;,&#x25BC;').split(',');
+		return h("frag", null, h("div", { p: "title" }), h("b", { p: "button" }));
+	};
+
 });

@@ -7,8 +7,7 @@
     "dist"
   ],
   "scripts": {
-    "test": "karma start --no-auto-watch --single-run true",
-    "dev-test": "karma start"
+    "build": "esbuild index.js --outdir=build --sourcemap --bundle --format=iife"
   },
   "repository": {
     "type": "git",

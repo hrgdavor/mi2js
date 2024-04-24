@@ -1,4 +1,4 @@
-mi2JS.addCompClass('base/RenderTable', 'Base', '<-TEMPLATE->',
+mi2JS.addCompClass('base/RenderTable', 'Base', '',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, superComp){
@@ -271,6 +271,15 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 			domEvent: evt
 		});
 	};
+
+	proto.initTemplate = function (h, t, state, self) {
+		return h("frag", null,
+		h("div", { p: "noData", "class": "noData", hidden: true }),
+		h("div", { p: "dataArea" },
+		h("div", { as: "base/Pager", p: "pager1", hidden: true }),
+		h("table", { "class": "data", p: "table" }, h("thead", { p: "thead" }), h("tbody", { p: "tbody" })),
+		h("div", { as: "base/Pager", p: "pager2" })));
+	}
 
 });
 

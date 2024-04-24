@@ -1,5 +1,5 @@
 
-mi2JS.addCompClass('base/Dialog', 'Base', '<div class="dialog-inner"> <div class="dialog-title" p="title"></div> <div class="dialog-content" p="content"></div> <div class="dialog-buttons" p="buttons" as="base/Loop"><button template as="base/Button" event="close"></button></div> </div>',
+mi2JS.addCompClass('base/Dialog', 'Base', '<',
 
 // component initializer function that defines constructor and adds methods to the prototype
 function(proto, superProto, comp, mi2, h, t, filters){
@@ -81,4 +81,11 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		}
 	};
 
+	proto.initTemplate = function (h, t, state, self) {
+		return h("div", { "class": "dialog-inner" },
+		h("div", { "class": "dialog-title", p: "title" }),
+		h("div", { "class": "dialog-content", p: "content" }),
+		h("div", { "class": "dialog-buttons", p: "buttons", as: "base/Loop" },
+		h("button", { template: true, as: "base/Button", event: "close" })));	
+	}
 });
