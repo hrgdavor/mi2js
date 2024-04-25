@@ -17,6 +17,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.sort = null;
 		this.bar = this.el.firstElementChild;
 		this.listen(this.el,'click');
+		this.listen(this.el.parentNode,'mouseover', ()=>this.updateScroll);
 		this.listen(this.bar,'mousedown');
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
@@ -89,14 +90,12 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		}
 	};
 
-	proto.init = function(list, scrollAmount, autoScroll, doCeil){
-		this.listen(this.el.parentNode,'mouseover', ()=>this.updateScroll);
-		if(win.observeResize && autoScroll){
+	proto.init = function(list, scrollAmount, autoScroll){
+		if(win.observeResize){
 			win.observeResize(list.el.parentNode,e=>this.newResize(e))
 		}
 		this.list = list;
-		this.doCeil = doCeil
-		if(list.el.style) list.el.style.touchAction = 'none'
+		list.el.style.touchAction = 'none'
 		this.scrollAmount = scrollAmount || 1;
 		// FF
 		this.listen(this.list.el.parentNode,'DOMMouseScroll',this.on_mousewheel);
@@ -127,9 +126,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.newResize = function(evt){
 		const h = evt.contentRect.height
-		var limit = Math.min(Math[this.doCeil ? 'ceil':'floor'](h/this.autoScroll),this.maxLimit)
-		console.log('evt.contentRect', evt.contentRect)
-		console.log('limit', limit, this.autoScroll)
+		var limit = Math.min(Math.floor(h/this.autoScroll),this.maxLimit)
+
 		if(this.autoScroll && limit){
 			this.el.style.height = ((limit-this.pivot)*this.autoScroll)+'px'
 			this.el.style.marginTop = (this.pivot*this.autoScroll)+'px'
