@@ -417,7 +417,6 @@
 					mi2.insertHtml(parent, def.children, before, updaters, parentComp);
 				}else{
 					if(def.attr && def.attr.as && def.attr.as.startsWith('jsx6') && mi2.jsx6){
-						console.log('JSX6', def.attr.as)
 						const tagName = def.tag
 						const attr = def.attr
 						const arr = attr.as.split('/')
@@ -442,7 +441,6 @@
 								if(n.el?.setAttribute) n.el.setAttribute('p',p)
 								else if(n.setAttribute) n.setAttribute('p',p)
 							}
-							console.log('JSX6', def.attr.as, def.tag, '\nn.el',n.el, '\nn', n)
 							return n
 						}catch(e){console.log(e);console.log('can not create ', tagName, def.tag, n, arr, comp, def, e)}
 					}else{			
