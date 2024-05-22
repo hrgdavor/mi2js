@@ -1,6 +1,7 @@
+import { AutoCompleteTpl } from './AutoComplete.jsx'
+export default { AutoCompleteTpl }
 
-mi2JS.addCompClass('base/AutoComplete', 'base/InputBase', '<-TEMPLATE->',
-
+mi2JS.addCompClass('base/AutoComplete', 'base/InputBase', '',
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, mi2, h, t, filters){
 
@@ -19,9 +20,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.data = [];
 	};
 
-	proto.initTemplate = function(){	
+	proto.initTemplate = function(h, t, state, self){	
 		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
-		superProto.initTemplate.apply(this, arguments);
+		return AutoCompleteTpl(h, t, state, self)
 	};
 
 	proto.initChildren = function(){
