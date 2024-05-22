@@ -60,9 +60,6 @@
 
 		if(args.timeout){
 			xhr.timeout = args.timeout;		
-			xhr.ontimeout = function(){
-				if(args.errback) args.errback.call(args.self,this);
-			}
 		}
 
 		xhr.send(args.postData);

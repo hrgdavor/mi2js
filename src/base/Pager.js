@@ -60,9 +60,9 @@ function(proto, superProto, comp, superComp){
 	proto.initTemplate = function (h, t, state, self) {
 		return h("frag", null,
 		h("div", { p: "noData", "class": "noData", hidden: true }),
-		h("b", { as: "base/Button", event: "page", action: "prev", "class": "disabled", p: "prev" }, "[[previous]]"),
+		h("b", { as: "base/Button", event: "page", action: "prev", "class": "disabled", p: "prev" }, t`previous`),
 		h("span", { p: "pagesArea" }),
-		h("b", { as: "base/Button", event: "page", action: "next", "class": "disabled", p: "next" }, "[[next]]"));
+		h("b", { as: "base/Button", event: "page", action: "next", "class": "disabled", p: "next" }, t`next`));
 	}	
 });
 

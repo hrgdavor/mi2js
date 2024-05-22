@@ -1,7 +1,5 @@
-import { AutoCompleteTpl } from './AutoComplete.jsx'
-export default { AutoCompleteTpl }
 
-mi2JS.addCompClass('base/AutoComplete', 'base/InputBase', '',
+mi2JS.addCompClass('base/AutoComplete', 'base/InputBase', '<-TEMPLATE->',
 
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, mi2, h, t, filters){
@@ -21,6 +19,10 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.data = [];
 	};
 
+	proto.initTemplate = function(){	
+		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
+		superProto.initTemplate.apply(this, arguments);
+	};
 
 	proto.initChildren = function(){
 		superProto.initChildren.call(this);
@@ -291,7 +293,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		d.attr('group', data.group ? true:void 0)
 		d.attr('unselectable', data.unselectable ? '1':void 0)
 		d.el.unselectable = d.unselectable = data.unselectable
-		d.el.innerHTML = data.html || data.name || data.text;
+		mi2.replaceHtml(d.el, data.html || data.name || data.text)
 	}
 
 	proto.showResults = function(data){
@@ -394,11 +396,6 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 	proto.validate = function(defReq){
 		return $.Validity.required( !this.getValue() && this.attrBoolean('required'));
-	};
-
-	proto.initTemplate = function(h, t, state, self){	
-		if(this.el.tagName == 'INPUT') this.el = this.replaceTag(this.el,'SPAN');
-		return AutoCompleteTpl(h, t, state, self)
 	};
 
 });

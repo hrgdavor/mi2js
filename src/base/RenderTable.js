@@ -122,7 +122,7 @@ data sample:  { offset:5, limit:5, rowcount:25, data: [{},{},{},{},{}] }
 	};
 
 	proto._findTh = function(code){
-		var tr = this.thead.find('TR');
+		var tr = $.find('TR', this.thead);
 		while(tr){
 			var tmp = tr.firstElementChild;
 			while(tmp){

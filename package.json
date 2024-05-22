@@ -2,12 +2,15 @@
   "name": "mi2js",
   "version": "1.0.0",
   "description": "Component library",
-  "main": "dist/mi2.c.js",
+  "main": "dist/mi2.js",
   "files": [
-    "dist"
+    "dist",
+    "mi2.js",
+    "src"
   ],
   "scripts": {
-    "build": "esbuild index.js --outdir=build --sourcemap --bundle --format=iife"
+    "build": "esbuild mi2.js --outdir=dist --sourcemap --bundle --minify --format=iife",
+    "prepublishOnly": "npm run build"
   },
   "repository": {
     "type": "git",
