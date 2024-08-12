@@ -17,7 +17,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.sort = null;
 		this.bar = this.el.firstElementChild;
 		this.listen(this.el,'click');
-		this.listen(this.el.parentNode,'mouseover', ()=>this.updateScroll);
+		setTimeout(()=>{// jsx6 compat
+			if(this.el.parentNode) this.listen(this.el.parentNode,'mouseover', ()=>this.updateScroll);
+		},0)
 		this.listen(this.bar,'mousedown');
 		this.listen(document,'mousemove');
 		this.listen(document,'mouseup');
