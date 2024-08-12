@@ -83,9 +83,9 @@ mi2JS.addCompClass('base/MultiCheck', 'base/InputBase', '',
 				if(data[p].count) {
 					let elCount = []
 					if(this.textWCount) {
-						elCount.push(<span class="btn-text">{data[p].text || data[p].name}</span>)
+						elCount.push(h("span", { "class": "btn-text" }, data[p].text || data[p].name))
 					}
-					elCount.push(<span class="count">{data[p].count+''}</span>)
+					elCount.push(h("span", { "class": "count" }, data[p].count + ''))
 					mi2.replaceHtml(item.el, elCount)
 				}
 				if(data[p].disabled) item.attr('disabled', true);
