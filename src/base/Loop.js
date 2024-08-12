@@ -18,8 +18,6 @@ example in separate template file:
 // component initializer function that defines constructor and adds methods to the prototype 
 function(proto, superProto, comp, mi2, h, t, filters){
 	
-	var mi2 = mi2JS;
-
 	proto.initTemplate = function(){
 		var el = this.el;
 		
@@ -37,7 +35,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			this.inFilter = mi2.parseFilter(this.attrDef('in-filter'), this.inFilter);
 		
 		if(this.hasAttr('out-filter'))
-			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);		
+			this.outFilter = mi2.parseFilter(this.attrDef('out-filter'), this.outFilter);
+		this.skipVisibilityControl = this.attrBoolean("skip-visibility-control") || false
 
 		if(this.itemTpl.attr) {
 			var comp = this.attrDef('item',this.itemTpl.attr.as);
@@ -260,7 +259,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		if(newData != void 0){
 			this.setItemValue(item, newData);
 			this.fireEvent({name:'afterSetItemValue', index:i, data:newData, item:item});
-			item.setVisible(true);
+			if (!this.skipVisibilityControl) {
+				item.setVisible(true)
+			}
 		}
 	};
 
@@ -281,11 +282,19 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		return this.getItem(index);
 	};
 
+	proto.clear = function(){
+		while(this.count > 0){
+			this.pop()
+		}
+	}
+
 	proto.pop = function(data){
 		if(this.count == 0) return;
 		this.count--;
 		var item = this.items.pop();
-		item.setVisible(false);
+		if (!this.skipVisibilityControl) {
+			item.setVisible(false)
+		}
 
 		this._fixItemList();
 
@@ -301,7 +310,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	    	var it = this.allItems;
 	    	for(var i=0; i<it.length; i++){
 	    		it[i].el.loopIndex = i;
-	    		it[i].setVisible(i<this.count);
+					if (!this.skipVisibilityControl) {
+						it[ i ].setVisible(i < this.count);
+					}
 	    	}    	
 		}		
 	};
