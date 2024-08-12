@@ -596,7 +596,8 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 
 		// when hidden by parent, there is no point in firing the event
 		// correct event will be fired when parent becomes visible
-		if(!this.parent || this.parent.isVisibleTruly()) 
+		// added this.parent?.__initialized into condition cause function isVisibleTruly() don't exist in jsx6 components
+		if(!this.parent || (this.parent?.__initialized && this.parent.isVisibleTruly())) 
 			this.fireEvent({name:visible ? 'show':'hide',fireTo:'children'});
 	};
 
