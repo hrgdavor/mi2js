@@ -1,5 +1,4 @@
-
-mi2JS.addCompClass('base/Dialog', 'Base', '<',
+mi2JS.addCompClass('base/Dialog', 'Base', '<div class="dialog-inner" p="innerContainer"> <div p="dragContainer"></div> <div class="dialog-title" p="title"></div> <div class="dialog-content" p="content"></div> <div class="dialog-buttons" p="buttons" as="base/Loop"><button template as="base/Button" event="close"></button></div> </div>',
 
 // component initializer function that defines constructor and adds methods to the prototype
 function(proto, superProto, comp, mi2, h, t, filters){
@@ -13,6 +12,49 @@ function(proto, superProto, comp, mi2, h, t, filters){
 				if(this.isVisible() && this.hasCancel) this.on_close({action:'cancel'});
 			}
 		});
+		this.isDragging = false;
+		this.initDrag();
+	};
+
+	proto.initDrag = function() {
+		const innerContainer = this.innerContainer.el;
+		let offsetX = 0;
+		let offsetY = 0;
+		const onMouseDown = (e) => {
+			if (e.target.getAttribute('p') === 'dragContainer') {
+				this.isDragging = true;
+				offsetX = e.clientX - innerContainer.offsetLeft;
+				offsetY = e.clientY - innerContainer.offsetTop;
+				document.addEventListener('mousemove', onMouseMove);
+				document.addEventListener('mouseup', onMouseUp);
+			}
+		};
+
+		const onMouseMove = (e) => {
+			if (this.isDragging) {
+				innerContainer.style.position = 'fixed';
+				innerContainer.style.left = (e.clientX - offsetX) + 'px';
+				innerContainer.style.top = (e.clientY - offsetY) + 'px';
+			}
+		};
+
+		const onMouseUp = () => {
+			this.isDragging = false;
+			document.getElementById('guiScreen').style.pointerEvents = 'all'
+			document.removeEventListener('mousemove', onMouseMove);
+			document.removeEventListener('mouseup', onMouseUp);
+		};
+
+		this.enableDragging = () => {
+			innerContainer.addEventListener('mousedown', onMouseDown);
+		};
+
+		this.disableDragging = () => {
+			this.isDragging = false;
+			innerContainer.removeEventListener('mousedown', onMouseDown);
+			document.removeEventListener('mousemove', onMouseMove);
+			document.removeEventListener('mouseup', onMouseUp);
+		};
 	};
 
 	proto.show = function(params){
@@ -23,12 +65,14 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		var buttonClass = params.buttonClass;
 		var contentClass = params.contentClass || '';
 		var dialogClass = params.dialogClass || '';
+		var innerClass = params.innerClass || '';
 		var buttons = params.buttons || [{action:'ok'},{action:'cancel'}];
 		// button: {action: 'ok', text: t('ok'), 'class':''}
 
 		this.title.setContent(title);
 		this.content.el.className = 'dialog-content '+contentClass;
-		this.el.className = this.baseClass +' '+ dialogClass
+		this.innerContainer.el.className = 'dialog-inner '+innerClass;
+		this.el.className = this.baseClass +' '+ dialogClass;
 		this.content.setContent(content);
 
 		this.buttons.setValue([]);
@@ -42,15 +86,15 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 			var item = this.buttons.getItem(i);
 			if (button.icon) {
-				text = button.text || ''
-				item.attr('icon', button.icon)
+				text = button.text || '';
+				item.attr('icon', button.icon);
 			}
 
 			if (button.xTitle) {
 				item.attr('x-title', button.xTitle);
 			}
 
-			item.setContent(text)
+			item.setContent(text);
 			item.attr('action', button.action);
 			item.attr('class',  button['class'] || buttonClass);
 		}
@@ -60,9 +104,24 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			this.setTimeout(function(){
 				var button = this.buttons.getItem(0);
 				button.el.focus();
-			},10);
-
-		} 
+			}, 10);
+		}
+		
+		this.innerContainer.el.style.position = 'relative'
+		this.innerContainer.el.style.top = 'inherit'
+		this.innerContainer.el.style.left = 'inherit'
+		this.innerContainer.el.style.transform = 'none'
+		
+		if(params.isDraggable){
+			const innerContainer = this.innerContainer.el;
+			innerContainer.style.position = 'fixed'
+			innerContainer.style.left = '50%'
+			innerContainer.style.top = '50%'
+			innerContainer.style.transform = 'translate(-50%, -50%)'
+			this.enableDragging();
+		} else {
+			this.disableDragging();
+		}
 	};
 
 	proto.on_close = function(evt){
@@ -72,20 +131,29 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			if(params.callback(evt.action) !== false){
 				this.setVisible(false);
 			}
-		}else if(params['callback_'+resp]){
+		} else if(params['callback_'+resp]){
 			if(params['callback_'+resp](evt.action) !== false){
-				this.setVisible(false);
+				if (!this.params.skipAutoClose) {
+					this.setVisible(false);
+				}
 			}
-		}else{
-			this.setVisible(false);			
+		} else {
+			this.setVisible(false);
 		}
 	};
 
-	proto.initTemplate = function (h, t, state, self) {
-		return h("div", { "class": "dialog-inner" },
-		h("div", { "class": "dialog-title", p: "title" }),
-		h("div", { "class": "dialog-content", p: "content" }),
-		h("div", { "class": "dialog-buttons", p: "buttons", as: "base/Loop" },
-		h("button", { template: true, as: "base/Button", event: "close" })));	
-	}
+    proto.initTemplate = function(h2, t2, state, self) {
+      return h2(
+        "div",
+        { "class": "dialog-inner", p: "innerContainer" },
+        h2("div", { p: "dragContainer" }),
+        h2("div", { "class": "dialog-title", p: "title" }),
+        h2("div", { "class": "dialog-content", p: "content" }),
+        h2(
+          "div",
+          { "class": "dialog-buttons", p: "buttons", as: "base/Loop" },
+          h2("button", { template: true, as: "base/Button", event: "close" })
+        )
+      );
+    }
 });
