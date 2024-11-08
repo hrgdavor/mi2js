@@ -363,24 +363,30 @@
 					}
 			}
 	};
+	mi2.updatableNode = function(parent, def, before, updaters, parentComp){
+	
+		function updateText(node, func){
+			var ret = function(){
+					var newValue = func();
+					// TODO join text node updating and value handling
+		if(newValue === null || newValue === void 0) newValue = '';		
+		if(typeof(newValue) != 'string') newValue = ''+newValue;
+
+					if(node.textContent != newValue) node.textContent = newValue;
+			}
+			ret.node = node;
+			return ret;
+	}	
+		var n = document.createTextNode('');
+		parent.insertBefore(n, before);
+		// prepare text updater
+		updaters.push(updateText(n,def));
+	}
 	
 	mi2.isNode = obj => obj?.nodeType !== undefined
-	
+
 	mi2.insertHtml = function(parent, def, before, updaters, parentComp){
 		updaters = updaters || [];
-	
-			function updateText(node, func){
-					var ret = function(){
-							var newValue = func();
-							// TODO join text node updating and value handling
-				if(newValue === null || newValue === void 0) newValue = '';		
-				if(typeof(newValue) != 'string') newValue = ''+newValue;
-	
-							if(node.textContent != newValue) node.textContent = newValue;
-					}
-					ret.node = node;
-					return ret;
-			}
 	
 			function updater(nodeUpdater){
 					var ret = function(){
@@ -396,11 +402,7 @@
 			} 
 			
 			if(def && def instanceof Function){
-					var n = document.createTextNode('');
-					parent.insertBefore(n, before);
-					// prepare text updater
-					updaters.push(updateText(n,def));
-	
+				mi2.updatableNode(parent, def, before, updaters, parentComp)
 			} else if(def instanceof mi2.NodeUpdater){
 					def.makeNode(parent, before);
 					updaters.push(updater(def));
