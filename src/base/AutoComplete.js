@@ -76,7 +76,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			}
 		});
 
-		this.listen(this.div.el, "click", function(evt){
+		this.listen(this.div.el, "pointerdown", function(evt){
 			if(!evt.target.unselectable && this.selectElem(evt.target)){
 				this.applySelection();
 				this.next();
