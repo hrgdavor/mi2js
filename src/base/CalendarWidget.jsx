@@ -35,9 +35,9 @@ export function CalendarWidgetTpl(h, t, state, self){return(<>
 	</div>
 </div>
 <div class="buttons">
-	<a p="today" class="bt" as="base/Button" event="today">{t`today`}</a>
-	<a p="done" class="bt" as="base/Button" event="done">{t`done`}</a>
-	<a p="clear" class="bt" as="base/Button" event="done" action="clear">{t`clear`}</a>
+	<a p="today" class="btn btn-xs" as="base/Button" event="today">{t`today`}</a>
+	<a p="done" class="btn btn-xs" as="base/Button" event="done">{t`done`}</a>
+	<a p="clear" class="btn btn-xs" as="base/Button" event="done" action="clear">{t`clear`}</a>
 	<input p="timeInput" size="5" as="base/Input"/>
 </div>
 

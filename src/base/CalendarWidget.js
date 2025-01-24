@@ -136,7 +136,8 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.checkDates = function(year, month, day){
-		let itemsVal = this.parent.parent.items ? this.parent.parent.items.getValue() : ''
+		if(!this.parent) return true
+    let itemsVal = this.parent?.parent?.items?.getValue?.() || ''
 
 		if(this.parent.__propName === 'end_time' && itemsVal && (itemsVal.start_time > new Date(year, month, day+1).getTime())){
 			MAIN_APP.showDialog({title:t('start_bigger_than_end_date'), buttons:['ok'], dialogClass:'alert-dialog'})
