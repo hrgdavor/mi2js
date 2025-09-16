@@ -38,6 +38,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.allowNew = this.attrBoolean('allow_new');
 		
 		this.emptyText = this.attrDef('empty_text', '') ;
+    this.displayActiveIcon = this.attrBoolean("display-active-icon");
 		this.clearBt.setVisible(!this.attrBoolean('disable_clear_button') && (this.textInput.el.value || '') != this.emptyText);
 
 		if(this.emptyText) this.setText(this.emptyText);
@@ -49,7 +50,9 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.listen(this.textInput.el, "focus", function(evt){
 			if(this.isReadOnly()) return;
 			this.hasFocus = true;
-            this.firstKey = true;
+      this.firstKey = true;
+			this.userNavigatedList = false;
+			this.userClickedItem = false;
 			this.selectFirst = false;
 			this.lastTextValue = this.textInput.el.value;
 			this.textInput.el.select();
@@ -59,18 +62,28 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.listen(this.textInput.el, "blur", function(evt){
 			if(this.isReadOnly()) return;
 			this.on_blur();
-            this.hide();
-        });
+      this.hide();
+			this.pastedInput = false;
+    });
 
-        this.listen(this.textInput.el, "keydown", function(evt){
+		this.listen(this.textInput.el, "paste", function (evt) {
+			if (this.isReadOnly()) return;
+			this.pastedInput = true;
+			this.userNavigatedList = false;
+			this.userClickedItem = false;
+		});		
+    this.listen(this.textInput.el, "keydown", function(evt){
             if(this.isReadOnly()) return;
 			if(evt.keyCode == 9){ // TAB
 				this.on_blur();
 			}else if(evt.keyCode == 13 && this.div.isVisible()){ // ENTER
-				this.applySelection();
-				evt.stop();
-				this.next();
-				return false;
+				var applied = this.applySelection();
+				this.pastedInput = false;
+				if (applied) {
+					evt.stop();
+					this.next();
+					return false;
+				}
 			}else{
 
 			}
@@ -78,7 +91,10 @@ function(proto, superProto, comp, mi2, h, t, filters){
 
 		this.listen(this.div.el, "pointerdown", function(evt){
 			if(!evt.target.unselectable && this.selectElem(evt.target)){
+				this.userClickedItem = true; 
 				this.applySelection();
+				this.userClickedItem = false;
+				this.pastedInput = false;
 				this.next();
 			}
 		});
@@ -91,6 +107,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			if(this.isReadOnly()) return;
 			//KEY_UP=38,KEY_DOWN=40;
 			if((evt.keyCode == 38 || evt.keyCode == 40) && this.count > 0 ){
+				this.userNavigatedList = true;
 				var sel = this.selected;
 				var i = sel ? sel.index:-1;
 				var move = evt.keyCode == 40 ? 1:-1;
@@ -103,6 +120,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 				if(item) this.selectElem(item.el);
 
 			}else{
+				this.userNavigatedList = false;
 				this.firstKey = false;
 			}
 			this.selectFirst = this.textInput.el.value != '';
@@ -159,6 +177,7 @@ function(proto, superProto, comp, mi2, h, t, filters){
 		this.hideTimer = this.setTimeout(function(){	
 			this.div.setVisible(false);
 			this.selectFirst = false;
+			this.pastedInput = false;
 		},200);
 	};
 
@@ -232,6 +251,13 @@ function(proto, superProto, comp, mi2, h, t, filters){
 			this.selectedData = allData[0];
 			this.setValue(allData[0].id);
 		}
+
+		if (this.displayActiveIcon) {
+			this.setActiveIcon();
+		}
+	};
+  proto.setActiveIcon = function() {
+        this.attr('status-active', this.selectedData?.active || false);
 	};
 
 	//load results from database (if already filtered jump to showResults)
@@ -335,18 +361,35 @@ function(proto, superProto, comp, mi2, h, t, filters){
 	};
 
 	proto.applySelection = function(skipIfNotSame){
+		var applied = false;
 		var sel = {};
 		if(this.selected) sel = this.selected.data || sel;
+		var hasExplicitIntent = !!(this.userNavigatedList || this.userClickedItem);
 		if(skipIfNotSame && (sel.name || sel.text) != this.textInput.el.value){
 			sel = {text:this.textInput.el.value};
 			this.idInput.el.value = '';
+			applied = true;
 		} else if (sel.name || sel.text){
+			if (this.pastedInput && !hasExplicitIntent && !skipIfNotSame) {
+				return false;
+			}
 			this.selectedData = sel;
-	        this.idInput.el.value = sel.id || '';
-	        this.setText(sel.name || sel.text);			
+			this.idInput.el.value = sel.id || '';
+			this.setText(sel.name || sel.text);			
+			if (this.displayActiveIcon) {
+				this.setActiveIcon();
+			}
+			applied = true;
 		}
-		this.fireIfChanged();
-		this.fireEvent({name:"afterSelect", selected:sel, fireTo:'parent'});
+		if (applied) {
+			this.fireIfChanged();
+			this.fireEvent({name:"afterSelect", selected:sel, fireTo:'parent'});
+		}
+		this.userNavigatedList = false;
+		this.userClickedItem = false;
+		if (applied) this.pastedInput = false;
+
+		return applied;		
 	};
 
 	proto.getSelectedData = function(){

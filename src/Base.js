@@ -624,10 +624,6 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
         if(!this.__expander) this.loadExpander();
 
         this.__expander.setValue(data);
-        var count = this.__expanderFwd.length;
-        for(var i=0; i<count; i++){
-            this.__expanderFwd[i].setValue(data);
-        }
     };
 
 	/** By default setValue calls this.expandVars. Input components for example override 
@@ -656,17 +652,6 @@ this.fireEvent({name:'submit', fireTo:'parent', domEvent:evt});
 	*/
     proto.loadExpander = function(){
         this.__expander = mi2.loadExpander(this.el, this);
-        this.__expanderFwd = [];
-
-        if(!this.children) return;
-        
-        var count = this.children.length;
-        for(var i=0; i<count; i++){
-            if(this.children[i].hasAttr('fwd-expand')){
-                if(this.children[i].setValue)
-                    this.__expanderFwd.push(this.children[i]);
-            }
-        }
     };
 
 }(mi2JS));

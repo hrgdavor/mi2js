@@ -209,7 +209,8 @@ template strings are parsed from DOM nodes from the <b>text and attribute values
 		var ch = el.firstChild;
 		while(ch){
 			if(ch.tagName){
-				if(!ch.hasAttribute('template'))
+				let as = ch.getAttribute('as')
+				if(!ch.hasAttribute('template') && !(as && as.startsWith('jsx6')))
 					mi2.loadExpanderRec(ch,list, comp);
 			}else{
 				// TextNode
